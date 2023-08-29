@@ -1,6 +1,11 @@
 # Snap-N-Claim
 
+## Reference projects
+https://github.com/PoornaSenadheera100/Flutter-Fundamentals
+https://github.com/PoornaSenadheera100/Flutter-App_with_Firebase
 
+##Refernces websites
+https://www.freecodespot.com/blog/crud-in-flutter-using-firebase/
 
 ## Getting started
 
