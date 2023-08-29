@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "900301134272",
+    "project_id": "snap-n-claim",
+    "storage_bucket": "snap-n-claim.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900301134272:android:b4e67ace477e3ee3ed5025",
+        "android_client_info": {
+          "package_name": "com.spsh.snap_n_claim"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "900301134272-4s4403cjd46nhhmo76b12nv2que090p6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEk81nhykmWTrUW1mxhV29vtMXs1_WoD8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "900301134272-4s4403cjd46nhhmo76b12nv2que090p6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
