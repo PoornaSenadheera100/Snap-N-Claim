@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:snap_n_claim/screens/test_screen.dart';
+import 'package:snap_n_claim/screens/approver_dashboard_screen.dart';
+
 
 void main(){
   runApp(SnapNClaim());
@@ -16,7 +17,7 @@ class SnapNClaim extends StatelessWidget {
     _width = MediaQuery.of(context).size.width;
     _height = MediaQuery.of(context).size.height;
     return MaterialApp(
-      home: TestScreen(_width, _height),
+      home: ApproverDashboardScreen(_width, _height),
     );
   }
 }
