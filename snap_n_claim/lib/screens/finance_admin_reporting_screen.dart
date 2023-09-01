@@ -18,9 +18,12 @@ class _FinanceAdminReportingScreenState
         appBar: AppBar(
           title: Text("Reporting and Analytics"),
           bottom: TabBar(tabs: [
-            Center(child: Text("Employee Report")),
-            Text("Departments Report"),
-            Text("Expense Report"),
+            Text(
+              "Employee\nReport",
+              textAlign: TextAlign.center,
+            ),
+            Text("Departments\nReport", textAlign: TextAlign.center,),
+            Text("Expense Report", textAlign: TextAlign.center,),
           ]),
         ),
         body: TabBarView(children: [
