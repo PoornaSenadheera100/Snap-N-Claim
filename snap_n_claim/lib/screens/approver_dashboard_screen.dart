@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'approver_navbar_widget.dart';
+
+
 class ApproverDashboardScreen extends StatefulWidget {
   const ApproverDashboardScreen(this._width, this._height, {Key? key})
       : super(key: key);
@@ -17,6 +20,6 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            centerTitle: true, title: Text("Approver Dashboard Screen")));
+            centerTitle: true, title: Text("Approver Screen")),drawer:ApproverNavBar(),);
   }
 }
