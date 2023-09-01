@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:snap_n_claim/screens/finance_admin_home_screen.dart';
 import 'package:snap_n_claim/screens/test_screen.dart';
 
 void main(){
@@ -16,7 +17,7 @@ class SnapNClaim extends StatelessWidget {
     _width = MediaQuery.of(context).size.width;
     _height = MediaQuery.of(context).size.height;
     return MaterialApp(
-      home: TestScreen(_width, _height),
+      home: FinanceAdminHomeScreen(_width, _height),
     );
   }
 }
