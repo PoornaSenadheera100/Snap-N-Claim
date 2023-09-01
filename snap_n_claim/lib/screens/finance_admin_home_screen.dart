@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:snap_n_claim/screens/finance_admin_reporting_screen.dart';
 
 class FinanceAdminHomeScreen extends StatelessWidget {
   FinanceAdminHomeScreen(this._width, this._height, {super.key});
 
   double _width;
   double _height;
+
+  void _onTapReportingAndAnalyticsBtn(BuildContext context){
+    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context)=> FinanceAdminReportingScreen()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +21,9 @@ class FinanceAdminHomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            ElevatedButton(onPressed: (){}, child: Text("Reporting and Analytics")),
+            ElevatedButton(onPressed: (){
+              _onTapReportingAndAnalyticsBtn(context);
+            }, child: Text("Reporting and Analytics")),
             ElevatedButton(onPressed: (){}, child: Text("Budget Allocation"))
           ],
         ),
