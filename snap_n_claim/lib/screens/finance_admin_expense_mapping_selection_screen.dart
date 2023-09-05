@@ -33,21 +33,36 @@ class _FinanceAdminExpenseMappingSelectionScreenState
         stream: _collectionReference,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
-            return ListView(
-              children: snapshot.data!.docs
-                  .map((e) => Card(
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text(e["gl_code"]),
-                                Text(e["gl_name"]),
-                              ],
-                            )
-                          ],
-                        ),
-                      ))
-                  .toList(),
+            return Column(
+              children: [
+                Row(
+                  children: [
+                    Text("GL Code"),
+                    Text("GL Name"),
+                  ],
+                ),
+                Expanded(
+                  child: SizedBox(
+                    child: ListView(
+                      children: snapshot.data!.docs
+                          .map((e) => Card(
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(e["gl_code"]),
+                                        Text(e["gl_name"]),
+                                        ElevatedButton(onPressed: (){}, child: Text("Configure")),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ],
             );
           } else {
             return Text("NO DATA");
