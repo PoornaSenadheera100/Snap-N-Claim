@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FinanceAdminExpenseMappingScreen extends StatefulWidget {
-  FinanceAdminExpenseMappingScreen(
-      this._width, this._height, this._glCode,
+  FinanceAdminExpenseMappingScreen(this._width, this._height, this._glCode,
       {super.key});
 
   double _width;
@@ -27,15 +26,42 @@ class _FinanceAdminExpenseMappingSelectionScreenState
           Text("Expense Info"),
           Row(
             children: [
-              Text("GL Code"),
-              Text("GL Name"),
-              Text("Transaction Limit"),
-              Text("Monthly Limit"),
-            ],
-          ),
-          Row(
-            children: [
-
+              Container(
+                width: widget._width/4,
+                child: Column(
+                  children: [
+                    Text("GL Code"),
+                    TextField(),
+                  ],
+                ),
+              ),
+              Container(
+                width: widget._width/4,
+                child: Column(
+                  children: [
+                    Text("GL Name"),
+                    TextField(),
+                  ],
+                ),
+              ),
+              Container(
+                width: widget._width/4,
+                child: Column(
+                  children: [
+                    Text("Transaction Limit"),
+                    TextField(),
+                  ],
+                ),
+              ),
+              Container(
+                width: widget._width/4,
+                child: Column(
+                  children: [
+                    Text("Monthly Limit"),
+                    TextField(),
+                  ],
+                ),
+              ),
             ],
           ),
           Text("Eligible Employees"),
