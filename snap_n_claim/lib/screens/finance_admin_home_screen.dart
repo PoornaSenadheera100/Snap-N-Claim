@@ -8,12 +8,15 @@ class FinanceAdminHomeScreen extends StatelessWidget {
   double _width;
   double _height;
 
-  void _onTapReportingAndAnalyticsBtn(BuildContext context){
-    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context)=> FinanceAdminReportingScreen()));
+  void _onTapReportingAndAnalyticsBtn(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => FinanceAdminReportingScreen()));
   }
 
-  void _onTapBudgetAllocationBtn(BuildContext context){
-    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context)=> FinanceAdminBudgetAllocationSelectionScreen()));
+  void _onTapBudgetAllocationBtn(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) =>
+            FinanceAdminBudgetAllocationSelectionScreen()));
   }
 
   @override
@@ -26,12 +29,18 @@ class FinanceAdminHomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            ElevatedButton(onPressed: (){
-              _onTapReportingAndAnalyticsBtn(context);
-            }, child: Text("Reporting and Analytics")),
-            ElevatedButton(onPressed: (){
-              _onTapBudgetAllocationBtn(context);
-            }, child: Text("Budget Allocation"))
+            ElevatedButton(
+                onPressed: () {
+                  _onTapReportingAndAnalyticsBtn(context);
+                },
+                child: Text("Reporting and Analytics")),
+            ElevatedButton(
+                onPressed: () {
+                  _onTapBudgetAllocationBtn(context);
+                },
+                child: Text("Budget Allocation")),
+            ElevatedButton(
+                onPressed: () {}, child: Text("Account Creation & Management")),
           ],
         ),
       ),
