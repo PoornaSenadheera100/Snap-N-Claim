@@ -1,8 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:snap_n_claim/screens/finance_admin_home_screen.dart';
 import 'package:snap_n_claim/screens/test_screen.dart';
 
-void main(){
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(SnapNClaim());
 }
 
