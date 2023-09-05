@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class FinanceAdminReportingScreen extends StatefulWidget {
-  const FinanceAdminReportingScreen({super.key});
+  FinanceAdminReportingScreen(this._width, this._height, {super.key});
+
+  double _width;
+  double _height;
 
   @override
   State<FinanceAdminReportingScreen> createState() =>

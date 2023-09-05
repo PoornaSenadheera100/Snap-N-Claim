@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:snap_n_claim/screens/finance_admin_expense_mapping_selection_screen.dart';
 
 class FinanceAdminBudgetAllocationSelectionScreen extends StatelessWidget {
-  const FinanceAdminBudgetAllocationSelectionScreen({super.key});
+  FinanceAdminBudgetAllocationSelectionScreen(this._width, this._height, {super.key});
+
+  double _width;
+  double _height;
 
   void _onTapExpenseMappingBtn(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) =>
-            FinanceAdminExpenseMappingSelectionScreen()));
+            FinanceAdminExpenseMappingSelectionScreen(_width, _height)));
   }
 
   @override

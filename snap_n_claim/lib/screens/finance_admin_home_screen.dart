@@ -10,13 +10,13 @@ class FinanceAdminHomeScreen extends StatelessWidget {
 
   void _onTapReportingAndAnalyticsBtn(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => FinanceAdminReportingScreen()));
+        builder: (BuildContext context) => FinanceAdminReportingScreen(_width, _height)));
   }
 
   void _onTapBudgetAllocationBtn(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) =>
-            FinanceAdminBudgetAllocationSelectionScreen()));
+            FinanceAdminBudgetAllocationSelectionScreen(_width, _height)));
   }
 
   @override

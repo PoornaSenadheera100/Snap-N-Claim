@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
 class FinanceAdminExpenseMappingSelectionScreen extends StatefulWidget {
-  const FinanceAdminExpenseMappingSelectionScreen({super.key});
+  FinanceAdminExpenseMappingSelectionScreen(this._width, this._height, {super.key});
+
+  double _width;
+  double _height;
 
   @override
   State<FinanceAdminExpenseMappingSelectionScreen> createState() =>
