@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:snap_n_claim/screens/finance_admin_expense_mapping_screen.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
 class FinanceAdminExpenseMappingSelectionScreen extends StatefulWidget {
-  FinanceAdminExpenseMappingSelectionScreen(this._width, this._height, {super.key});
+  FinanceAdminExpenseMappingSelectionScreen(this._width, this._height,
+      {super.key});
 
   double _width;
   double _height;
@@ -21,6 +23,12 @@ class _FinanceAdminExpenseMappingSelectionScreenState
   void initState() {
     super.initState();
     _collectionReference = BudgetAllocationAndReportingService.getExpenses();
+  }
+
+  void _onTapConfigureBtn(BuildContext context, String glCode) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => FinanceAdminExpenseMappingScreen(
+            widget._width, widget._height, glCode)));
   }
 
   @override
@@ -52,7 +60,11 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                                       children: [
                                         Text(e["gl_code"]),
                                         Text(e["gl_name"]),
-                                        ElevatedButton(onPressed: (){}, child: Text("Configure")),
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              _onTapConfigureBtn(context, e["gl_code"]);
+                                            },
+                                            child: Text("Configure")),
                                       ],
                                     )
                                   ],
