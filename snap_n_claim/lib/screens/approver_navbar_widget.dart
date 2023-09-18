@@ -29,7 +29,22 @@ class ApproverNavBar extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-        )
+        ),
+        ListTile(
+          leading: Icon(Icons.home),
+          title: Text("Approver Dashboard"),
+          onTap: null
+        ),
+        ListTile(
+            leading: Icon(Icons.analytics_outlined),
+            title: Text("View Reports"),
+            onTap: null
+        ),
+        ListTile(
+            leading: Icon(Icons.monetization_on),
+            title: Text("My Claims"),
+            onTap: null
+        ),
       ],
     ));
   }
