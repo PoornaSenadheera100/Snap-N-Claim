@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-
-import 'finance_admin_budget_allocation_selection_screen.dart';
 import 'finance_admin_menu_drawer.dart';
 import 'finance_admin_reporting_screen.dart';
 
 class FinanceAdminReportsSelectionScreen extends StatelessWidget {
-  FinanceAdminReportsSelectionScreen(this._width, this._height, {super.key});
+  const FinanceAdminReportsSelectionScreen(this._width, this._height, {super.key});
 
-  double _width;
-  double _height;
+  final double _width;
+  final double _height;
 
   void _onTapReportingAndAnalyticsBtn(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
