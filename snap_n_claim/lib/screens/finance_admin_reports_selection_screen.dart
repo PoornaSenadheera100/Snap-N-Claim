@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'finance_admin_menu_drawer.dart';
 
-class ReportsSelectionScreen extends StatelessWidget {
-   ReportsSelectionScreen(this._width, this._height, {super.key});
+class FinanceAdminReportsSelectionScreen extends StatelessWidget {
+   FinanceAdminReportsSelectionScreen(this._width, this._height, {super.key});
 
   double _width;
   double _height;
