@@ -12,16 +12,9 @@ class FinanceAdminReportsSelectionScreen extends StatelessWidget {
   double _height;
 
   void _onTapReportingAndAnalyticsBtn(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      PageTransition(
-        child: FinanceAdminReportingScreen(_width, _height),
-        type: PageTransitionType.rightToLeft,
-        alignment: Alignment.center,
-        isIos: true,
-        duration: const Duration(seconds: 1),
-      ),
-    );
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) =>
+            FinanceAdminReportingScreen(_width, _height)));
   }
 
   void _onTapViewClaimStatusBtn(BuildContext context) {}
