@@ -43,6 +43,14 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
     }
   }
 
+  void _onTapBudgetConfigBtn(BuildContext context) {}
+
+  void _onTapUserConfigBtn(BuildContext context) {}
+
+  void _onTapMyClaimsBtn(BuildContext context) {}
+
+  void _onTapSignOutBtn(BuildContext context) {}
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -106,7 +114,11 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
             child: const Text("My Claims"),
           ),
         ),
-        Divider(thickness: 5, indent: 20, endIndent: 20,),
+        const Divider(
+          thickness: 5,
+          indent: 20,
+          endIndent: 20,
+        ),
         Padding(
           padding: EdgeInsets.symmetric(
             horizontal: _width / 19.63636363636364,
@@ -114,8 +126,8 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () {},
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith(
-                      (states) => Colors.red),
+              backgroundColor:
+                  MaterialStateProperty.resolveWith((states) => Colors.red),
             ),
             child: const Text("Sign out"),
           ),
