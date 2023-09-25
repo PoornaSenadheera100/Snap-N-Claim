@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snap_n_claim/screens/finance_admin_expense_mapping_selection_screen.dart';
+import 'package:snap_n_claim/screens/finance_admin_menu_drawer.dart';
 
 class FinanceAdminBudgetAllocationSelectionScreen extends StatelessWidget {
   FinanceAdminBudgetAllocationSelectionScreen(this._width, this._height, {super.key});
@@ -19,6 +20,7 @@ class FinanceAdminBudgetAllocationSelectionScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Budget Allocation Menu"),
       ),
+      drawer: FinanceAdminMenuDrawer(_width, _height, "Budget Allocation Menu"),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
