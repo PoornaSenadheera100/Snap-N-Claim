@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:snap_n_claim/screens/finance_admin_budget_allocation_selection_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin_home_screen.dart';
-import 'package:snap_n_claim/screens/reports_selection_screen.dart';
+import 'package:snap_n_claim/screens/finance_admin_reports_selection_screen.dart';
 
 class FinanceAdminMenuDrawer extends StatelessWidget {
   const FinanceAdminMenuDrawer(this._width, this._height, this.currentPage,
@@ -33,7 +34,7 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
       Navigator.pushReplacement(
         context,
         PageTransition(
-          child: ReportsSelectionScreen(_width, _height),
+          child: FinanceAdminReportsSelectionScreen(_width, _height),
           type: PageTransitionType.rightToLeft,
           alignment: Alignment.center,
           isIos: true,
@@ -43,7 +44,21 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
     }
   }
 
-  void _onTapBudgetConfigBtn(BuildContext context) {}
+  void _onTapBudgetAllocationBtn(BuildContext context) {
+    Navigator.of(context).pop();
+    if (currentPage != "Budget Allocation Menu") {
+      Navigator.pushReplacement(
+        context,
+        PageTransition(
+          child: FinanceAdminBudgetAllocationSelectionScreen(_width, _height),
+          type: PageTransitionType.rightToLeft,
+          alignment: Alignment.center,
+          isIos: true,
+          duration: const Duration(seconds: 1),
+        ),
+      );
+    }
+  }
 
   void _onTapUserConfigBtn(BuildContext context) {}
 
@@ -92,8 +107,10 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
             horizontal: _width / 19.63636363636364,
           ), // 20
           child: ElevatedButton(
-            onPressed: () {},
-            child: const Text("Budget Configurations"),
+            onPressed: () {
+              _onTapBudgetAllocationBtn(context);
+            },
+            child: const Text("Budget Allocation"),
           ),
         ),
         Padding(
