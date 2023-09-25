@@ -25,10 +25,16 @@ class _FinanceAdminExpenseMappingSelectionScreenState
     _collectionReference = BudgetAllocationAndReportingService.getExpenses();
   }
 
-  void _onTapConfigureBtn(BuildContext context, String glCode) {
+  void _onTapConfigureBtn(BuildContext context, String glCode, String glName,
+      double transactionLimit, double monthlyLimit) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => FinanceAdminExpenseMappingScreen(
-            widget._width, widget._height, glCode)));
+            widget._width,
+            widget._height,
+            glCode,
+            glName,
+            transactionLimit,
+            monthlyLimit)));
   }
 
   @override
@@ -62,7 +68,12 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                                         Text(e["gl_name"]),
                                         ElevatedButton(
                                             onPressed: () {
-                                              _onTapConfigureBtn(context, e["gl_code"]);
+                                              _onTapConfigureBtn(
+                                                  context,
+                                                  e["gl_code"],
+                                                  e["gl_name"],
+                                                  e["transaction_limit"].toDouble(),
+                                                  e["monthly_limit"].toDouble());
                                             },
                                             child: Text("Configure")),
                                       ],
