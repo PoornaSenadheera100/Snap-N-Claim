@@ -42,7 +42,7 @@ class _FinanceAdminExpenseMappingSelectionScreenState
     print(widget._height);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Expense Mapping"),
+        title: const Text("Expense Mapping"),
       ),
       body: Padding(
         padding:
@@ -55,7 +55,7 @@ class _FinanceAdminExpenseMappingSelectionScreenState
               child: Container(
                 width: widget._width / 1.05,
                 color: Colors.grey,
-                child: Center(child: Text("Expense Info")),
+                child: const Center(child: Text("Expense Info")),
               ),
             ),
             Row(
@@ -64,11 +64,11 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                   padding: EdgeInsets.symmetric(
                       horizontal:
                           (widget._width / 2 - widget._width / 2.1) / 2),
-                  child: Container(
+                  child: SizedBox(
                     width: widget._width / 2.1,
                     child: Column(
                       children: [
-                        Text("GL Code"),
+                        const Text("GL Code"),
                         TextField(
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -76,10 +76,10 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                           controller: _glCodeController,
                           readOnly: true,
                           decoration:
-                              InputDecoration(border: OutlineInputBorder()),
+                              const InputDecoration(border: OutlineInputBorder()),
                         ),
-                        Divider(),
-                        Text("Transaction Limit"),
+                        const Divider(),
+                        const Text("Transaction Limit"),
                         TextField(
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -87,7 +87,7 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                           readOnly: true,
                           controller: _transactionLimitController,
                           decoration:
-                              InputDecoration(border: OutlineInputBorder()),
+                              const InputDecoration(border: OutlineInputBorder()),
                         ),
                       ],
                     ),
@@ -97,11 +97,11 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                   padding: EdgeInsets.symmetric(
                       horizontal:
                           (widget._width / 2 - widget._width / 2.1) / 2),
-                  child: Container(
+                  child: SizedBox(
                     width: widget._width / 2.1,
                     child: Column(
                       children: [
-                        Text("GL Name"),
+                        const Text("GL Name"),
                         TextField(
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -109,10 +109,10 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                           readOnly: true,
                           controller: _glNameController,
                           decoration:
-                              InputDecoration(border: OutlineInputBorder()),
+                              const InputDecoration(border: OutlineInputBorder()),
                         ),
-                        Divider(),
-                        Text("Monthly Limit"),
+                        const Divider(),
+                        const Text("Monthly Limit"),
                         TextField(
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -120,7 +120,7 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                           readOnly: true,
                           controller: _monthlyLimitController,
                           decoration:
-                              InputDecoration(border: OutlineInputBorder()),
+                              const InputDecoration(border: OutlineInputBorder()),
                         ),
                       ],
                     ),
@@ -133,7 +133,7 @@ class _FinanceAdminExpenseMappingSelectionScreenState
               child: Container(
                 width: widget._width / 1.05,
                 color: Colors.grey,
-                child: Center(child: Text("Eligible Employees")),
+                child: const Center(child: Text("Eligible Employees")),
               ),
             ),
           ],
