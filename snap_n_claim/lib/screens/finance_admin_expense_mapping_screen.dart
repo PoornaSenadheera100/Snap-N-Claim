@@ -15,6 +15,14 @@ class FinanceAdminExpenseMappingScreen extends StatefulWidget {
 
 class _FinanceAdminExpenseMappingSelectionScreenState
     extends State<FinanceAdminExpenseMappingScreen> {
+  final TextEditingController _glCodeController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _glCodeController.text = widget._glCode;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,38 +35,34 @@ class _FinanceAdminExpenseMappingSelectionScreenState
           Row(
             children: [
               Container(
-                width: widget._width/4,
+                width: widget._width / 2,
                 child: Column(
                   children: [
                     Text("GL Code"),
-                    TextField(),
+                    TextField(
+                      controller: _glCodeController,
+                      readOnly: true,
+                      decoration: InputDecoration(border: OutlineInputBorder()),
+                    ),
+                    Text("Transaction Limit"),
+                    TextField(
+                      decoration: InputDecoration(border: OutlineInputBorder()),
+                    ),
                   ],
                 ),
               ),
               Container(
-                width: widget._width/4,
+                width: widget._width / 2,
                 child: Column(
                   children: [
                     Text("GL Name"),
-                    TextField(),
-                  ],
-                ),
-              ),
-              Container(
-                width: widget._width/4,
-                child: Column(
-                  children: [
-                    Text("Transaction Limit"),
-                    TextField(),
-                  ],
-                ),
-              ),
-              Container(
-                width: widget._width/4,
-                child: Column(
-                  children: [
+                    TextField(
+                      decoration: InputDecoration(border: OutlineInputBorder()),
+                    ),
                     Text("Monthly Limit"),
-                    TextField(),
+                    TextField(
+                      decoration: InputDecoration(border: OutlineInputBorder()),
+                    ),
                   ],
                 ),
               ),
