@@ -25,6 +25,8 @@ class _FinanceAdminExpenseMappingSelectionScreenState
       TextEditingController();
   final TextEditingController _monthlyLimitController = TextEditingController();
 
+  late String _dropdownValue;
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +36,7 @@ class _FinanceAdminExpenseMappingSelectionScreenState
         "Rs. ${widget._transactionLimit.toStringAsFixed(2)}";
     _monthlyLimitController.text =
         "Rs. ${widget._monthlyLimit.toStringAsFixed(2)}";
+    _dropdownValue = "null";
   }
 
   @override
@@ -150,8 +153,8 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                         const Text("Employee Grade"),
                         DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
-                              // value: "test",
-                              hint: Text("Select Device"),
+                              value: _dropdownValue.isNotEmpty ? _dropdownValue : null,
+                              hint: Text("Select Grade"),
                               items: ["Dog", "Cat", "Tiger"]
                                   .map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem(
@@ -160,7 +163,9 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                                 );
                               }).toList(),
                               onChanged: (String? newValue) {
-                                setState(() {});
+                                setState(() {
+                                  _dropdownValue = newValue!;
+                                });
                               }),
                         ),
                       ],
