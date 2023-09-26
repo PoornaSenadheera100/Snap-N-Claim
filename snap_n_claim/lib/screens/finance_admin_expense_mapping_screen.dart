@@ -25,7 +25,24 @@ class _FinanceAdminExpenseMappingSelectionScreenState
       TextEditingController();
   final TextEditingController _monthlyLimitController = TextEditingController();
 
-  late String _dropdownValue;
+  late String _empGradeDropdownValue;
+  late String _costCenterDropdownValue;
+
+  final List<String> _empGrades = [
+    "Junior",
+    "Senior",
+    "Manager",
+    "Executive",
+    "Senior Executive"
+  ];
+  final List<String> _costCenters = [
+    "Production Department",
+    "IT Department",
+    "Finance Department",
+    "HR Department",
+    "Marketing Department",
+    "Safety and Security Department"
+  ];
 
   @override
   void initState() {
@@ -36,7 +53,8 @@ class _FinanceAdminExpenseMappingSelectionScreenState
         "Rs. ${widget._transactionLimit.toStringAsFixed(2)}";
     _monthlyLimitController.text =
         "Rs. ${widget._monthlyLimit.toStringAsFixed(2)}";
-    _dropdownValue = "null";
+    _empGradeDropdownValue = "";
+    _costCenterDropdownValue = "";
   }
 
   @override
@@ -153,18 +171,24 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                         const Text("Employee Grade"),
                         DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
-                              value: _dropdownValue.isNotEmpty ? _dropdownValue : null,
-                              hint: Text("Select Grade"),
-                              items: ["Dog", "Cat", "Tiger"]
-                                  .map<DropdownMenuItem<String>>((String value) {
+                              value: _empGradeDropdownValue.isNotEmpty
+                                  ? _empGradeDropdownValue
+                                  : null,
+                              hint: const Text("Select Grade"),
+                              items: _empGrades.map<DropdownMenuItem<String>>(
+                                  (String value) {
                                 return DropdownMenuItem(
                                   value: value,
-                                  child: Text(value),
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(
+                                        fontSize: widget._width / 26.18181818181818),
+                                  ),
                                 );
                               }).toList(),
                               onChanged: (String? newValue) {
                                 setState(() {
-                                  _dropdownValue = newValue!;
+                                  _empGradeDropdownValue = newValue!;
                                 });
                               }),
                         ),
@@ -181,12 +205,29 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                     child: Column(
                       children: [
                         const Text("Employee Cost Center"),
-                        TextField(
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: widget._width / 26.18181818181818),
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder()),
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                              value: _costCenterDropdownValue.isNotEmpty
+                                  ? _costCenterDropdownValue
+                                  : null,
+                              hint: const Text("Select Cost Center"),
+                              items: _costCenters.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(
+                                        fontSize:
+                                            widget._width / 35.70247933884297),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  _costCenterDropdownValue = newValue!;
+                                });
+                              }),
                         ),
                       ],
                     ),
