@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import '../services/budget_allocation_and_reporting_service.dart';
 
 class FinanceAdminExpenseMappingScreen extends StatefulWidget {
   const FinanceAdminExpenseMappingScreen(this._width, this._height,
@@ -44,6 +47,8 @@ class _FinanceAdminExpenseMappingSelectionScreenState
     "Safety and Security Department"
   ];
 
+  late Stream<QuerySnapshot> _collectionReference;
+
   @override
   void initState() {
     super.initState();
@@ -55,6 +60,8 @@ class _FinanceAdminExpenseMappingSelectionScreenState
         "Rs. ${widget._monthlyLimit.toStringAsFixed(2)}";
     _empGradeDropdownValue = "";
     _costCenterDropdownValue = "";
+    _collectionReference =
+        BudgetAllocationAndReportingService.getEligibleEmps();
   }
 
   void _onTapAddBtn() {}
@@ -101,7 +108,9 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                           decoration: const InputDecoration(
                               border: OutlineInputBorder()),
                         ),
-                        const Divider(),
+                        const Divider(
+                          color: Colors.transparent,
+                        ),
                         const Text("Transaction Limit"),
                         TextField(
                           textAlign: TextAlign.center,
@@ -134,7 +143,9 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                           decoration: const InputDecoration(
                               border: OutlineInputBorder()),
                         ),
-                        const Divider(),
+                        const Divider(
+                          color: Colors.transparent,
+                        ),
                         const Text("Monthly Limit"),
                         TextField(
                           textAlign: TextAlign.center,
@@ -253,6 +264,63 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                 ],
               ),
             ),
+            const Divider(thickness: 2),
+            StreamBuilder(
+                stream: _collectionReference,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator.adaptive(),
+                          Padding(
+                            padding: EdgeInsets.only(top: 20.0),
+                            child: Text("Loading..."),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else if (snapshot.hasData) {
+                    print(snapshot.data?.docs[0]["emp_grade"]);
+                    return Expanded(
+                      child: SizedBox(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  (widget._width - widget._width * 3 / 3.1) /
+                                      2),
+                          child: ListView(
+                            children: snapshot.data!.docs
+                                .map((e) => Row(
+                                      children: [
+                                        Container(
+                                            width: widget._width / 3.1,
+                                            child: Center(
+                                                child: Text(e["emp_grade"]))),
+                                        Container(
+                                            width: widget._width / 3.1,
+                                            child: Center(
+                                                child: Text(e["department"]))),
+                                        Container(
+                                            width: widget._width / 3.1,
+                                            child: Center(
+                                                child: IconButton(
+                                              onPressed: () {},
+                                              icon: Icon(Icons.delete, color: Colors.red,),
+                                            ))),
+                                      ],
+                                    ))
+                                .toList(),
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Text("NO DATA");
+                  }
+                })
           ],
         ),
       ),
