@@ -8,4 +8,9 @@ class BudgetAllocationAndReportingService{
     CollectionReference collectionReference = _collection;
     return collectionReference.snapshots();
   }
+
+  static Stream<QuerySnapshot> getEligibleEmps(){
+    CollectionReference collectionReference = _firestore.collection("Allocation");
+    return collectionReference.snapshots();
+  }
 }
