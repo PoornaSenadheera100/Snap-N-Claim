@@ -4,10 +4,10 @@ import 'package:snap_n_claim/screens/finance_admin_expense_mapping_selection_scr
 import 'package:snap_n_claim/screens/finance_admin_menu_drawer.dart';
 
 class FinanceAdminBudgetAllocationSelectionScreen extends StatelessWidget {
-  FinanceAdminBudgetAllocationSelectionScreen(this._width, this._height, {super.key});
+  const FinanceAdminBudgetAllocationSelectionScreen(this._width, this._height, {super.key});
 
-  double _width;
-  double _height;
+  final double _width;
+  final double _height;
 
   void _onTapExpenseMappingBtn(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
