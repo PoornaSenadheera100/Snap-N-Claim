@@ -57,6 +57,8 @@ class _FinanceAdminExpenseMappingSelectionScreenState
     _costCenterDropdownValue = "";
   }
 
+  void _onTapAddBtn() {}
+
   @override
   Widget build(BuildContext context) {
     print(widget._width);
@@ -182,7 +184,8 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                                   child: Text(
                                     value,
                                     style: TextStyle(
-                                        fontSize: widget._width / 26.18181818181818),
+                                        fontSize:
+                                            widget._width / 26.18181818181818),
                                   ),
                                 );
                               }).toList(),
@@ -234,6 +237,21 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                   ),
                 ),
               ],
+            ),
+            Padding(
+              padding:
+                  EdgeInsets.only(right: widget._width / 26.18181818181818),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      _onTapAddBtn();
+                    },
+                    child: const Text("Add"),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
