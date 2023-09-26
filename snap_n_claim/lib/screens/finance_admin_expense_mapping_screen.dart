@@ -148,16 +148,21 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                     child: Column(
                       children: [
                         const Text("Employee Grade"),
-                        DropdownButton(
-                            items: ["Dog", "Cat", "Tiger"]
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem(
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              setState(() {});
-                            }),
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                              // value: "test",
+                              hint: Text("Select Device"),
+                              items: ["Dog", "Cat", "Tiger"]
+                                  .map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {});
+                              }),
+                        ),
                       ],
                     ),
                   ),
