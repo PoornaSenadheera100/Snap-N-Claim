@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:snap_n_claim/screens/finance_admin_expense_configurations_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin_expense_mapping_selection_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin_menu_drawer.dart';
 
@@ -12,6 +13,12 @@ class FinanceAdminBudgetAllocationSelectionScreen extends StatelessWidget {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) =>
             FinanceAdminExpenseMappingSelectionScreen(_width, _height)));
+  }
+
+  void _onTapExpenseConfigurationsBtn(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) =>
+            FinanceAdminExpenseConfigurationsScreen(_width, _height)));
   }
 
   @override
@@ -32,7 +39,9 @@ class FinanceAdminBudgetAllocationSelectionScreen extends StatelessWidget {
               child: Text("Expense Mapping"),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                _onTapExpenseConfigurationsBtn(context);
+              },
               child: Text("Expense Configurations"),
             ),
           ],
