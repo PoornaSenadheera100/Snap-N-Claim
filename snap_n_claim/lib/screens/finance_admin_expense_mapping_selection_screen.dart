@@ -4,11 +4,11 @@ import 'package:snap_n_claim/screens/finance_admin_expense_mapping_screen.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
 class FinanceAdminExpenseMappingSelectionScreen extends StatefulWidget {
-  FinanceAdminExpenseMappingSelectionScreen(this._width, this._height,
+  const FinanceAdminExpenseMappingSelectionScreen(this._width, this._height,
       {super.key});
 
-  double _width;
-  double _height;
+  final double _width;
+  final double _height;
 
   @override
   State<FinanceAdminExpenseMappingSelectionScreen> createState() =>
@@ -39,9 +39,10 @@ class _FinanceAdminExpenseMappingSelectionScreenState
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Expense Mapping"),
+        title: const Text("Expense Mapping"),
       ),
       body: StreamBuilder(
         stream: _collectionReference,
@@ -49,46 +50,91 @@ class _FinanceAdminExpenseMappingSelectionScreenState
           if (snapshot.hasData) {
             return Column(
               children: [
-                Row(
-                  children: [
-                    Text("GL Code"),
-                    Text("GL Name"),
-                  ],
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: (widget._width - widget._width * 3 / 3.2) / 3,
+                      vertical: widget._height / 80.29090909090909),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                          width: widget._width / 3.2,
+                          child: Center(
+                              child: Text(
+                            "GL Code",
+                            style: TextStyle(
+                                fontSize: widget._width / 23.10160427807486,
+                                fontWeight: FontWeight.bold),
+                          ))),
+                      SizedBox(
+                          width: widget._width / 3.2,
+                          child: Center(
+                              child: Text(
+                            "GL Name",
+                            style: TextStyle(
+                                fontSize: widget._width / 23.10160427807486,
+                                fontWeight: FontWeight.bold),
+                          ))),
+                      Container(
+                        width: widget._width / 3.2,
+                      )
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: SizedBox(
-                    child: ListView(
-                      children: snapshot.data!.docs
-                          .map((e) => Card(
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(e["gl_code"]),
-                                        Text(e["gl_name"]),
-                                        ElevatedButton(
-                                            onPressed: () {
-                                              _onTapConfigureBtn(
-                                                  context,
-                                                  e["gl_code"],
-                                                  e["gl_name"],
-                                                  e["transaction_limit"].toDouble(),
-                                                  e["monthly_limit"].toDouble());
-                                            },
-                                            child: Text("Configure")),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ))
-                          .toList(),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal:
+                              (widget._width - widget._width * 3 / 3.2) / 3),
+                      child: ListView(
+                        children: snapshot.data!.docs
+                            .map((e) => Card(
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                              width: widget._width / 3.2,
+                                              child: Center(
+                                                  child: Text(e["gl_code"]))),
+                                          SizedBox(
+                                              width: widget._width / 3.2,
+                                              child: Center(
+                                                  child: Text(
+                                                e["gl_name"],
+                                                textAlign: TextAlign.center,
+                                              ))),
+                                          SizedBox(
+                                            width: widget._width / 3.2,
+                                            child: Center(
+                                              child: ElevatedButton(
+                                                  onPressed: () {
+                                                    _onTapConfigureBtn(
+                                                        context,
+                                                        e["gl_code"],
+                                                        e["gl_name"],
+                                                        e["transaction_limit"]
+                                                            .toDouble(),
+                                                        e["monthly_limit"]
+                                                            .toDouble());
+                                                  },
+                                                  child: const Text("Configure")),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ))
+                            .toList(),
+                      ),
                     ),
                   ),
                 ),
               ],
             );
           } else {
-            return Text("NO DATA");
+            return const Text("NO DATA");
           }
         },
       ),
