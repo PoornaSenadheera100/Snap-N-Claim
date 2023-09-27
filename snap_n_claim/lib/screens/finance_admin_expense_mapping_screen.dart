@@ -164,8 +164,6 @@ class _FinanceAdminExpenseMappingSelectionScreenState
 
   @override
   Widget build(BuildContext context) {
-    print(widget._width);
-    print(widget._height);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Expense Mapping"),
@@ -390,21 +388,21 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                             children: snapshot.data!.docs
                                 .map((e) => Row(
                                       children: [
-                                        Container(
+                                        SizedBox(
                                             width: widget._width / 3.1,
                                             child: Center(
                                                 child: Text(
                                               e["emp_grade"],
                                               textAlign: TextAlign.center,
                                             ))),
-                                        Container(
+                                        SizedBox(
                                             width: widget._width / 3.1,
                                             child: Center(
                                                 child: Text(
                                               e["department"],
                                               textAlign: TextAlign.center,
                                             ))),
-                                        Container(
+                                        SizedBox(
                                             width: widget._width / 3.1,
                                             child: Center(
                                                 child: IconButton(
@@ -412,7 +410,7 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                                                 _onTapDeleteBtn(e["emp_grade"],
                                                     e["department"]);
                                               },
-                                              icon: Icon(
+                                              icon: const Icon(
                                                 Icons.delete,
                                                 color: Colors.red,
                                               ),
@@ -425,7 +423,7 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                       ),
                     );
                   } else {
-                    return Text("NO DATA");
+                    return const Text("NO DATA");
                   }
                 })
           ],
