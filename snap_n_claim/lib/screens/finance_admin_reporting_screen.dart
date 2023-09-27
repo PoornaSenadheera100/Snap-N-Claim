@@ -1,6 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../indicator.dart';
+
 class FinanceAdminReportingScreen extends StatefulWidget {
   FinanceAdminReportingScreen(this._width, this._height, {super.key});
 
@@ -67,6 +69,70 @@ class _FinanceAdminReportingScreenState
     }
 
     return Text(text, style: style, textAlign: TextAlign.left);
+  }
+
+  List<PieChartSectionData> showingSections() {
+    return List.generate(4, (i) {
+      final fontSize = 16.0;
+      final radius = 50.0;
+      const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
+      switch (i) {
+        case 0:
+          return PieChartSectionData(
+            color: Color(0xFF2196F3),
+            value: 40,
+            title: '40%',
+            radius: radius,
+            titleStyle: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              shadows: shadows,
+            ),
+          );
+        case 1:
+          return PieChartSectionData(
+            color: Color(0xFFFFC300),
+            value: 30,
+            title: '30%',
+            radius: radius,
+            titleStyle: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              shadows: shadows,
+            ),
+          );
+        case 2:
+          return PieChartSectionData(
+            color: Color(0xFF6E1BFF),
+            value: 15,
+            title: '15%',
+            radius: radius,
+            titleStyle: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              shadows: shadows,
+            ),
+          );
+        case 3:
+          return PieChartSectionData(
+            color: Color(0xFF3BFF49),
+            value: 15,
+            title: '15%',
+            radius: radius,
+            titleStyle: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              shadows: shadows,
+            ),
+          );
+        default:
+          throw Error();
+      }
+    });
   }
 
   Widget _employeeReportTab() {
@@ -159,7 +225,64 @@ class _FinanceAdminReportingScreenState
   }
 
   Widget _departmentsReportTab() {
-    return Container();
+    return Column(
+      children: [
+        const SizedBox(
+          width: 28,
+        ),
+        Expanded(
+          child: PieChart(PieChartData(
+            borderData: FlBorderData(
+              show: false,
+            ),
+            sectionsSpace: 0,
+            centerSpaceRadius: 40,
+            sections: showingSections(),
+          )),
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Indicator(
+              color: Color(0xFF2196F3),
+              text: 'First',
+              isSquare: true,
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Indicator(
+              color: Color(0xFFFFC300),
+              text: 'Second',
+              isSquare: true,
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Indicator(
+              color: Color(0xFF6E1BFF),
+              text: 'Third',
+              isSquare: true,
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Indicator(
+              color: Color(0xFF3BFF49),
+              text: 'Fourth',
+              isSquare: true,
+            ),
+            SizedBox(
+              height: 18,
+            ),
+          ],
+        ),
+        const SizedBox(
+          width: 28,
+        ),
+      ],
+    );
   }
 
   Widget _expenseReportTab() {
@@ -172,8 +295,8 @@ class _FinanceAdminReportingScreenState
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Reporting and Analytics"),
-          bottom: TabBar(tabs: [
+          title: const Text("Reporting and Analytics"),
+          bottom: const TabBar(tabs: [
             Text(
               "Employee\nReport",
               textAlign: TextAlign.center,
