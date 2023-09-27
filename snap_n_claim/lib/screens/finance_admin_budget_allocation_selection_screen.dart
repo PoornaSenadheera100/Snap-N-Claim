@@ -4,7 +4,8 @@ import 'package:snap_n_claim/screens/finance_admin_expense_mapping_selection_scr
 import 'package:snap_n_claim/screens/finance_admin_menu_drawer.dart';
 
 class FinanceAdminBudgetAllocationSelectionScreen extends StatelessWidget {
-  const FinanceAdminBudgetAllocationSelectionScreen(this._width, this._height, {super.key});
+  const FinanceAdminBudgetAllocationSelectionScreen(this._width, this._height,
+      {super.key});
 
   final double _width;
   final double _height;
@@ -25,24 +26,44 @@ class FinanceAdminBudgetAllocationSelectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Budget Allocation Menu"),
+        title: const Text("Budget Allocation Menu"),
       ),
       drawer: FinanceAdminMenuDrawer(_width, _height, "Budget Allocation Menu"),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            ElevatedButton(
-              onPressed: () {
-                _onTapExpenseMappingBtn(context);
-              },
-              child: Text("Expense Mapping"),
+            SizedBox(
+              width: _width / 1.309090909090909,
+              height: _height / 5.352727272727273,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints.expand(),
+                child: Ink.image(
+                  image: const AssetImage('assets/expense_mapping_btn.png'),
+                  fit: BoxFit.fill,
+                  child: InkWell(
+                    onTap: () {
+                      _onTapExpenseMappingBtn(context);
+                    },
+                  ),
+                ),
+              ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                _onTapExpenseConfigurationsBtn(context);
-              },
-              child: Text("Expense Configurations"),
+            SizedBox(
+              width: _width / 1.309090909090909,
+              height: _height / 5.352727272727273,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints.expand(),
+                child: Ink.image(
+                  image: const AssetImage('assets/expense_config_btn.png'),
+                  fit: BoxFit.fill,
+                  child: InkWell(
+                    onTap: () {
+                      _onTapExpenseConfigurationsBtn(context);
+                    },
+                  ),
+                ),
+              ),
             ),
           ],
         ),
