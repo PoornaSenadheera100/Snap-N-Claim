@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snap_n_claim/models/response.dart';
 
 import '../services/budget_allocation_and_reporting_service.dart';
@@ -69,7 +70,51 @@ class _FinanceAdminExpenseMappingSelectionScreenState
     Response response = await BudgetAllocationAndReportingService.addAllocation(
         widget._glCode, _empGradeDropdownValue, _costCenterDropdownValue);
     if (response.code == 200) {
+      Fluttertoast.showToast(
+          msg: "Allocation Added!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
       setState(() {});
+    }
+  }
+
+  Future<void> _onTapDeleteBtn(String empGrade, String costCenter) async {
+    var dialogRes = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Are you sure?'),
+        content: const Text('Do you want to delete this allocation?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    );
+    if (dialogRes == true) {
+      Response response =
+          await BudgetAllocationAndReportingService.deleteAllocation(
+              widget._glCode, empGrade, costCenter);
+      if (response.code == 200) {
+        Fluttertoast.showToast(
+            msg: "Allocation Deleted!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        setState(() {});
+      }
     }
   }
 
@@ -319,7 +364,10 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                                             width: widget._width / 3.1,
                                             child: Center(
                                                 child: IconButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                _onTapDeleteBtn(e["emp_grade"],
+                                                    e["department"]);
+                                              },
                                               icon: Icon(
                                                 Icons.delete,
                                                 color: Colors.red,
