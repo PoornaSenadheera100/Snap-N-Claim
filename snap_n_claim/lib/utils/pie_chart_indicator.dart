@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Indicator extends StatelessWidget {
-  const Indicator({
+class PieChartIndicator extends StatelessWidget {
+  const PieChartIndicator({
     super.key,
     required this.color,
     required this.text,

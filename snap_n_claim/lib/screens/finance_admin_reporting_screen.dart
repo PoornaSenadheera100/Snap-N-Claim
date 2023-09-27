@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import '../indicator.dart';
+import '../utils/pie_chart_indicator.dart';
 
 class FinanceAdminReportingScreen extends StatefulWidget {
   FinanceAdminReportingScreen(this._width, this._height, {super.key});
@@ -244,7 +244,7 @@ class _FinanceAdminReportingScreenState
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Indicator(
+            PieChartIndicator(
               color: Color(0xFF2196F3),
               text: 'First',
               isSquare: true,
@@ -252,7 +252,7 @@ class _FinanceAdminReportingScreenState
             SizedBox(
               height: 4,
             ),
-            Indicator(
+            PieChartIndicator(
               color: Color(0xFFFFC300),
               text: 'Second',
               isSquare: true,
@@ -260,7 +260,7 @@ class _FinanceAdminReportingScreenState
             SizedBox(
               height: 4,
             ),
-            Indicator(
+            PieChartIndicator(
               color: Color(0xFF6E1BFF),
               text: 'Third',
               isSquare: true,
@@ -268,7 +268,7 @@ class _FinanceAdminReportingScreenState
             SizedBox(
               height: 4,
             ),
-            Indicator(
+            PieChartIndicator(
               color: Color(0xFF3BFF49),
               text: 'Fourth',
               isSquare: true,
