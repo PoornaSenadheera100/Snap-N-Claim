@@ -12,12 +12,14 @@ final CollectionReference allocationCollectionReference =
 
 class BudgetAllocationAndReportingService {
   static Stream<QuerySnapshot> getExpenses() {
-    return expenseCollectionReference.snapshots();
+    return expenseCollectionReference.orderBy("gl_code").snapshots();
   }
 
   static Stream<QuerySnapshot<Object?>> getEligibleEmps(String glCode) {
     return allocationCollectionReference
         .where("gl_code", isEqualTo: glCode)
+        .orderBy("emp_grade")
+        .orderBy("department")
         .snapshots();
   }
 
