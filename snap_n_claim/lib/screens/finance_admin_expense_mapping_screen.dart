@@ -67,34 +67,64 @@ class _FinanceAdminExpenseMappingSelectionScreenState
   }
 
   Future<void> _onTapAddBtn() async {
-    bool hasAllocation =
-        await BudgetAllocationAndReportingService.hasAllocation(
-            widget._glCode, _empGradeDropdownValue, _costCenterDropdownValue);
-    if (hasAllocation == true) {
-      Fluttertoast.showToast(
-          msg: "Already Allocated!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
-    } else {
-      Response response =
-          await BudgetAllocationAndReportingService.addAllocation(
+    bool isValidated = _validateDropdownValues();
+    if (isValidated == true) {
+      bool hasAllocation =
+          await BudgetAllocationAndReportingService.hasAllocation(
               widget._glCode, _empGradeDropdownValue, _costCenterDropdownValue);
-      if (response.code == 200) {
+      if (hasAllocation == true) {
         Fluttertoast.showToast(
-            msg: "Allocation Added!",
+            msg: "Already Allocated!",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
-        // setState(() {});
+      } else {
+        Response response =
+            await BudgetAllocationAndReportingService.addAllocation(
+                widget._glCode,
+                _empGradeDropdownValue,
+                _costCenterDropdownValue);
+        if (response.code == 200) {
+          Fluttertoast.showToast(
+              msg: "Allocation Added!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          // setState(() {});
+        }
       }
     }
+  }
+
+  bool _validateDropdownValues() {
+    if (_empGradeDropdownValue == "") {
+      Fluttertoast.showToast(
+          msg: "Select Employee Grade!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return false;
+    } else if (_costCenterDropdownValue == "") {
+      Fluttertoast.showToast(
+          msg: "Select Cost Center!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return false;
+    }
+    return true;
   }
 
   Future<void> _onTapDeleteBtn(String empGrade, String costCenter) async {
@@ -128,7 +158,6 @@ class _FinanceAdminExpenseMappingSelectionScreenState
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
-
       }
     }
   }
