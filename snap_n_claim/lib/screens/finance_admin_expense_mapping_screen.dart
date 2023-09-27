@@ -62,7 +62,7 @@ class _FinanceAdminExpenseMappingSelectionScreenState
     _empGradeDropdownValue = "";
     _costCenterDropdownValue = "";
     _collectionReference =
-        BudgetAllocationAndReportingService.getEligibleEmps();
+        BudgetAllocationAndReportingService.getEligibleEmps(widget._glCode);
   }
 
   Future<void> _onTapAddBtn() async {
@@ -290,7 +290,6 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                       ),
                     );
                   } else if (snapshot.hasData) {
-                    print(snapshot.data?.docs[0]["emp_grade"]);
                     return Expanded(
                       child: SizedBox(
                         child: Padding(

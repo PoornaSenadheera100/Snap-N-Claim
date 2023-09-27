@@ -15,8 +15,10 @@ class BudgetAllocationAndReportingService {
     return expenseCollectionReference.snapshots();
   }
 
-  static Stream<QuerySnapshot> getEligibleEmps() {
-    return allocationCollectionReference.snapshots();
+  static Stream<QuerySnapshot<Object?>> getEligibleEmps(String glCode) {
+    return allocationCollectionReference
+        .where("gl_code", isEqualTo: glCode)
+        .snapshots();
   }
 
   static Future<Response> addAllocation(
@@ -28,10 +30,10 @@ class BudgetAllocationAndReportingService {
       "department": costCenter
     };
 
-    await allocationCollectionReference.doc().set(data).whenComplete((){
+    await allocationCollectionReference.doc().set(data).whenComplete(() {
       response.code = 200;
       response.message = "Allocation Added";
-    }).catchError((e){
+    }).catchError((e) {
       response.code = 500;
       response.message = e;
     });
