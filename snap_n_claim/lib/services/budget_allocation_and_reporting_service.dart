@@ -67,4 +67,19 @@ class BudgetAllocationAndReportingService {
     }
     return response;
   }
+
+  static Future<bool> hasAllocation(
+      String glCode, String empGrade, String costCenter) async {
+    QuerySnapshot querySnapshot = await allocationCollectionReference
+        .where("gl_code", isEqualTo: glCode)
+        .where("emp_grade", isEqualTo: empGrade)
+        .where("department", isEqualTo: costCenter)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
