@@ -21,33 +21,41 @@ class FinanceAdminReportsSelectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Reports"),
+        title: const Text("Reports"),
       ),
       drawer: FinanceAdminMenuDrawer(_width, _height, "Reports"),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            ElevatedButton(
-                onPressed: () {
-                  _onTapReportingAndAnalyticsBtn(context);
-                },
-                child: Text("Reporting and Analytics")),
-            ElevatedButton(
-                onPressed: () {
-                  _onTapViewClaimStatusBtn(context);
-                },
-                child: Text("View Claim Status")),
-            Container(
-              width: 100,
-              height: 50,
+            SizedBox(
+              width: _width / 1.190082644628099,
+              height: _height / 5.352727272727273,
               child: ConstrainedBox(
-                constraints: BoxConstraints.expand(),
+                constraints: const BoxConstraints.expand(),
                 child: Ink.image(
-                  image: AssetImage('assets/avatarpic.jpg'),
+                  image: const AssetImage('assets/reporting_btn.png'),
                   fit: BoxFit.fill,
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      _onTapReportingAndAnalyticsBtn(context);
+                    },
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: _width / 1.190082644628099,
+              height: _height / 5.352727272727273,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints.expand(),
+                child: Ink.image(
+                  image: const AssetImage('assets/claim_status_btn.png'),
+                  fit: BoxFit.fill,
+                  child: InkWell(
+                    onTap: () {
+                      _onTapViewClaimStatusBtn(context);
+                    },
                   ),
                 ),
               ),
