@@ -67,18 +67,33 @@ class _FinanceAdminExpenseMappingSelectionScreenState
   }
 
   Future<void> _onTapAddBtn() async {
-    Response response = await BudgetAllocationAndReportingService.addAllocation(
-        widget._glCode, _empGradeDropdownValue, _costCenterDropdownValue);
-    if (response.code == 200) {
+    bool hasAllocation =
+        await BudgetAllocationAndReportingService.hasAllocation(
+            widget._glCode, _empGradeDropdownValue, _costCenterDropdownValue);
+    if (hasAllocation == true) {
       Fluttertoast.showToast(
-          msg: "Allocation Added!",
+          msg: "Already Allocated!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
           textColor: Colors.white,
           fontSize: 16.0);
-      setState(() {});
+    } else {
+      Response response =
+          await BudgetAllocationAndReportingService.addAllocation(
+              widget._glCode, _empGradeDropdownValue, _costCenterDropdownValue);
+      if (response.code == 200) {
+        Fluttertoast.showToast(
+            msg: "Allocation Added!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        // setState(() {});
+      }
     }
   }
 
@@ -113,7 +128,7 @@ class _FinanceAdminExpenseMappingSelectionScreenState
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
-        setState(() {});
+
       }
     }
   }
