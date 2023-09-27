@@ -3,7 +3,8 @@ import 'finance_admin_menu_drawer.dart';
 import 'finance_admin_reporting_screen.dart';
 
 class FinanceAdminReportsSelectionScreen extends StatelessWidget {
-  const FinanceAdminReportsSelectionScreen(this._width, this._height, {super.key});
+  const FinanceAdminReportsSelectionScreen(this._width, this._height,
+      {super.key});
 
   final double _width;
   final double _height;
@@ -37,6 +38,20 @@ class FinanceAdminReportsSelectionScreen extends StatelessWidget {
                   _onTapViewClaimStatusBtn(context);
                 },
                 child: Text("View Claim Status")),
+            Container(
+              width: 100,
+              height: 50,
+              child: ConstrainedBox(
+                constraints: BoxConstraints.expand(),
+                child: Ink.image(
+                  image: AssetImage('assets/avatarpic.jpg'),
+                  fit: BoxFit.fill,
+                  child: InkWell(
+                    onTap: () {},
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
