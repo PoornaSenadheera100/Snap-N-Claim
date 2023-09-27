@@ -30,7 +30,7 @@ class FinanceAdminReportsSelectionScreen extends StatelessWidget {
           children: [
             SizedBox(
               width: _width / 1.190082644628099,
-              height: _height / 5.352727272727273,
+              height: _height / 6.176223776223776,
               child: ConstrainedBox(
                 constraints: const BoxConstraints.expand(),
                 child: Ink.image(
@@ -46,7 +46,7 @@ class FinanceAdminReportsSelectionScreen extends StatelessWidget {
             ),
             SizedBox(
               width: _width / 1.190082644628099,
-              height: _height / 5.352727272727273,
+              height: _height / 6.176223776223776,
               child: ConstrainedBox(
                 constraints: const BoxConstraints.expand(),
                 child: Ink.image(
