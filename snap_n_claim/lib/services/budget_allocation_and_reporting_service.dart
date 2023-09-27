@@ -1,16 +1,41 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-final CollectionReference _collection = _firestore.collection("Expense");
+import '../models/response.dart';
 
-class BudgetAllocationAndReportingService{
-  static Stream<QuerySnapshot> getExpenses(){
-    CollectionReference collectionReference = _collection;
-    return collectionReference.snapshots();
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+final CollectionReference expenseCollectionReference =
+    _firestore.collection("Expense");
+final CollectionReference allocationCollectionReference =
+    _firestore.collection("Allocation");
+
+class BudgetAllocationAndReportingService {
+  static Stream<QuerySnapshot> getExpenses() {
+    return expenseCollectionReference.snapshots();
   }
 
-  static Stream<QuerySnapshot> getEligibleEmps(){
-    CollectionReference collectionReference = _firestore.collection("Allocation");
-    return collectionReference.snapshots();
+  static Stream<QuerySnapshot> getEligibleEmps() {
+    return allocationCollectionReference.snapshots();
+  }
+
+  static Future<Response> addAllocation(
+      String glCode, String empGrade, String costCenter) async {
+    Response response = Response();
+    Map<String, dynamic> data = <String, dynamic>{
+      "gl_code": glCode,
+      "emp_grade": empGrade,
+      "department": costCenter
+    };
+
+    await allocationCollectionReference.doc().set(data).whenComplete((){
+      response.code = 200;
+      response.message = "Allocation Added";
+    }).catchError((e){
+      response.code = 500;
+      response.message = e;
+    });
+
+    return response;
   }
 }
