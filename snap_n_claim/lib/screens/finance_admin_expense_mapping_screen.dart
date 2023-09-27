@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:snap_n_claim/models/response.dart';
 
 import '../services/budget_allocation_and_reporting_service.dart';
 
@@ -64,7 +65,13 @@ class _FinanceAdminExpenseMappingSelectionScreenState
         BudgetAllocationAndReportingService.getEligibleEmps();
   }
 
-  void _onTapAddBtn() {}
+  Future<void> _onTapAddBtn() async {
+    Response response = await BudgetAllocationAndReportingService.addAllocation(
+        widget._glCode, _empGradeDropdownValue, _costCenterDropdownValue);
+    if (response.code == 200) {
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -298,17 +305,26 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                                         Container(
                                             width: widget._width / 3.1,
                                             child: Center(
-                                                child: Text(e["emp_grade"]))),
+                                                child: Text(
+                                              e["emp_grade"],
+                                              textAlign: TextAlign.center,
+                                            ))),
                                         Container(
                                             width: widget._width / 3.1,
                                             child: Center(
-                                                child: Text(e["department"]))),
+                                                child: Text(
+                                              e["department"],
+                                              textAlign: TextAlign.center,
+                                            ))),
                                         Container(
                                             width: widget._width / 3.1,
                                             child: Center(
                                                 child: IconButton(
                                               onPressed: () {},
-                                              icon: Icon(Icons.delete, color: Colors.red,),
+                                              icon: Icon(
+                                                Icons.delete,
+                                                color: Colors.red,
+                                              ),
                                             ))),
                                       ],
                                     ))
