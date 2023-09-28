@@ -44,9 +44,20 @@ class _FinanceAdminExpenseConfigurationsScreenState
     isInitial = true;
   }
 
-  void _assigningValues(){
-    if(isInitial == true){
-      print("working");
+  Future<void> _assigningValues() async {
+    if (isInitial == true) {
+      _collectionReference =
+          await BudgetAllocationAndReportingService.getExpenses();
+      _collectionReference.forEach((querySnapshot) {
+        List<Map<String, dynamic>> documentDataList = [];
+        querySnapshot.docs.forEach((documentSnapshot) {
+          Map<String, dynamic> documentData =
+              documentSnapshot.data() as Map<String, dynamic>;
+          documentData['documentId'] = documentSnapshot.id;
+          documentDataList.add(documentData);
+        });
+        print(documentDataList);
+      });
 
       isInitial = false;
     }
@@ -76,73 +87,74 @@ class _FinanceAdminExpenseConfigurationsScreenState
       appBar: AppBar(
         title: Text("Expense Configurations"),
       ),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: (widget._width - widget._width * 3 / 3.2) / 2,
-                  vertical: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                      width: widget._width / 3.2,
-                      child: Center(
-                          child: Text(
-                        "GL Code",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ))),
-                  SizedBox(
-                      width: widget._width / 3.2,
-                      child: Center(
-                          child: Text(
-                        "Transaction Limit (Rs.)",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ))),
-                  SizedBox(
-                      width: widget._width / 3.2,
-                      child: Center(
-                          child: Text(
-                        "Monthly Limit (Rs.)",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ))),
-                ],
-              ),
-            ),
-            StreamBuilder(
-                stream: _collectionReference,
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: Column(
+      body: StreamBuilder(
+          stream: _collectionReference,
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator.adaptive(),
+                    Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                      child: Text("Loading..."),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              _assigningValues();
+              return Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal:
+                              (widget._width - widget._width * 3 / 3.2) / 2,
+                          vertical: 20),
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CircularProgressIndicator.adaptive(),
-                          Padding(
-                            padding: EdgeInsets.only(top: 20.0),
-                            child: Text("Loading..."),
-                          ),
+                          SizedBox(
+                              width: widget._width / 3.2,
+                              child: Center(
+                                  child: Text(
+                                "GL Code",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ))),
+                          SizedBox(
+                              width: widget._width / 3.2,
+                              child: Center(
+                                  child: Text(
+                                "Transaction Limit (Rs.)",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ))),
+                          SizedBox(
+                              width: widget._width / 3.2,
+                              child: Center(
+                                  child: Text(
+                                "Monthly Limit (Rs.)",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ))),
                         ],
                       ),
-                    );
-                  } else {
-                    _assigningValues();
-                    return Expanded(
+                    ),
+                    Expanded(
                       child: SizedBox(
                         child: Padding(
                           padding: EdgeInsets.symmetric(
@@ -164,7 +176,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                       width: widget._width / 3.2,
                                       child: Center(
                                           child: TextFormField(
-                                            controller: _g001MonthLimit,
+                                        controller: _g001MonthLimit,
                                         keyboardType: TextInputType.number,
                                         validator: (text) {
                                           return _validateAmount(text!);
@@ -206,12 +218,12 @@ class _FinanceAdminExpenseConfigurationsScreenState
                           ),
                         ),
                       ),
-                    );
-                  }
-                })
-          ],
-        ),
-      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+          }),
     );
   }
 }
