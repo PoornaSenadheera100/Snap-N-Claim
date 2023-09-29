@@ -48,8 +48,8 @@ class _FinanceAdminExpenseConfigurationsScreenState
     if (isInitial == true) {
       _collectionReference =
           await BudgetAllocationAndReportingService.getExpenses();
+      List<Map<String, dynamic>> documentDataList = [];
       _collectionReference.forEach((querySnapshot) {
-        List<Map<String, dynamic>> documentDataList = [];
         querySnapshot.docs.forEach((documentSnapshot) {
           Map<String, dynamic> documentData =
               documentSnapshot.data() as Map<String, dynamic>;
@@ -57,6 +57,30 @@ class _FinanceAdminExpenseConfigurationsScreenState
           documentDataList.add(documentData);
         });
         print(documentDataList);
+        _g001TransLimit.text =
+            documentDataList[0]["transaction_limit"].toStringAsFixed(2);
+        _g001MonthLimit.text =
+            documentDataList[0]["monthly_limit"].toStringAsFixed(2);
+        _g002TransLimit.text =
+            documentDataList[1]["transaction_limit"].toStringAsFixed(2);
+        _g002MonthLimit.text =
+            documentDataList[1]["monthly_limit"].toStringAsFixed(2);
+        _g003TransLimit.text =
+            documentDataList[2]["transaction_limit"].toStringAsFixed(2);
+        _g003MonthLimit.text =
+            documentDataList[2]["monthly_limit"].toStringAsFixed(2);
+        _g004TransLimit.text =
+            documentDataList[3]["transaction_limit"].toStringAsFixed(2);
+        _g004MonthLimit.text =
+            documentDataList[3]["monthly_limit"].toStringAsFixed(2);
+        _g005TransLimit.text =
+            documentDataList[4]["transaction_limit"].toStringAsFixed(2);
+        _g005MonthLimit.text =
+            documentDataList[4]["monthly_limit"].toStringAsFixed(2);
+        _g006TransLimit.text =
+            documentDataList[5]["transaction_limit"].toStringAsFixed(2);
+        _g006MonthLimit.text =
+            documentDataList[5]["monthly_limit"].toStringAsFixed(2);
       });
 
       isInitial = false;
