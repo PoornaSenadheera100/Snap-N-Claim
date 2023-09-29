@@ -451,13 +451,6 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                       ))),
                                 ],
                               ),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      _formKey.currentState?.save();
-                                    }
-                                  },
-                                  child: Text("Save"))
                             ],
                           ),
                         ),
@@ -468,6 +461,14 @@ class _FinanceAdminExpenseConfigurationsScreenState
               );
             }
           }),
+      floatingActionButton: ElevatedButton(
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            _formKey.currentState?.save();
+          }
+        },
+        child: Text("Save"),
+      ),
     );
   }
 }
