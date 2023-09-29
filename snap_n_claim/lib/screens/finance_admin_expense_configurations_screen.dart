@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../services/budget_allocation_and_reporting_service.dart';
 
@@ -90,15 +91,55 @@ class _FinanceAdminExpenseConfigurationsScreenState
 
   String? _validateAmount(String text) {
     if (text == '') {
-      return "Amount cannot be empty!";
+      Fluttertoast.showToast(
+          msg: "Amount cannot be empty!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return "Invalid amount!";
     } else if (text.contains(" ") || text.contains(",") || text.contains("-")) {
+      Fluttertoast.showToast(
+          msg: "Invalid amount!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
       return "Invalid amount!";
     } else if (text.startsWith(".")) {
+      Fluttertoast.showToast(
+          msg: "Invalid amount!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
       return "Invalid amount!";
     } else if (text.length < 4) {
+      Fluttertoast.showToast(
+          msg: "Invalid amount!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
       return "Invalid amount";
     } else if (text.substring(text.length - 3, text.length - 2) != ".") {
-      return "Amount must have 2 decimal places!";
+      Fluttertoast.showToast(
+          msg: "Amount must have 2 decimal places!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return "Invalid amount!";
     } else {
       return null;
     }
