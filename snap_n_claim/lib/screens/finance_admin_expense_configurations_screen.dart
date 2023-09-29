@@ -17,7 +17,8 @@ class FinanceAdminExpenseConfigurationsScreen extends StatefulWidget {
 
 class _FinanceAdminExpenseConfigurationsScreenState
     extends State<FinanceAdminExpenseConfigurationsScreen> {
-  late Stream<QuerySnapshot> _collectionReference;
+  late Stream<QuerySnapshot> _collectionReference1;
+  late Stream<QuerySnapshot> _collectionReference2;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -40,23 +41,23 @@ class _FinanceAdminExpenseConfigurationsScreenState
   @override
   void initState() {
     super.initState();
-    _collectionReference = BudgetAllocationAndReportingService.getExpenses();
+    _collectionReference1 = BudgetAllocationAndReportingService.getExpenses();
     isInitial = true;
   }
 
   Future<void> _assigningValues() async {
     if (isInitial == true) {
-      _collectionReference =
+      _collectionReference2 =
           await BudgetAllocationAndReportingService.getExpenses();
       List<Map<String, dynamic>> documentDataList = [];
-      _collectionReference.forEach((querySnapshot) {
+      _collectionReference2.forEach((querySnapshot) {
         querySnapshot.docs.forEach((documentSnapshot) {
           Map<String, dynamic> documentData =
               documentSnapshot.data() as Map<String, dynamic>;
           documentData['documentId'] = documentSnapshot.id;
           documentDataList.add(documentData);
         });
-        print(documentDataList);
+
         _g001TransLimit.text =
             documentDataList[0]["transaction_limit"].toStringAsFixed(2);
         _g001MonthLimit.text =
@@ -109,10 +110,10 @@ class _FinanceAdminExpenseConfigurationsScreenState
     print(widget._height);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Expense Configurations"),
+        title: const Text("Expense Configurations"),
       ),
       body: StreamBuilder(
-          stream: _collectionReference,
+          stream: _collectionReference1,
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -191,22 +192,221 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                 children: [
                                   SizedBox(
                                       width: widget._width / 3.2,
-                                      child: Center(child: Text("gl_code"))),
+                                      child: Center(child: Text("G001"))),
                                   SizedBox(
                                       width: widget._width / 3.2,
                                       child: Center(
-                                          child: Text("transaction_limit"))),
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(2),
+                                        child: TextFormField(
+                                          controller: _g001TransLimit,
+                                          keyboardType: TextInputType.number,
+                                          validator: (text) {
+                                            return _validateAmount(text!);
+                                          },
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder()),
+                                        ),
+                                      ))),
                                   SizedBox(
                                       width: widget._width / 3.2,
                                       child: Center(
-                                          child: TextFormField(
-                                        controller: _g001MonthLimit,
-                                        keyboardType: TextInputType.number,
-                                        validator: (text) {
-                                          return _validateAmount(text!);
-                                        },
-                                        decoration: InputDecoration(
-                                            border: OutlineInputBorder()),
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(2),
+                                        child: TextFormField(
+                                          controller: _g001MonthLimit,
+                                          keyboardType: TextInputType.number,
+                                          validator: (text) {
+                                            return _validateAmount(text!);
+                                          },
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder()),
+                                        ),
+                                      ))),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                      width: widget._width / 3.2,
+                                      child: Center(child: Text("G002"))),
+                                  SizedBox(
+                                      width: widget._width / 3.2,
+                                      child: Center(
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(2),
+                                        child: TextFormField(
+                                          controller: _g002TransLimit,
+                                          keyboardType: TextInputType.number,
+                                          validator: (text) {
+                                            return _validateAmount(text!);
+                                          },
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder()),
+                                        ),
+                                      ))),
+                                  SizedBox(
+                                      width: widget._width / 3.2,
+                                      child: Center(
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(2),
+                                        child: TextFormField(
+                                          controller: _g002MonthLimit,
+                                          keyboardType: TextInputType.number,
+                                          validator: (text) {
+                                            return _validateAmount(text!);
+                                          },
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder()),
+                                        ),
+                                      ))),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                      width: widget._width / 3.2,
+                                      child: Center(child: Text("G003"))),
+                                  SizedBox(
+                                      width: widget._width / 3.2,
+                                      child: Center(
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(2),
+                                        child: TextFormField(
+                                          controller: _g003TransLimit,
+                                          keyboardType: TextInputType.number,
+                                          validator: (text) {
+                                            return _validateAmount(text!);
+                                          },
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder()),
+                                        ),
+                                      ))),
+                                  SizedBox(
+                                      width: widget._width / 3.2,
+                                      child: Center(
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(2),
+                                        child: TextFormField(
+                                          controller: _g003MonthLimit,
+                                          keyboardType: TextInputType.number,
+                                          validator: (text) {
+                                            return _validateAmount(text!);
+                                          },
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder()),
+                                        ),
+                                      ))),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                      width: widget._width / 3.2,
+                                      child: Center(child: Text("G004"))),
+                                  SizedBox(
+                                      width: widget._width / 3.2,
+                                      child: Center(
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(2),
+                                        child: TextFormField(
+                                          controller: _g004TransLimit,
+                                          keyboardType: TextInputType.number,
+                                          validator: (text) {
+                                            return _validateAmount(text!);
+                                          },
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder()),
+                                        ),
+                                      ))),
+                                  SizedBox(
+                                      width: widget._width / 3.2,
+                                      child: Center(
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(2),
+                                        child: TextFormField(
+                                          controller: _g004MonthLimit,
+                                          keyboardType: TextInputType.number,
+                                          validator: (text) {
+                                            return _validateAmount(text!);
+                                          },
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder()),
+                                        ),
+                                      ))),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                      width: widget._width / 3.2,
+                                      child: Center(child: Text("G005"))),
+                                  SizedBox(
+                                      width: widget._width / 3.2,
+                                      child: Center(
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(2),
+                                        child: TextFormField(
+                                          controller: _g005TransLimit,
+                                          keyboardType: TextInputType.number,
+                                          validator: (text) {
+                                            return _validateAmount(text!);
+                                          },
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder()),
+                                        ),
+                                      ))),
+                                  SizedBox(
+                                      width: widget._width / 3.2,
+                                      child: Center(
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(2),
+                                        child: TextFormField(
+                                          controller: _g005MonthLimit,
+                                          keyboardType: TextInputType.number,
+                                          validator: (text) {
+                                            return _validateAmount(text!);
+                                          },
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder()),
+                                        ),
+                                      ))),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                      width: widget._width / 3.2,
+                                      child: Center(child: Text("G006"))),
+                                  SizedBox(
+                                      width: widget._width / 3.2,
+                                      child: Center(
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(2),
+                                        child: TextFormField(
+                                          controller: _g006TransLimit,
+                                          keyboardType: TextInputType.number,
+                                          validator: (text) {
+                                            return _validateAmount(text!);
+                                          },
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder()),
+                                        ),
+                                      ))),
+                                  SizedBox(
+                                      width: widget._width / 3.2,
+                                      child: Center(
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(2),
+                                        child: TextFormField(
+                                          controller: _g006MonthLimit,
+                                          keyboardType: TextInputType.number,
+                                          validator: (text) {
+                                            return _validateAmount(text!);
+                                          },
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder()),
+                                        ),
                                       ))),
                                 ],
                               ),
@@ -218,27 +418,6 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                   },
                                   child: Text("Save"))
                             ],
-                            // children: snapshot.data!.docs.map((e) {
-                            //   return Row(
-                            //     children: [
-                            //       SizedBox(
-                            //           width: widget._width / 3.2,
-                            //           child: Center(child: Text(e["gl_code"]))),
-                            //       SizedBox(
-                            //           width: widget._width / 3.2,
-                            //           child: Center(
-                            //               child: Text(e["transaction_limit"]
-                            //                   .toString()))),
-                            //       SizedBox(
-                            //           width: widget._width / 3.2,
-                            //           child: Center(
-                            //               child: TextFormField(
-                            //             decoration: InputDecoration(
-                            //                 border: OutlineInputBorder()),
-                            //           ))),
-                            //     ],
-                            //   );
-                            // }).toList(),
                           ),
                         ),
                       ),
