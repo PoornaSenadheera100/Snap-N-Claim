@@ -84,4 +84,36 @@ class BudgetAllocationAndReportingService {
       return false;
     }
   }
+
+  // TODO - Modify
+  static Future<Response> updateAllExpenses(List<Map<String, dynamic>> updatedExpenseData) async {
+    Response response = Response();
+    WriteBatch batch = FirebaseFirestore.instance.batch(); // Create a WriteBatch
+
+    for (var expenseData in updatedExpenseData) {
+      String docId = expenseData['docId']; // Assuming each data map has a 'docId' field
+      DocumentReference documentReference = expenseCollectionReference.doc(docId);
+
+      Map<String, dynamic> data = <String, dynamic>{
+        "gl_code": expenseData['gl_code'],
+        "gl_name": expenseData['gl_name'],
+        "transaction_limit": expenseData['transaction_limit'],
+        "monthly_limit": expenseData['monthly_limit'],
+      };
+
+      batch.update(documentReference, data); // Queue up the update for this document
+    }
+
+    try {
+      await batch.commit(); // Commit all updates in the batch
+      response.code = 200;
+      response.message = "Expenses updated!";
+    } catch (e) {
+      response.code = 500;
+      response.message = e.toString();
+    }
+
+    return response;
+  }
+
 }

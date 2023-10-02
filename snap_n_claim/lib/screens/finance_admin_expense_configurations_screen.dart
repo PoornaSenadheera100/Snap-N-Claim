@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:snap_n_claim/models/response.dart';
 
 import '../services/budget_allocation_and_reporting_service.dart';
 
@@ -9,6 +10,7 @@ class FinanceAdminExpenseConfigurationsScreen extends StatefulWidget {
       {super.key});
 
   final double _width;
+  // ignore: unused_field
   final double _height;
 
   @override
@@ -22,6 +24,20 @@ class _FinanceAdminExpenseConfigurationsScreenState
   late Stream<QuerySnapshot> _collectionReference2;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  late String _g001DocId;
+  late String _g002DocId;
+  late String _g003DocId;
+  late String _g004DocId;
+  late String _g005DocId;
+  late String _g006DocId;
+
+  late String _g001GlName;
+  late String _g002GlName;
+  late String _g003GlName;
+  late String _g004GlName;
+  late String _g005GlName;
+  late String _g006GlName;
 
   final TextEditingController _g001TransLimit = TextEditingController();
   final TextEditingController _g002TransLimit = TextEditingController();
@@ -49,15 +65,31 @@ class _FinanceAdminExpenseConfigurationsScreenState
   Future<void> _assigningValues() async {
     if (isInitial == true) {
       _collectionReference2 =
+          // ignore: await_only_futures
           await BudgetAllocationAndReportingService.getExpenses();
       List<Map<String, dynamic>> documentDataList = [];
       _collectionReference2.forEach((querySnapshot) {
+        // ignore: avoid_function_literals_in_foreach_calls
         querySnapshot.docs.forEach((documentSnapshot) {
           Map<String, dynamic> documentData =
               documentSnapshot.data() as Map<String, dynamic>;
           documentData['documentId'] = documentSnapshot.id;
           documentDataList.add(documentData);
         });
+
+        _g001DocId = documentDataList[0]["documentId"];
+        _g002DocId = documentDataList[1]["documentId"];
+        _g003DocId = documentDataList[2]["documentId"];
+        _g004DocId = documentDataList[3]["documentId"];
+        _g005DocId = documentDataList[4]["documentId"];
+        _g006DocId = documentDataList[5]["documentId"];
+
+        _g001GlName = documentDataList[0]["gl_name"];
+        _g002GlName = documentDataList[1]["gl_name"];
+        _g003GlName = documentDataList[2]["gl_name"];
+        _g004GlName = documentDataList[3]["gl_name"];
+        _g005GlName = documentDataList[4]["gl_name"];
+        _g006GlName = documentDataList[5]["gl_name"];
 
         _g001TransLimit.text =
             documentDataList[0]["transaction_limit"].toStringAsFixed(2);
@@ -145,10 +177,80 @@ class _FinanceAdminExpenseConfigurationsScreenState
     }
   }
 
+  Future<void> _update(BuildContext context) async {
+    List<Map<String, dynamic>> updatedData = [
+      {
+        "docId": _g001DocId,
+        "gl_code": "G001",
+        "gl_name": _g001GlName,
+        "transaction_limit": double.parse(_g001TransLimit.text),
+        "monthly_limit": double.parse(_g001MonthLimit.text),
+      },
+      {
+        "docId": _g002DocId,
+        "gl_code": "G002",
+        "gl_name": _g002GlName,
+        "transaction_limit": double.parse(_g002TransLimit.text),
+        "monthly_limit": double.parse(_g002MonthLimit.text),
+      },
+      {
+        "docId": _g003DocId,
+        "gl_code": "G003",
+        "gl_name": _g003GlName,
+        "transaction_limit": double.parse(_g003TransLimit.text),
+        "monthly_limit": double.parse(_g003MonthLimit.text),
+      },
+      {
+        "docId": _g004DocId,
+        "gl_code": "G004",
+        "gl_name": _g004GlName,
+        "transaction_limit": double.parse(_g004TransLimit.text),
+        "monthly_limit": double.parse(_g004MonthLimit.text),
+      },
+      {
+        "docId": _g005DocId,
+        "gl_code": "G005",
+        "gl_name": _g005GlName,
+        "transaction_limit": double.parse(_g005TransLimit.text),
+        "monthly_limit": double.parse(_g005MonthLimit.text),
+      },
+      {
+        "docId": _g006DocId,
+        "gl_code": "G006",
+        "gl_name": _g006GlName,
+        "transaction_limit": double.parse(_g006TransLimit.text),
+        "monthly_limit": double.parse(_g006MonthLimit.text),
+      },
+    ];
+
+    Response response =
+        await BudgetAllocationAndReportingService.updateAllExpenses(
+            updatedData);
+
+    if (response.code == 200) {
+      Fluttertoast.showToast(
+          msg: "Saved!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      Navigator.of(context).pop();
+    } else {
+      Fluttertoast.showToast(
+          msg: "Something went wrong!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(widget._width);
-    print(widget._height);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Expense Configurations"),
@@ -186,7 +288,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                         children: [
                           SizedBox(
                               width: widget._width / 3.2,
-                              child: Center(
+                              child: const Center(
                                   child: Text(
                                 "GL Code",
                                 textAlign: TextAlign.center,
@@ -197,7 +299,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                               ))),
                           SizedBox(
                               width: widget._width / 3.2,
-                              child: Center(
+                              child: const Center(
                                   child: Text(
                                 "Transaction Limit (Rs.)",
                                 textAlign: TextAlign.center,
@@ -208,7 +310,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                               ))),
                           SizedBox(
                               width: widget._width / 3.2,
-                              child: Center(
+                              child: const Center(
                                   child: Text(
                                 "Monthly Limit (Rs.)",
                                 textAlign: TextAlign.center,
@@ -233,7 +335,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                 children: [
                                   SizedBox(
                                       width: widget._width / 3.2,
-                                      child: Center(child: Text("G001"))),
+                                      child: const Center(child: Text("G001"))),
                                   SizedBox(
                                       width: widget._width / 3.2,
                                       child: Center(
@@ -245,7 +347,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                           validator: (text) {
                                             return _validateAmount(text!);
                                           },
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                               border: OutlineInputBorder()),
                                         ),
                                       ))),
@@ -260,7 +362,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                           validator: (text) {
                                             return _validateAmount(text!);
                                           },
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                               border: OutlineInputBorder()),
                                         ),
                                       ))),
@@ -270,7 +372,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                 children: [
                                   SizedBox(
                                       width: widget._width / 3.2,
-                                      child: Center(child: Text("G002"))),
+                                      child: const Center(child: Text("G002"))),
                                   SizedBox(
                                       width: widget._width / 3.2,
                                       child: Center(
@@ -282,7 +384,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                           validator: (text) {
                                             return _validateAmount(text!);
                                           },
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                               border: OutlineInputBorder()),
                                         ),
                                       ))),
@@ -297,7 +399,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                           validator: (text) {
                                             return _validateAmount(text!);
                                           },
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                               border: OutlineInputBorder()),
                                         ),
                                       ))),
@@ -307,7 +409,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                 children: [
                                   SizedBox(
                                       width: widget._width / 3.2,
-                                      child: Center(child: Text("G003"))),
+                                      child: const Center(child: Text("G003"))),
                                   SizedBox(
                                       width: widget._width / 3.2,
                                       child: Center(
@@ -319,7 +421,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                           validator: (text) {
                                             return _validateAmount(text!);
                                           },
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                               border: OutlineInputBorder()),
                                         ),
                                       ))),
@@ -334,7 +436,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                           validator: (text) {
                                             return _validateAmount(text!);
                                           },
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                               border: OutlineInputBorder()),
                                         ),
                                       ))),
@@ -344,7 +446,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                 children: [
                                   SizedBox(
                                       width: widget._width / 3.2,
-                                      child: Center(child: Text("G004"))),
+                                      child: const Center(child: Text("G004"))),
                                   SizedBox(
                                       width: widget._width / 3.2,
                                       child: Center(
@@ -356,7 +458,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                           validator: (text) {
                                             return _validateAmount(text!);
                                           },
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                               border: OutlineInputBorder()),
                                         ),
                                       ))),
@@ -371,7 +473,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                           validator: (text) {
                                             return _validateAmount(text!);
                                           },
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                               border: OutlineInputBorder()),
                                         ),
                                       ))),
@@ -381,7 +483,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                 children: [
                                   SizedBox(
                                       width: widget._width / 3.2,
-                                      child: Center(child: Text("G005"))),
+                                      child: const Center(child: Text("G005"))),
                                   SizedBox(
                                       width: widget._width / 3.2,
                                       child: Center(
@@ -393,7 +495,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                           validator: (text) {
                                             return _validateAmount(text!);
                                           },
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                               border: OutlineInputBorder()),
                                         ),
                                       ))),
@@ -408,7 +510,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                           validator: (text) {
                                             return _validateAmount(text!);
                                           },
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                               border: OutlineInputBorder()),
                                         ),
                                       ))),
@@ -418,7 +520,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                 children: [
                                   SizedBox(
                                       width: widget._width / 3.2,
-                                      child: Center(child: Text("G006"))),
+                                      child: const Center(child: Text("G006"))),
                                   SizedBox(
                                       width: widget._width / 3.2,
                                       child: Center(
@@ -430,7 +532,7 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                           validator: (text) {
                                             return _validateAmount(text!);
                                           },
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                               border: OutlineInputBorder()),
                                         ),
                                       ))),
@@ -445,10 +547,27 @@ class _FinanceAdminExpenseConfigurationsScreenState
                                           validator: (text) {
                                             return _validateAmount(text!);
                                           },
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                               border: OutlineInputBorder()),
                                         ),
                                       ))),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 30.0),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          _formKey.currentState?.save();
+                                          _update(context);
+                                        }
+                                      },
+                                      child: const Text("Save"),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ],
@@ -461,14 +580,15 @@ class _FinanceAdminExpenseConfigurationsScreenState
               );
             }
           }),
-      floatingActionButton: ElevatedButton(
-        onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            _formKey.currentState?.save();
-          }
-        },
-        child: Text("Save"),
-      ),
+      // floatingActionButton: ElevatedButton(
+      //   onPressed: () {
+      //     if (_formKey.currentState!.validate()) {
+      //       _formKey.currentState?.save();
+      //       update(context);
+      //     }
+      //   },
+      //   child: Text("Save"),
+      // ),
     );
   }
 }
