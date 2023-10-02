@@ -16,10 +16,24 @@ class FinanceAdminReportingScreen extends StatefulWidget {
 
 class _FinanceAdminReportingScreenState
     extends State<FinanceAdminReportingScreen> {
+  final TextEditingController _empNoController = TextEditingController();
+  late String _yearDropdownValue;
+  final List<String> _years = ["2023", "2024"];
   List<Color> gradientColors = [
     Color(0xFF50E4FF),
     Color(0xFF2196F3),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _yearDropdownValue = "";
+  }
+
+  void _getEmpReportData() {
+    print(_empNoController.text);
+    print(_yearDropdownValue);
+  }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
@@ -137,90 +151,147 @@ class _FinanceAdminReportingScreenState
 
   Widget _employeeReportTab() {
     return Padding(
-      padding: const EdgeInsets.all(50.0),
-      child: LineChart(LineChartData(
-        gridData: FlGridData(
-          show: true,
-          drawVerticalLine: true,
-          horizontalInterval: 1,
-          verticalInterval: 1,
-          getDrawingHorizontalLine: (value) {
-            return const FlLine(
-              color: Colors.white10,
-              strokeWidth: 1,
-            );
-          },
-          getDrawingVerticalLine: (value) {
-            return const FlLine(
-              color: Colors.white10,
-              strokeWidth: 1,
-            );
-          },
-        ),
-        titlesData: FlTitlesData(
-          show: true,
-          rightTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          topTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 30,
-              interval: 1,
-              getTitlesWidget: bottomTitleWidgets,
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    child: TextField(
+                      controller: _empNoController,
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(), hintText: "Emp No."),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: SizedBox(
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                          value: _yearDropdownValue.isNotEmpty
+                              ? _yearDropdownValue
+                              : null,
+                          hint: const Text("Year"),
+                          items: _years
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(
+                                    fontSize:
+                                        widget._width / 26.18181818181818),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _yearDropdownValue = newValue!;
+                            });
+                          }),
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      _getEmpReportData();
+                    },
+                    child: Text("View"))
+              ],
             ),
           ),
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              interval: 1,
-              getTitlesWidget: leftTitleWidgets,
-              reservedSize: 42,
-            ),
-          ),
-        ),
-        borderData: FlBorderData(
-          show: true,
-          border: Border.all(color: const Color(0xff37434d)),
-        ),
-        minX: 0,
-        maxX: 11,
-        minY: 0,
-        maxY: 6,
-        lineBarsData: [
-          LineChartBarData(
-            spots: const [
-              FlSpot(0, 3),
-              FlSpot(2.6, 2),
-              FlSpot(4.9, 5),
-              FlSpot(6.8, 3.1),
-              FlSpot(8, 4),
-              FlSpot(9.5, 3),
-              FlSpot(11, 4),
-            ],
-            isCurved: true,
-            gradient: LinearGradient(
-              colors: gradientColors,
-            ),
-            barWidth: 5,
-            isStrokeCapRound: true,
-            dotData: const FlDotData(
-              show: false,
-            ),
-            belowBarData: BarAreaData(
-              show: true,
-              gradient: LinearGradient(
-                colors: gradientColors
-                    .map((color) => color.withOpacity(0.3))
-                    .toList(),
-              ),
+          Expanded(
+            child: SizedBox(
+              child: LineChart(LineChartData(
+                gridData: FlGridData(
+                  show: true,
+                  drawVerticalLine: true,
+                  horizontalInterval: 1,
+                  verticalInterval: 1,
+                  getDrawingHorizontalLine: (value) {
+                    return const FlLine(
+                      color: Colors.white10,
+                      strokeWidth: 1,
+                    );
+                  },
+                  getDrawingVerticalLine: (value) {
+                    return const FlLine(
+                      color: Colors.white10,
+                      strokeWidth: 1,
+                    );
+                  },
+                ),
+                titlesData: FlTitlesData(
+                  show: true,
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 30,
+                      interval: 1,
+                      getTitlesWidget: bottomTitleWidgets,
+                    ),
+                  ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      interval: 1,
+                      getTitlesWidget: leftTitleWidgets,
+                      reservedSize: 42,
+                    ),
+                  ),
+                ),
+                borderData: FlBorderData(
+                  show: true,
+                  border: Border.all(color: const Color(0xff37434d)),
+                ),
+                minX: 0,
+                maxX: 11,
+                minY: 0,
+                maxY: 6,
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: const [
+                      FlSpot(0, 3),
+                      FlSpot(2.6, 2),
+                      FlSpot(4.9, 5),
+                      FlSpot(6.8, 3.1),
+                      FlSpot(8, 4),
+                      FlSpot(9.5, 3),
+                      FlSpot(11, 4),
+                    ],
+                    isCurved: true,
+                    gradient: LinearGradient(
+                      colors: gradientColors,
+                    ),
+                    barWidth: 5,
+                    isStrokeCapRound: true,
+                    dotData: const FlDotData(
+                      show: false,
+                    ),
+                    belowBarData: BarAreaData(
+                      show: true,
+                      gradient: LinearGradient(
+                        colors: gradientColors
+                            .map((color) => color.withOpacity(0.3))
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                ],
+              )),
             ),
           ),
         ],
-      )),
+      ),
     );
   }
 
