@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 import '../models/response.dart';
 
@@ -9,6 +8,8 @@ final CollectionReference expenseCollectionReference =
     _firestore.collection("Expense");
 final CollectionReference allocationCollectionReference =
     _firestore.collection("Allocation");
+final CollectionReference requestCollectionReference =
+    _firestore.collection("Request");
 
 class BudgetAllocationAndReportingService {
   static Stream<QuerySnapshot> getExpenses() {
@@ -85,14 +86,15 @@ class BudgetAllocationAndReportingService {
     }
   }
 
-  // TODO - Modify
-  static Future<Response> updateAllExpenses(List<Map<String, dynamic>> updatedExpenseData) async {
+  static Future<Response> updateAllExpenses(
+      List<Map<String, dynamic>> updatedExpenseData) async {
     Response response = Response();
-    WriteBatch batch = FirebaseFirestore.instance.batch(); // Create a WriteBatch
+    WriteBatch batch = FirebaseFirestore.instance.batch();
 
     for (var expenseData in updatedExpenseData) {
-      String docId = expenseData['docId']; // Assuming each data map has a 'docId' field
-      DocumentReference documentReference = expenseCollectionReference.doc(docId);
+      String docId = expenseData['docId'];
+      DocumentReference documentReference =
+          expenseCollectionReference.doc(docId);
 
       Map<String, dynamic> data = <String, dynamic>{
         "gl_code": expenseData['gl_code'],
@@ -101,11 +103,11 @@ class BudgetAllocationAndReportingService {
         "monthly_limit": expenseData['monthly_limit'],
       };
 
-      batch.update(documentReference, data); // Queue up the update for this document
+      batch.update(documentReference, data);
     }
 
     try {
-      await batch.commit(); // Commit all updates in the batch
+      await batch.commit();
       response.code = 200;
       response.message = "Expenses updated!";
     } catch (e) {
@@ -116,4 +118,50 @@ class BudgetAllocationAndReportingService {
     return response;
   }
 
+  // TODO -
+  static Future<Map<String, dynamic>> getEmpReportData(
+      String empNo, int year) async {
+    final Map<String, dynamic> result = {
+      "JAN": 0,
+      "FEB": 0,
+      "MAR": 0,
+      "APR": 0,
+      "MAY": 0,
+      "JUN": 0,
+      "JUL": 0,
+      "AUG": 0,
+      "SEP": 0,
+      "OCT": 0,
+      "NOV": 0,
+      "DEC": 0,
+      "MAX": 0
+    };
+
+    try {
+      final QuerySnapshot querySnapshot = await requestCollectionReference
+          .where('empNo', isEqualTo: empNo)
+          // .where('paymentStatus', isEqualTo: "Paid")
+          .where('date', isGreaterThanOrEqualTo: DateTime(year, 1, 1))
+          .where('date', isLessThanOrEqualTo: DateTime(year, 12, 31))
+          .get();
+
+      for (final QueryDocumentSnapshot document in querySnapshot.docs) {
+        final DateTime claimDate = (document['date'] as Timestamp).toDate();
+        final String month = DateFormat('MMM').format(claimDate).toUpperCase();
+        final double total = document['total'].toDouble();
+
+        if (result.containsKey(month)) {
+          result[month] += total;
+          if (result["MAX"] < result[month]) {
+            result["MAX"] = result[month];
+          }
+        }
+      }
+
+      return result;
+    } catch (e) {
+      print('Error fetching data: $e');
+      return result; // Return the initialized result with zeros if there's an error
+    }
+  }
 }

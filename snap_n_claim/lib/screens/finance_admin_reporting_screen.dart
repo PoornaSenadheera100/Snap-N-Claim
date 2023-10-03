@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
 import '../utils/pie_chart_indicator.dart';
 
@@ -19,6 +20,23 @@ class _FinanceAdminReportingScreenState
   final TextEditingController _empNoController = TextEditingController();
   late String _yearDropdownValue;
   final List<String> _years = ["2023", "2024"];
+
+  Map<String, dynamic> _empReportData = {
+    "JAN": 0,
+    "FEB": 0,
+    "MAR": 0,
+    "APR": 0,
+    "MAY": 0,
+    "JUN": 0,
+    "JUL": 0,
+    "AUG": 0,
+    "SEP": 0,
+    "OCT": 0,
+    "NOV": 0,
+    "DEC": 0,
+    "MAX": 0
+  };
+
   List<Color> gradientColors = [
     Color(0xFF50E4FF),
     Color(0xFF2196F3),
@@ -30,9 +48,16 @@ class _FinanceAdminReportingScreenState
     _yearDropdownValue = "";
   }
 
-  void _getEmpReportData() {
-    print(_empNoController.text);
-    print(_yearDropdownValue);
+  Future<void> _getEmpReportData() async {
+    // print(_empNoController.text);
+    // print(_yearDropdownValue);
+    Map<String, dynamic> res =
+        await BudgetAllocationAndReportingService.getEmpReportData(
+            _empNoController.text, int.parse(_yearDropdownValue));
+    print(res.toString());
+    setState(() {
+      _empReportData = res;
+    });
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
@@ -69,14 +94,23 @@ class _FinanceAdminReportingScreenState
     );
     String text;
     switch (value.toInt()) {
-      case 1:
+      case 1000:
+        text = '1K';
+        break;
+      case 5000:
+        text = '5K';
+        break;
+      case 10000:
         text = '10K';
         break;
-      case 3:
+      case 30000:
         text = '30k';
         break;
-      case 5:
+      case 50000:
         text = '50k';
+        break;
+      case 100000:
+        text = '100k';
         break;
       default:
         return Container();
@@ -160,46 +194,55 @@ class _FinanceAdminReportingScreenState
               children: [
                 Expanded(
                   child: SizedBox(
-                    child: TextField(
-                      controller: _empNoController,
-                      decoration: const InputDecoration(
-                          border: OutlineInputBorder(), hintText: "Emp No."),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: TextField(
+                        controller: _empNoController,
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(), hintText: "Emp No."),
+                      ),
                     ),
                   ),
                 ),
                 Expanded(
                   child: SizedBox(
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                          value: _yearDropdownValue.isNotEmpty
-                              ? _yearDropdownValue
-                              : null,
-                          hint: const Text("Year"),
-                          items: _years
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem(
-                              value: value,
-                              child: Text(
-                                value,
-                                style: TextStyle(
-                                    fontSize:
-                                        widget._width / 26.18181818181818),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              _yearDropdownValue = newValue!;
-                            });
-                          }),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                            value: _yearDropdownValue.isNotEmpty
+                                ? _yearDropdownValue
+                                : null,
+                            hint: const Text("Year"),
+                            items: _years
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: TextStyle(
+                                      fontSize:
+                                          widget._width / 26.18181818181818),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _yearDropdownValue = newValue!;
+                              });
+                            }),
+                      ),
                     ),
                   ),
                 ),
-                ElevatedButton(
-                    onPressed: () {
-                      _getEmpReportData();
-                    },
-                    child: Text("View"))
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        _getEmpReportData();
+                      },
+                      child: Text("View")),
+                )
               ],
             ),
           ),
@@ -256,17 +299,24 @@ class _FinanceAdminReportingScreenState
                 minX: 0,
                 maxX: 11,
                 minY: 0,
-                maxY: 6,
+                maxY: _empReportData["MAX"].toDouble() + 1000,
+                //6,
                 lineBarsData: [
                   LineChartBarData(
-                    spots: const [
-                      FlSpot(0, 3),
-                      FlSpot(2.6, 2),
-                      FlSpot(4.9, 5),
-                      FlSpot(6.8, 3.1),
-                      FlSpot(8, 4),
-                      FlSpot(9.5, 3),
-                      FlSpot(11, 4),
+                    preventCurveOverShooting: true,
+                    spots: [
+                      FlSpot(0, _empReportData["JAN"].toDouble()),
+                      FlSpot(1, _empReportData["FEB"].toDouble()),
+                      FlSpot(2, _empReportData["MAR"].toDouble()),
+                      FlSpot(3, _empReportData["APR"].toDouble()),
+                      FlSpot(4, _empReportData["MAY"].toDouble()),
+                      FlSpot(5, _empReportData["JUN"].toDouble()),
+                      FlSpot(6, _empReportData["JUL"].toDouble()),
+                      FlSpot(7, _empReportData["AUG"].toDouble()),
+                      FlSpot(8, _empReportData["SEP"].toDouble()),
+                      FlSpot(9, _empReportData["OCT"].toDouble()),
+                      FlSpot(10, _empReportData["NOV"].toDouble()),
+                      FlSpot(11, _empReportData["DEC"].toDouble()),
                     ],
                     isCurved: true,
                     gradient: LinearGradient(
