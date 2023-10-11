@@ -163,4 +163,37 @@ class BudgetAllocationAndReportingService {
       return result; // Return the initialized result with zeros if there's an error
     }
   }
+
+  // TODO - completed. need to be checked.
+  static Future<Map<String, dynamic>> getDeptReportData(
+      int year, int month) async {
+    final Map<String, dynamic> result = {
+      "Production Department": 10,
+      "IT Department": 0,
+      "Finance Department": 0,
+      "HR Department": 0,
+      "Marketing Department": 0,
+      "Safety and Security Department": 0
+    };
+
+    try {
+      final QuerySnapshot querySnapshot = await requestCollectionReference
+          .where('paymentStatus', isEqualTo: "Paid")
+          .where('date', isGreaterThanOrEqualTo: DateTime(year, month, 1))
+          .where('date', isLessThanOrEqualTo: DateTime(year, month, 31))
+          .get();
+
+      for (final QueryDocumentSnapshot document in querySnapshot.docs) {
+        final department = document['department'];
+        final double total = document['total'].toDouble();
+        if (result.containsKey(department)) {
+          result[department] += total;
+        }
+      }
+      return result;
+    } catch (e) {
+      print('Error fetching data: $e');
+      return result; // Return the initialized result with zeros if there's an error
+    }
+  }
 }
