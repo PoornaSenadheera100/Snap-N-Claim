@@ -19,7 +19,22 @@ class _FinanceAdminReportingScreenState
     extends State<FinanceAdminReportingScreen> {
   final TextEditingController _empNoController = TextEditingController();
   late String _yearDropdownValue;
+  late String _monthDropdownValue;
   final List<String> _years = ["2023", "2024"];
+  final List<String> _months = [
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AUG",
+    "SEP",
+    "OCT",
+    "NOV",
+    "DEC"
+  ];
 
   Map<String, dynamic> _empReportData = {
     "JAN": 0,
@@ -38,7 +53,7 @@ class _FinanceAdminReportingScreenState
   };
 
   Map<String, dynamic> _deptReportData = {
-    "Production Department": 0,
+    "Production Department": 10,
     "IT Department": 0,
     "Finance Department": 0,
     "HR Department": 0,
@@ -55,11 +70,10 @@ class _FinanceAdminReportingScreenState
   void initState() {
     super.initState();
     _yearDropdownValue = "";
+    _monthDropdownValue = "";
   }
 
   Future<void> _getEmpReportData() async {
-    // print(_empNoController.text);
-    // print(_yearDropdownValue);
     Map<String, dynamic> res =
         await BudgetAllocationAndReportingService.getEmpReportData(
             _empNoController.text, int.parse(_yearDropdownValue));
@@ -67,6 +81,18 @@ class _FinanceAdminReportingScreenState
     setState(() {
       _empReportData = res;
     });
+  }
+
+  Future<void> _getDeptReportData() async {
+    print(_monthDropdownValue);
+    print(_yearDropdownValue);
+    // Map<String, dynamic> res =
+    // await BudgetAllocationAndReportingService.getEmpReportData(
+    //     _empNoController.text, int.parse(_yearDropdownValue));
+    // print(res.toString());
+    // setState(() {
+    //   _deptReportData = res;
+    // });
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
@@ -384,6 +410,64 @@ class _FinanceAdminReportingScreenState
   Widget _departmentsReportTab() {
     return Column(
       children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                    value: _yearDropdownValue.isNotEmpty
+                        ? _yearDropdownValue
+                        : null,
+                    hint: const Text("Year"),
+                    items: _years.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: TextStyle(
+                              fontSize: widget._width / 26.18181818181818),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _yearDropdownValue = newValue!;
+                      });
+                    }),
+              ),
+              DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                    value: _monthDropdownValue.isNotEmpty
+                        ? _monthDropdownValue
+                        : null,
+                    hint: const Text("Month"),
+                    items:
+                        _months.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: TextStyle(
+                              fontSize: widget._width / 26.18181818181818),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _monthDropdownValue = newValue!;
+                      });
+                    }),
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    _getDeptReportData();
+                  },
+                  child: Text("View"))
+            ],
+          ),
+        ),
         const SizedBox(
           width: 28,
         ),
@@ -401,35 +485,40 @@ class _FinanceAdminReportingScreenState
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            PieChartIndicator(
-              color: Color(0xFF2196F3),
-              text: 'First',
-              isSquare: true,
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            PieChartIndicator(
-              color: Color(0xFFFFC300),
-              text: 'Second',
-              isSquare: true,
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            PieChartIndicator(
-              color: Color(0xFF6E1BFF),
-              text: 'Third',
-              isSquare: true,
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            PieChartIndicator(
-              color: Color(0xFF3BFF49),
-              text: 'Fourth',
-              isSquare: true,
-            ),
+
+                PieChartIndicator(
+                  color: Color(0xFF2196F3),
+                  text: 'Production Department',
+                  isSquare: true,
+                ),
+                PieChartIndicator(
+                  color: Color(0xFF3BFF49),
+                  text: 'IT Department',
+                  isSquare: true,
+                ),
+
+
+                PieChartIndicator(
+                  color: Color(0xFFFFC300),
+                  text: 'Finance Department',
+                  isSquare: true,
+                ),PieChartIndicator(
+                  color: Color(0xFF3BFF49),
+                  text: 'HR Department',
+                  isSquare: true,
+                ),
+
+
+                PieChartIndicator(
+                  color: Color(0xFF6E1BFF),
+                  text: 'Marketing Department',
+                  isSquare: true,
+                ),PieChartIndicator(
+                  color: Color(0xFF3BFF49),
+                  text: 'Safety and Security Department',
+                  isSquare: true,
+                ),
+
             SizedBox(
               height: 18,
             ),
