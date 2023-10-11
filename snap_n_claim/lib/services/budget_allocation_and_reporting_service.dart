@@ -159,16 +159,14 @@ class BudgetAllocationAndReportingService {
 
       return result;
     } catch (e) {
-      print('Error fetching data: $e');
       return result; // Return the initialized result with zeros if there's an error
     }
   }
 
-  // TODO - completed. need to be checked.
   static Future<Map<String, dynamic>> getDeptReportData(
       int year, int month) async {
     final Map<String, dynamic> result = {
-      "Production Department": 10,
+      "Production Department": 0,
       "IT Department": 0,
       "Finance Department": 0,
       "HR Department": 0,
@@ -192,7 +190,6 @@ class BudgetAllocationAndReportingService {
       }
       return result;
     } catch (e) {
-      print('Error fetching data: $e');
       return result; // Return the initialized result with zeros if there's an error
     }
   }

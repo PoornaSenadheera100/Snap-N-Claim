@@ -53,7 +53,7 @@ class _FinanceAdminReportingScreenState
   };
 
   Map<String, dynamic> _deptReportData = {
-    "Production Department": 10,
+    "Production Department": 0,
     "IT Department": 0,
     "Finance Department": 0,
     "HR Department": 0,
@@ -86,13 +86,44 @@ class _FinanceAdminReportingScreenState
   Future<void> _getDeptReportData() async {
     print(_monthDropdownValue);
     print(_yearDropdownValue);
-    // Map<String, dynamic> res =
-    // await BudgetAllocationAndReportingService.getEmpReportData(
-    //     _empNoController.text, int.parse(_yearDropdownValue));
-    // print(res.toString());
-    // setState(() {
-    //   _deptReportData = res;
-    // });
+    Map<String, dynamic> res =
+        await BudgetAllocationAndReportingService.getDeptReportData(
+            int.parse(_yearDropdownValue), getMonthNumber(_monthDropdownValue));
+    print(res.toString());
+    setState(() {
+      _deptReportData = res;
+    });
+  }
+
+  int getMonthNumber(String month) {
+    switch (month) {
+      case "JAN":
+        return 1;
+      case "FEB":
+        return 2;
+      case "MAR":
+        return 3;
+      case "APR":
+        return 4;
+      case "MAY":
+        return 5;
+      case "JUN":
+        return 6;
+      case "JUL":
+        return 7;
+      case "AUG":
+        return 8;
+      case "SEP":
+        return 9;
+      case "OCT":
+        return 10;
+      case "NOV":
+        return 11;
+      case "DEC":
+        return 12;
+      default:
+        return 0;
+    }
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
@@ -481,48 +512,47 @@ class _FinanceAdminReportingScreenState
             sections: showingSections(),
           )),
         ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-
-                PieChartIndicator(
-                  color: Color(0xFF2196F3),
-                  text: 'Production Department',
-                  isSquare: true,
-                ),
-                PieChartIndicator(
-                  color: Color(0xFF3BFF49),
-                  text: 'IT Department',
-                  isSquare: true,
-                ),
-
-
-                PieChartIndicator(
-                  color: Color(0xFFFFC300),
-                  text: 'Finance Department',
-                  isSquare: true,
-                ),PieChartIndicator(
-                  color: Color(0xFF3BFF49),
-                  text: 'HR Department',
-                  isSquare: true,
-                ),
-
-
-                PieChartIndicator(
-                  color: Color(0xFF6E1BFF),
-                  text: 'Marketing Department',
-                  isSquare: true,
-                ),PieChartIndicator(
-                  color: Color(0xFF3BFF49),
-                  text: 'Safety and Security Department',
-                  isSquare: true,
-                ),
-
-            SizedBox(
-              height: 18,
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              PieChartIndicator(
+                color: Color(0xFF2196F3),
+                text: 'Production Department',
+                isSquare: true,
+              ),
+              PieChartIndicator(
+                color: Color(0xFFFFC300),
+                text: 'IT Department',
+                isSquare: true,
+              ),
+              PieChartIndicator(
+                color: Color(0xFF3BFF49),
+                text: 'Finance Department',
+                isSquare: true,
+              ),
+              PieChartIndicator(
+                color: Color(0xFF91C922),
+                text: 'HR Department',
+                isSquare: true,
+              ),
+              PieChartIndicator(
+                color: Colors.deepOrangeAccent,
+                text: 'Marketing Department',
+                isSquare: true,
+              ),
+              PieChartIndicator(
+                color: Color(0xFF6E1BFF),
+                text: 'Safety and Security Department',
+                isSquare: true,
+              ),
+              SizedBox(
+                height: 18,
+              ),
+            ],
+          ),
         ),
         const SizedBox(
           width: 28,
