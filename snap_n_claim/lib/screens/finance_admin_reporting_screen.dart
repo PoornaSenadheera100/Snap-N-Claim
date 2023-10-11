@@ -37,6 +37,15 @@ class _FinanceAdminReportingScreenState
     "MAX": 0
   };
 
+  Map<String, dynamic> _deptReportData = {
+    "Production Department": 0,
+    "IT Department": 0,
+    "Finance Department": 0,
+    "HR Department": 0,
+    "Marketing Department": 0,
+    "Safety and Security Department": 0
+  };
+
   List<Color> gradientColors = [
     Color(0xFF50E4FF),
     Color(0xFF2196F3),
@@ -120,16 +129,16 @@ class _FinanceAdminReportingScreenState
   }
 
   List<PieChartSectionData> showingSections() {
-    return List.generate(4, (i) {
+    return List.generate(6, (i) {
       final fontSize = 16.0;
-      final radius = 50.0;
+      final radius = 180.0;
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
       switch (i) {
         case 0:
           return PieChartSectionData(
             color: Color(0xFF2196F3),
-            value: 40,
-            title: '40%',
+            value: _deptReportData["Production Department"].toDouble(),
+            title: _deptReportData["Production Department"].toString(),
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -141,8 +150,8 @@ class _FinanceAdminReportingScreenState
         case 1:
           return PieChartSectionData(
             color: Color(0xFFFFC300),
-            value: 30,
-            title: '30%',
+            value: _deptReportData["IT Department"].toDouble(),
+            title: _deptReportData["IT Department"].toString(),
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -151,11 +160,12 @@ class _FinanceAdminReportingScreenState
               shadows: shadows,
             ),
           );
+
         case 2:
           return PieChartSectionData(
-            color: Color(0xFF6E1BFF),
-            value: 15,
-            title: '15%',
+            color: Color(0xFF3BFF49),
+            value: _deptReportData["Finance Department"].toDouble(),
+            title: _deptReportData["Finance Department"].toString(),
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -166,9 +176,35 @@ class _FinanceAdminReportingScreenState
           );
         case 3:
           return PieChartSectionData(
-            color: Color(0xFF3BFF49),
-            value: 15,
-            title: '15%',
+            color: Color(0xFF91C922),
+            value: _deptReportData["HR Department"].toDouble(),
+            title: _deptReportData["HR Department"].toString(),
+            radius: radius,
+            titleStyle: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              shadows: shadows,
+            ),
+          );
+        case 4:
+          return PieChartSectionData(
+            color: Colors.deepOrangeAccent,
+            value: _deptReportData["Marketing Department"].toDouble(),
+            title: _deptReportData["Marketing Department"].toString(),
+            radius: radius,
+            titleStyle: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              shadows: shadows,
+            ),
+          );
+        case 5:
+          return PieChartSectionData(
+            color: Color(0xFF6E1BFF),
+            value: _deptReportData["Safety and Security Department"].toDouble(),
+            title: _deptReportData["Safety and Security Department"].toString(),
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -357,7 +393,7 @@ class _FinanceAdminReportingScreenState
               show: false,
             ),
             sectionsSpace: 0,
-            centerSpaceRadius: 40,
+            centerSpaceRadius: 0,
             sections: showingSections(),
           )),
         ),
