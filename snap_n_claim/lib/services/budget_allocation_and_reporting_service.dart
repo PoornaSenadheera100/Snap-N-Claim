@@ -118,7 +118,6 @@ class BudgetAllocationAndReportingService {
     return response;
   }
 
-  // TODO -
   static Future<Map<String, dynamic>> getEmpReportData(
       String empNo, int year) async {
     final Map<String, dynamic> result = {
@@ -140,7 +139,7 @@ class BudgetAllocationAndReportingService {
     try {
       final QuerySnapshot querySnapshot = await requestCollectionReference
           .where('empNo', isEqualTo: empNo)
-          // .where('paymentStatus', isEqualTo: "Paid")
+          .where('paymentStatus', isEqualTo: "Paid")
           .where('date', isGreaterThanOrEqualTo: DateTime(year, 1, 1))
           .where('date', isLessThanOrEqualTo: DateTime(year, 12, 31))
           .get();
