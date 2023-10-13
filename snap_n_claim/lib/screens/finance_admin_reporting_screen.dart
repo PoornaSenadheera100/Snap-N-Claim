@@ -61,6 +61,15 @@ class _FinanceAdminReportingScreenState
     "Safety and Security Department": 0
   };
 
+  Map<String, dynamic> _expenseReportData = {
+    "Transportation": 0,
+    "Meals and Food": 0,
+    "Accommodation": 0,
+    "Equipment and Supplies": 0,
+    "Communication": 0,
+    "Health and Safety": 0
+  };
+
   List<Color> gradientColors = [
     Color(0xFF50E4FF),
     Color(0xFF2196F3),
@@ -93,6 +102,10 @@ class _FinanceAdminReportingScreenState
     setState(() {
       _deptReportData = res;
     });
+  }
+
+  void _getExpenseReportData(){
+
   }
 
   int getMonthNumber(String month) {
@@ -308,26 +321,24 @@ class _FinanceAdminReportingScreenState
     String text;
     switch (value.toInt()) {
       case 0:
-        text = 'Mn';
+        text = 'G001';
         break;
       case 1:
-        text = 'Te';
+        text = 'G002';
         break;
       case 2:
-        text = 'Wd';
+        text = 'G003';
         break;
       case 3:
-        text = 'Tu';
+        text = 'G004';
         break;
       case 4:
-        text = 'Fr';
+        text = 'G005';
         break;
       case 5:
-        text = 'St';
+        text = 'G006';
         break;
-      case 6:
-        text = 'Sn';
-        break;
+
       default:
         text = '';
         break;
@@ -377,7 +388,7 @@ class _FinanceAdminReportingScreenState
       x: 0,
       barRods: [
         BarChartRodData(
-          toY: 8,
+          toY: _expenseReportData["Transportation"].toDouble(),
           gradient: _barsGradient,
         )
       ],
@@ -387,7 +398,7 @@ class _FinanceAdminReportingScreenState
       x: 1,
       barRods: [
         BarChartRodData(
-          toY: 10,
+          toY: _expenseReportData["Meals and Food"].toDouble(),
           gradient: _barsGradient,
         )
       ],
@@ -397,7 +408,7 @@ class _FinanceAdminReportingScreenState
       x: 2,
       barRods: [
         BarChartRodData(
-          toY: 14,
+          toY: _expenseReportData["Accommodation"].toDouble(),
           gradient: _barsGradient,
         )
       ],
@@ -407,7 +418,7 @@ class _FinanceAdminReportingScreenState
       x: 3,
       barRods: [
         BarChartRodData(
-          toY: 15,
+          toY: _expenseReportData["Equipment and Supplies"].toDouble(),
           gradient: _barsGradient,
         )
       ],
@@ -417,7 +428,7 @@ class _FinanceAdminReportingScreenState
       x: 4,
       barRods: [
         BarChartRodData(
-          toY: 13,
+          toY: _expenseReportData["Communication"].toDouble(),
           gradient: _barsGradient,
         )
       ],
@@ -427,17 +438,7 @@ class _FinanceAdminReportingScreenState
       x: 5,
       barRods: [
         BarChartRodData(
-          toY: 10,
-          gradient: _barsGradient,
-        )
-      ],
-      showingTooltipIndicators: [0],
-    ),
-    BarChartGroupData(
-      x: 6,
-      barRods: [
-        BarChartRodData(
-          toY: 16,
+          toY: _expenseReportData["Health and Safety"].toDouble(),
           gradient: _barsGradient,
         )
       ],
