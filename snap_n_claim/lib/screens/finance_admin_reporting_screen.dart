@@ -104,8 +104,11 @@ class _FinanceAdminReportingScreenState
     });
   }
 
-  void _getExpenseReportData(){
-
+  Future<void> _getExpenseReportData() async {
+    Map<String, dynamic> res = await BudgetAllocationAndReportingService.getExpenseReportData(2023, 10);
+    setState(() {
+      _expenseReportData = res;
+    });
   }
 
   int getMonthNumber(String month) {
@@ -732,17 +735,76 @@ class _FinanceAdminReportingScreenState
   }
 
   Widget _expenseReportTab() {
-    return AspectRatio(aspectRatio: 1.6, child: BarChart(
-      BarChartData(
-        barTouchData: barTouchData,
-        titlesData: titlesData,
-        borderData: borderData,
-        barGroups: barGroups,
-        gridData: const FlGridData(show: false),
-        alignment: BarChartAlignment.spaceAround,
-        maxY: 20,
-      ),
-    ),);
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                  value: _yearDropdownValue.isNotEmpty
+                      ? _yearDropdownValue
+                      : null,
+                  hint: const Text("Year"),
+                  items: _years.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(
+                            fontSize: widget._width / 26.18181818181818),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _yearDropdownValue = newValue!;
+                    });
+                  }),
+            ),
+            DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                  value: _monthDropdownValue.isNotEmpty
+                      ? _monthDropdownValue
+                      : null,
+                  hint: const Text("Month"),
+                  items:
+                  _months.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(
+                            fontSize: widget._width / 26.18181818181818),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _monthDropdownValue = newValue!;
+                    });
+                  }),
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  _getExpenseReportData();
+                },
+                child: Text("View"))
+          ],
+        ),
+        AspectRatio(aspectRatio: 1.0, child: BarChart(
+          BarChartData(
+            barTouchData: barTouchData,
+            titlesData: titlesData,
+            borderData: borderData,
+            barGroups: barGroups,
+            gridData: const FlGridData(show: false),
+            alignment: BarChartAlignment.spaceAround,
+            maxY: 20,
+          ),
+        ),),
+      ],
+    );
   }
 
   @override

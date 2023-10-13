@@ -193,4 +193,35 @@ class BudgetAllocationAndReportingService {
       return result; // Return the initialized result with zeros if there's an error
     }
   }
+
+  static Future<Map<String, dynamic>> getExpenseReportData(
+      int year, int month) async {
+    final Map<String, dynamic> result = {
+      "Transportation": 0,
+      "Meals and Food": 0,
+      "Accommodation": 0,
+      "Equipment and Supplies": 0,
+      "Communication": 0,
+      "Health and Safety": 0
+    };
+
+    try {
+      final QuerySnapshot querySnapshot = await requestCollectionReference
+          .where('paymentStatus', isEqualTo: "Paid")
+          .where('date', isGreaterThanOrEqualTo: DateTime(year, month, 1))
+          .where('date', isLessThanOrEqualTo: DateTime(year, month, 31))
+          .get();
+
+      for (final QueryDocumentSnapshot document in querySnapshot.docs) {
+        final category = document['category'];
+        final double total = document['total'].toDouble();
+        if (result.containsKey(category)) {
+          result[category] += total;
+        }
+      }
+      return result;
+    } catch (e) {
+      return result; // Return the initialized result with zeros if there's an error
+    }
+  }
 }
