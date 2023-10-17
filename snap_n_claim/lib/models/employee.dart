@@ -5,7 +5,7 @@ class Employee{
   String email;
   String empGrade;
   String empType;
-  String firstLogin;
+  bool firstLogin;
   String password;
   String phone;
 
