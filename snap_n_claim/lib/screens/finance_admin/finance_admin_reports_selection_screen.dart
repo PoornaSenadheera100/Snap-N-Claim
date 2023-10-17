@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snap_n_claim/models/employee.dart';
+import 'package:snap_n_claim/screens/finance_admin/finance_admin_view_claim_status_screen.dart';
 import 'finance_admin_menu_drawer.dart';
 import 'finance_admin_reporting_screen.dart';
 
@@ -17,7 +18,11 @@ class FinanceAdminReportsSelectionScreen extends StatelessWidget {
             FinanceAdminReportingScreen(_width, _height, user)));
   }
 
-  void _onTapViewClaimStatusBtn(BuildContext context) {}
+  void _onTapViewClaimStatusBtn(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) =>
+            FinanceAdminViewClaimStatusScreen(_width, _height, user)));
+  }
 
   @override
   Widget build(BuildContext context) {
