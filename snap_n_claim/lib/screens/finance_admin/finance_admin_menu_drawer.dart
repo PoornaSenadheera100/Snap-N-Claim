@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:snap_n_claim/models/employee.dart';
+import 'package:snap_n_claim/screens/common/login_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_budget_allocation_selection_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_home_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_reports_selection_screen.dart';
 
 class FinanceAdminMenuDrawer extends StatelessWidget {
-  const FinanceAdminMenuDrawer(this._width, this._height, this.currentPage, this.user,
+  const FinanceAdminMenuDrawer(
+      this._width, this._height, this.currentPage, this.user,
       {super.key});
 
   final double _width;
@@ -52,7 +57,8 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
       Navigator.pushReplacement(
         context,
         PageTransition(
-          child: FinanceAdminBudgetAllocationSelectionScreen(_width, _height, user),
+          child: FinanceAdminBudgetAllocationSelectionScreen(
+              _width, _height, user),
           type: PageTransitionType.rightToLeft,
           alignment: Alignment.center,
           isIos: true,
@@ -66,7 +72,16 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
 
   void _onTapMyClaimsBtn(BuildContext context) {}
 
-  void _onTapSignOutBtn(BuildContext context) {}
+  Future<void> _onTapSignOutBtn(BuildContext context) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+    File file = File('$path/userdata.txt');
+    await file.delete();
+
+    Navigator.of(context).pop();
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (BuildContext context) => LoginScreen(_width, _height)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +135,9 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
             horizontal: _width / 19.63636363636364,
           ), // 20
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              _onTapUserConfigBtn(context);
+            },
             child: const Text("User Configurations"),
           ),
         ),
@@ -129,7 +146,9 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
             horizontal: _width / 19.63636363636364,
           ), // 20
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              _onTapMyClaimsBtn(context);
+            },
             child: const Text("My Claims"),
           ),
         ),
@@ -143,7 +162,9 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
             horizontal: _width / 19.63636363636364,
           ), // 20
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              _onTapSignOutBtn(context);
+            },
             style: ButtonStyle(
               backgroundColor:
                   MaterialStateProperty.resolveWith((states) => Colors.red),
