@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:snap_n_claim/models/employee.dart';
+import 'package:snap_n_claim/screens/finance_admin/finance_admin_home_screen.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -47,6 +49,32 @@ class _LoginScreenState extends State<LoginScreen> {
     QuerySnapshot snapshot =
         await BudgetAllocationAndReportingService.getUserByEmail(
             _emailController.text);
+    if (snapshot.docs.isEmpty) {
+      Fluttertoast.showToast(
+          msg: "Please Register Your Account!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    } else {
+      if (_passwordController.text != snapshot.docs[0]["password"]) {
+        Fluttertoast.showToast(
+            msg: "Invalid Credentials!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else {
+        // print(snapshot.docs[0]["email"]);
+        Employee employee = await _saveCredentials(snapshot.docs[0]);
+        _navigate(employee, context);
+      }
+    }
+
     //   var siteManager =
     //   await DBService.login(_emailController.text, _passwordController.text);
     //   if (siteManager.isEmpty) {
@@ -106,6 +134,67 @@ class _LoginScreenState extends State<LoginScreen> {
     //           fontSize: 16.0);
     //     }
     //   }
+  }
+
+  Future<Employee> _saveCredentials(QueryDocumentSnapshot doc) async {
+    // String user = '{
+    //   "department": "' + doc["department"] + '",
+    //   "email": doc["email"],
+    //   "emp_grade": doc["emp_grade"],
+    //   "emp_no": doc["emp_no"],
+    //   "emp_type": doc["emp_type"],
+    //   "first_login": doc["first_login"],
+    //   "name": doc["name"],
+    //   "password": doc["password"],
+    //   "phone": doc["phone"],
+    // }';
+
+    String userData = '{"department" : "' +
+        doc["department"] +
+        '", "email" : "' +
+        doc["email"] +
+        '", "emp_grade" : "' +
+        doc["emp_grade"] +
+        '", "emp_no" : "' +
+        doc["emp_no"] +
+        '", "emp_type" : "' +
+        doc["emp_type"] +
+        '", "first_login" : "' +
+        doc["first_login"].toString() +
+        '", "name" : "' +
+        doc["name"] +
+        '", "password" : "' +
+        doc["password"] +
+        '", "phone" : "' +
+        doc["phone"] +
+        '"}';
+
+    Employee employee = Employee(
+        doc["emp_no"],
+        doc["name"],
+        doc["department"],
+        doc["email"],
+        doc["emp_grade"],
+        doc["emp_type"],
+        doc["first_login"],
+        doc["password"],
+        doc["phone"]);
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+    File file = File('$path/userdata.txt');
+    file.writeAsString(userData);
+
+    return employee;
+  }
+
+  void _navigate(Employee employee, BuildContext context) {
+    if (employee.empType == "finadmin") {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (BuildContext context) =>
+              FinanceAdminHomeScreen(widget._width, widget._height, employee)));
+    } else if (employee.empType == "hod") {
+    } else {}
   }
 
   @override
