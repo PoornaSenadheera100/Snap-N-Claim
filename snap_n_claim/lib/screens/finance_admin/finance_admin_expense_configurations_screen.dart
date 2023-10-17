@@ -1,17 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:snap_n_claim/models/employee.dart';
 import 'package:snap_n_claim/models/response.dart';
 
 import '../../services/budget_allocation_and_reporting_service.dart';
 
 class FinanceAdminExpenseConfigurationsScreen extends StatefulWidget {
-  const FinanceAdminExpenseConfigurationsScreen(this._width, this._height,
+  const FinanceAdminExpenseConfigurationsScreen(this._width, this._height, this.user,
       {super.key});
 
   final double _width;
   // ignore: unused_field
   final double _height;
+  final Employee user;
 
   @override
   State<FinanceAdminExpenseConfigurationsScreen> createState() =>

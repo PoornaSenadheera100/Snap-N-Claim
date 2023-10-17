@@ -1,14 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:snap_n_claim/models/employee.dart';
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_expense_mapping_screen.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
 class FinanceAdminExpenseMappingSelectionScreen extends StatefulWidget {
-  const FinanceAdminExpenseMappingSelectionScreen(this._width, this._height,
+  const FinanceAdminExpenseMappingSelectionScreen(this._width, this._height, this.user,
       {super.key});
 
   final double _width;
   final double _height;
+  final Employee user;
 
   @override
   State<FinanceAdminExpenseMappingSelectionScreen> createState() =>
@@ -34,7 +36,7 @@ class _FinanceAdminExpenseMappingSelectionScreenState
             glCode,
             glName,
             transactionLimit,
-            monthlyLimit)));
+            monthlyLimit, widget.user)));
   }
 
   @override

@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:snap_n_claim/models/employee.dart';
 import 'finance_admin_menu_drawer.dart';
 import 'finance_admin_reporting_screen.dart';
 
 class FinanceAdminReportsSelectionScreen extends StatelessWidget {
-  const FinanceAdminReportsSelectionScreen(this._width, this._height,
+  const FinanceAdminReportsSelectionScreen(this._width, this._height, this.user,
       {super.key});
 
   final double _width;
   final double _height;
+  final Employee user;
 
   void _onTapReportingAndAnalyticsBtn(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) =>
-            FinanceAdminReportingScreen(_width, _height)));
+            FinanceAdminReportingScreen(_width, _height, user)));
   }
 
   void _onTapViewClaimStatusBtn(BuildContext context) {}
@@ -23,7 +25,7 @@ class FinanceAdminReportsSelectionScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Reports"),
       ),
-      drawer: FinanceAdminMenuDrawer(_width, _height, "Reports"),
+      drawer: FinanceAdminMenuDrawer(_width, _height, "Reports", user),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

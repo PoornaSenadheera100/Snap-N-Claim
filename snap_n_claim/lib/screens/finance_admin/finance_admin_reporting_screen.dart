@@ -1,15 +1,17 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:snap_n_claim/models/employee.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
 import '../../utils/pie_chart_indicator.dart';
 
 class FinanceAdminReportingScreen extends StatefulWidget {
-  const FinanceAdminReportingScreen(this._width, this._height, {super.key});
+  const FinanceAdminReportingScreen(this._width, this._height, this.user, {super.key});
 
   final double _width;
   final double _height;
+  final Employee user;
 
   @override
   State<FinanceAdminReportingScreen> createState() =>
