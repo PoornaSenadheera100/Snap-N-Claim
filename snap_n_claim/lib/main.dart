@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:snap_n_claim/screens/finance_admin_home_screen.dart';
+import 'package:snap_n_claim/screens/common/login_exchange_screen.dart';
+import 'package:snap_n_claim/screens/common/login_screen.dart';
+import 'package:snap_n_claim/screens/finance_admin/finance_admin_home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +21,8 @@ class SnapNClaim extends StatelessWidget {
     _width = MediaQuery.of(context).size.width;
     _height = MediaQuery.of(context).size.height;
     return MaterialApp(
-      home: FinanceAdminHomeScreen(_width, _height),
+      // home: FinanceAdminHomeScreen(_width, _height),
+      home: LoginExchangeScreen(_width, _height),
     );
   }
 }
