@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
 import '../../models/employee.dart';
 
@@ -17,8 +19,20 @@ class FinanceAdminViewClaimStatusScreen extends StatefulWidget {
 
 class _FinanceAdminViewClaimStatusScreenState
     extends State<FinanceAdminViewClaimStatusScreen> {
-  List<String> _statusDropdownItems = ["Approved", "Rejected"];
+  final List<String> _statusDropdownItems = ["Approved", "Rejected"];
   String _statusDropdownValue = '';
+  late Stream<QuerySnapshot> _requestsCollectionReference;
+
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+
+  Future<void> _getData() async {
+    _requestsCollectionReference =
+        await BudgetAllocationAndReportingService.getApprovedAndRejectedClaims();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,42 +95,74 @@ class _FinanceAdminViewClaimStatusScreenState
           Container(
             height: 600,
             color: Color(0xFFD7D7D7),
-            child: DataTable(
-              dividerThickness: 3,
-              showBottomBorder: true,
-              columnSpacing: 40,
-              columns: [
-                DataColumn(
-                    label: Expanded(
-                  child: Text(
-                    "Emp No",
-                  ),
-                )),
-                DataColumn(
-                    label: Expanded(
-                  child: Text("Name"),
-                )),
-                DataColumn(
-                    label: Expanded(
-                  child: Text("Expense Type"),
-                )),
-                DataColumn(
-                    label: Expanded(
-                  child: Text("Cost"),
-                ))
-              ],
-              rows: [
-                DataRow(
-                    cells: [
-                      DataCell(Text("Test")),
-                      DataCell(Text("Test")),
-                      DataCell(Center(child: Text("Test"))),
-                      DataCell(Text("Test"))
-                    ],
-                    color: MaterialStateProperty.resolveWith(
-                        (states) => Color(0x98A2C5FF)))
-              ],
-            ),
+            child: StreamBuilder(
+    stream: _requestsCollectionReference,
+    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+      if(snapshot.connectionState == ConnectionState.waiting){
+        return Container();
+    }
+      else if(snapshot.hasData){
+        return SingleChildScrollView(
+          child: DataTable(
+            dividerThickness: 3,
+            showBottomBorder: true,
+            columnSpacing: 40,
+            columns: [
+              DataColumn(
+                  label: Expanded(
+                    child: Text(
+                      "Emp No",
+                    ),
+                  )),
+              DataColumn(
+                  label: Expanded(
+                    child: Text("Name"),
+                  )),
+              DataColumn(
+                  label: Expanded(
+                    child: Text("Expense Type"),
+                  )),
+              DataColumn(
+                  label: Expanded(
+                    child: Text("Cost"),
+                  ))
+            ],
+            // rows: [
+              // DataRow(
+              //     cells: [
+              //       DataCell(Text("Test")),
+              //       DataCell(Text("Test")),
+              //       DataCell(Center(child: Text("Test"))),
+              //       DataCell(Text("Test"))
+              //     ],
+              //     color: MaterialStateProperty.resolveWith(
+              //             (states) => Color(0x98A2C5FF))),
+              // DataRow(
+              //     cells: [
+              //       DataCell(Text("Test")),
+              //       DataCell(Text("Test")),
+              //       DataCell(Center(child: Text("Test"))),
+              //       DataCell(Text("Test"))
+              //     ],
+              //     color: MaterialStateProperty.resolveWith(
+              //             (states) => Color(0x98A2C5FF))),
+            // ],
+            rows: snapshot.data!.docs.map((e) => DataRow(cells: [
+                    DataCell(Text(e["empNo"])),
+                    DataCell(Text(e["empName"])),
+                    DataCell(Center(child: Text(e["category"]))),
+                    DataCell(Text(e["total"].toString()))
+            ])).toList(),
+          ),
+        );
+    }
+      else{
+        return Text("No Data");
+    }
+    },
+    ) 
+            
+            
           )
         ],
       ),
