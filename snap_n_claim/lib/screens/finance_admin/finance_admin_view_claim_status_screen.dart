@@ -79,6 +79,7 @@ class _FinanceAdminViewClaimStatusScreenState
             ),
           ),
           Container(
+            height: 600,
             color: Color(0xFFD7D7D7),
             child: DataTable(
               dividerThickness: 3,
@@ -105,12 +106,15 @@ class _FinanceAdminViewClaimStatusScreenState
                 ))
               ],
               rows: [
-                DataRow(cells: [
-                  DataCell(Text("Test")),
-                  DataCell(Text("Test")),
-                  DataCell(Center(child: Text("Test"))),
-                  DataCell(Text("Test"))
-                ])
+                DataRow(
+                    cells: [
+                      DataCell(Text("Test")),
+                      DataCell(Text("Test")),
+                      DataCell(Center(child: Text("Test"))),
+                      DataCell(Text("Test"))
+                    ],
+                    color: MaterialStateProperty.resolveWith(
+                        (states) => Color(0x98A2C5FF)))
               ],
             ),
           )
