@@ -142,23 +142,23 @@ class _FinanceAdminReportingScreenState
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
+    var style = TextStyle(
       fontWeight: FontWeight.bold,
-      fontSize: 16,
+      fontSize: widget._width / 24.54545454545454,
     );
     Widget text;
     switch (value.toInt()) {
       case 2:
-        text = const Text('MAR', style: style);
+        text =  Text('MAR', style: style);
         break;
       case 5:
-        text = const Text('JUN', style: style);
+        text =  Text('JUN', style: style);
         break;
       case 8:
-        text = const Text('SEP', style: style);
+        text =  Text('SEP', style: style);
         break;
       default:
-        text = const Text('', style: style);
+        text =  Text('', style: style);
         break;
     }
 
@@ -169,9 +169,9 @@ class _FinanceAdminReportingScreenState
   }
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
+    var style = TextStyle(
       fontWeight: FontWeight.bold,
-      fontSize: 15,
+      fontSize: widget._width / 26.18181818181818,
     );
     String text;
     switch (value.toInt()) {
@@ -202,8 +202,8 @@ class _FinanceAdminReportingScreenState
 
   List<PieChartSectionData> showingSections() {
     return List.generate(6, (i) {
-      const fontSize = 16.0;
-      const radius = 180.0;
+      var fontSize = widget._width / 24.54545454545454;
+      var radius = widget._width / 2.181818181818182;
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
       switch (i) {
         case 0:
@@ -212,7 +212,7 @@ class _FinanceAdminReportingScreenState
             value: _deptReportData["Production Department"].toDouble(),
             title: _deptReportData["Production Department"].toString(),
             radius: radius,
-            titleStyle: const TextStyle(
+            titleStyle:  TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -225,7 +225,7 @@ class _FinanceAdminReportingScreenState
             value: _deptReportData["IT Department"].toDouble(),
             title: _deptReportData["IT Department"].toString(),
             radius: radius,
-            titleStyle: const TextStyle(
+            titleStyle:  TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -239,7 +239,7 @@ class _FinanceAdminReportingScreenState
             value: _deptReportData["Finance Department"].toDouble(),
             title: _deptReportData["Finance Department"].toString(),
             radius: radius,
-            titleStyle: const TextStyle(
+            titleStyle:  TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -252,7 +252,7 @@ class _FinanceAdminReportingScreenState
             value: _deptReportData["HR Department"].toDouble(),
             title: _deptReportData["HR Department"].toString(),
             radius: radius,
-            titleStyle: const TextStyle(
+            titleStyle:  TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -265,7 +265,7 @@ class _FinanceAdminReportingScreenState
             value: _deptReportData["Marketing Department"].toDouble(),
             title: _deptReportData["Marketing Department"].toString(),
             radius: radius,
-            titleStyle: const TextStyle(
+            titleStyle:  TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -278,7 +278,7 @@ class _FinanceAdminReportingScreenState
             value: _deptReportData["Safety and Security Department"].toDouble(),
             title: _deptReportData["Safety and Security Department"].toString(),
             radius: radius,
-            titleStyle: const TextStyle(
+            titleStyle:  TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -296,7 +296,7 @@ class _FinanceAdminReportingScreenState
         touchTooltipData: BarTouchTooltipData(
           tooltipBgColor: Colors.transparent,
           tooltipPadding: EdgeInsets.zero,
-          tooltipMargin: 8,
+          tooltipMargin: widget._height / 100.3636363636364,
           getTooltipItem: (
             BarChartGroupData group,
             int groupIndex,
@@ -315,10 +315,10 @@ class _FinanceAdminReportingScreenState
       );
 
   Widget getTitles(double value, TitleMeta meta) {
-    const style = TextStyle(
-      color: Color(0xFF2196F3),
+    var style = TextStyle(
+      color: const Color(0xFF2196F3),
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: widget._width / 28.05194805194805,
     );
     String text;
     switch (value.toInt()) {
@@ -347,7 +347,7 @@ class _FinanceAdminReportingScreenState
     }
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      space: 4,
+      space: widget._height / 200.7272727272727,
       child: Text(text, style: style),
     );
   }
@@ -357,7 +357,7 @@ class _FinanceAdminReportingScreenState
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 30,
+            reservedSize: widget._height / 26.76363636363636,
             getTitlesWidget: getTitles,
           ),
         ),
@@ -450,17 +450,17 @@ class _FinanceAdminReportingScreenState
 
   Widget _employeeReportTab() {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(widget._width / 39.27272727272727),
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
+            padding: EdgeInsets.only(bottom: widget._height / 100.3636363636364),
             child: Row(
               children: [
                 Expanded(
                   child: SizedBox(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      padding: EdgeInsets.symmetric(horizontal: widget._width / 78.54545454545454),
                       child: TextField(
                         controller: _empNoController,
                         decoration: const InputDecoration(
@@ -472,7 +472,7 @@ class _FinanceAdminReportingScreenState
                 Expanded(
                   child: SizedBox(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      padding: EdgeInsets.symmetric(horizontal: widget._width / 78.54545454545454),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                             value: _yearDropdownValue.isNotEmpty
@@ -501,7 +501,7 @@ class _FinanceAdminReportingScreenState
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  padding: EdgeInsets.symmetric(horizontal: widget._width / 78.54545454545454),
                   child: ElevatedButton(
                       onPressed: () {
                         _getEmpReportData();
@@ -543,7 +543,7 @@ class _FinanceAdminReportingScreenState
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      reservedSize: 30,
+                      reservedSize: widget._height / 26.76363636363636,
                       interval: 1,
                       getTitlesWidget: bottomTitleWidgets,
                     ),
@@ -553,7 +553,7 @@ class _FinanceAdminReportingScreenState
                       showTitles: true,
                       interval: 1,
                       getTitlesWidget: leftTitleWidgets,
-                      reservedSize: 42,
+                      reservedSize: widget._width / 9.35064935064935,
                     ),
                   ),
                 ),
@@ -587,7 +587,7 @@ class _FinanceAdminReportingScreenState
                     gradient: LinearGradient(
                       colors: gradientColors,
                     ),
-                    barWidth: 5,
+                    barWidth: 3,
                     isStrokeCapRound: true,
                     dotData: const FlDotData(
                       show: false,
@@ -614,7 +614,7 @@ class _FinanceAdminReportingScreenState
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
+          padding: EdgeInsets.symmetric(horizontal: widget._width / 19.63636363636364, vertical: widget._height / 160.5818181818182,),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -671,8 +671,8 @@ class _FinanceAdminReportingScreenState
             ],
           ),
         ),
-        const SizedBox(
-          width: 28,
+         SizedBox(
+          width: widget._width / 14.02597402597403,
         ),
         Expanded(
           child: PieChart(PieChartData(
@@ -684,50 +684,50 @@ class _FinanceAdminReportingScreenState
             sections: showingSections(),
           )),
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
+         Padding(
+          padding: EdgeInsets.symmetric(horizontal: widget._width / 19.63636363636364),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              PieChartIndicator(
+              const PieChartIndicator(
                 color: Color(0xFF2196F3),
                 text: 'Production Department',
                 isSquare: true,
               ),
-              PieChartIndicator(
+              const PieChartIndicator(
                 color: Color(0xFFFFC300),
                 text: 'IT Department',
                 isSquare: true,
               ),
-              PieChartIndicator(
+              const PieChartIndicator(
                 color: Color(0xFF3BFF49),
                 text: 'Finance Department',
                 isSquare: true,
               ),
-              PieChartIndicator(
+              const PieChartIndicator(
                 color: Color(0xFF91C922),
                 text: 'HR Department',
                 isSquare: true,
               ),
-              PieChartIndicator(
+              const PieChartIndicator(
                 color: Colors.deepOrangeAccent,
                 text: 'Marketing Department',
                 isSquare: true,
               ),
-              PieChartIndicator(
+              const PieChartIndicator(
                 color: Color(0xFF6E1BFF),
                 text: 'Safety and Security Department',
                 isSquare: true,
               ),
               SizedBox(
-                height: 18,
+                height: widget._height / 44.60606060606061,
               ),
             ],
           ),
         ),
-        const SizedBox(
-          width: 28,
+         SizedBox(
+          width: widget._width / 14.02597402597403,
         ),
       ],
     );
@@ -736,58 +736,63 @@ class _FinanceAdminReportingScreenState
   Widget _expenseReportTab() {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                  value:
-                      _yearDropdownValue.isNotEmpty ? _yearDropdownValue : null,
-                  hint: const Text("Year"),
-                  items: _years.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: TextStyle(
-                            fontSize: widget._width / 26.18181818181818),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _yearDropdownValue = newValue!;
-                    });
-                  }),
-            ),
-            DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                  value: _monthDropdownValue.isNotEmpty
-                      ? _monthDropdownValue
-                      : null,
-                  hint: const Text("Month"),
-                  items: _months.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: TextStyle(
-                            fontSize: widget._width / 26.18181818181818),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _monthDropdownValue = newValue!;
-                    });
-                  }),
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  _getExpenseReportData();
-                },
-                child: const Text("View"))
-          ],
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: widget._width / 19.63636363636364, vertical: widget._height / 160.5818181818182,),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                    value: _yearDropdownValue.isNotEmpty
+                        ? _yearDropdownValue
+                        : null,
+                    hint: const Text("Year"),
+                    items: _years.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: TextStyle(
+                              fontSize: widget._width / 26.18181818181818),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _yearDropdownValue = newValue!;
+                      });
+                    }),
+              ),
+              DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                    value: _monthDropdownValue.isNotEmpty
+                        ? _monthDropdownValue
+                        : null,
+                    hint: const Text("Month"),
+                    items:
+                        _months.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: TextStyle(
+                              fontSize: widget._width / 26.18181818181818),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _monthDropdownValue = newValue!;
+                      });
+                    }),
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    _getExpenseReportData();
+                  },
+                  child: const Text("View"))
+            ],
+          ),
         ),
         AspectRatio(
           aspectRatio: 1.0,
@@ -803,6 +808,119 @@ class _FinanceAdminReportingScreenState
             ),
           ),
         ),
+        SizedBox(
+          width: widget._width,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: widget._width / 26.18181818181818, vertical: widget._height / 32.11636363636364),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      "G001",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: widget._width / 23.10160427807486,
+                      ),
+                    ),
+                    Text(
+                      " - Transportation",
+                      style: TextStyle(
+                        fontSize: widget._width / 23.10160427807486,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "G002",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: widget._width / 23.10160427807486,
+                      ),
+                    ),
+                    Text(
+                      " - Meals and Food",
+                      style: TextStyle(
+                        fontSize: widget._width / 23.10160427807486,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "G003",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: widget._width / 23.10160427807486,
+                      ),
+                    ),
+                    Text(
+                      " - Accommodation",
+                      style: TextStyle(
+                        fontSize: widget._width / 23.10160427807486,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "G004",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: widget._width / 23.10160427807486,
+                      ),
+                    ),
+                    Text(
+                      " - Equipment and Supplies",
+                      style: TextStyle(
+                        fontSize: widget._width / 23.10160427807486,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "G005",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: widget._width / 23.10160427807486,
+                      ),
+                    ),
+                    Text(
+                      " - Communication",
+                      style: TextStyle(
+                        fontSize: widget._width / 23.10160427807486,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "G006",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: widget._width / 23.10160427807486,
+                      ),
+                    ),
+                    Text(
+                      " - Health and Safety",
+                      style: TextStyle(
+                        fontSize: widget._width / 23.10160427807486,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        )
       ],
     );
   }
