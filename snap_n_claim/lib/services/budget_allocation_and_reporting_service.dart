@@ -11,7 +11,7 @@ final CollectionReference allocationCollectionReference =
 final CollectionReference requestCollectionReference =
     _firestore.collection("Request");
 final CollectionReference employeeCollectionReference =
-_firestore.collection("Employee");
+    _firestore.collection("Employee");
 
 class BudgetAllocationAndReportingService {
   static Stream<QuerySnapshot> getExpenses() {
@@ -231,6 +231,18 @@ class BudgetAllocationAndReportingService {
   }
 
   static Future<QuerySnapshot<Object?>> getUserByEmail(String email) async {
-    return await employeeCollectionReference.where("email", isEqualTo: email).get();
+    return await employeeCollectionReference
+        .where("email", isEqualTo: email)
+        .get();
+  }
+
+  // TODO - Test
+  static Stream<QuerySnapshot<Object?>> getApprovedAndRejectedClaims() {
+    return requestCollectionReference
+        .where("status", whereIn: ["Approved", "Rejected"])
+        .orderBy("empNo")
+        .orderBy("category")
+        .orderBy("total")
+        .snapshots();
   }
 }
