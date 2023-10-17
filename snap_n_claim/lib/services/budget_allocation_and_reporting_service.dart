@@ -10,6 +10,8 @@ final CollectionReference allocationCollectionReference =
     _firestore.collection("Allocation");
 final CollectionReference requestCollectionReference =
     _firestore.collection("Request");
+final CollectionReference employeeCollectionReference =
+_firestore.collection("Employee");
 
 class BudgetAllocationAndReportingService {
   static Stream<QuerySnapshot> getExpenses() {
@@ -226,5 +228,9 @@ class BudgetAllocationAndReportingService {
     } catch (e) {
       return result; // Return the initialized result with zeros if there's an error
     }
+  }
+
+  static Future<QuerySnapshot<Object?>> getUserByEmail(String email) async {
+    return await employeeCollectionReference.where("email", isEqualTo: email).get();
   }
 }
