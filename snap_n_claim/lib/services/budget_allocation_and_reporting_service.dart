@@ -247,6 +247,15 @@ class BudgetAllocationAndReportingService {
   }
 
   // TODO - Test
+  static Stream<QuerySnapshot<Object?>> getApprovedClaimsWithEmpNo(
+      String empNo) {
+    return requestCollectionReference
+        .where("status", isEqualTo: "Approved")
+        .orderBy("empNo")
+        .startAt([empNo]).endAt([empNo + '\uf8ff']).snapshots();
+  }
+
+  // TODO - Test
   static Stream<QuerySnapshot<Object?>> getRejectedClaims() {
     return requestCollectionReference
         .where("status", isEqualTo: "Rejected")
@@ -254,5 +263,14 @@ class BudgetAllocationAndReportingService {
         .orderBy("category")
         .orderBy("total")
         .snapshots();
+  }
+
+  // TODO - Test
+  static Stream<QuerySnapshot<Object?>> getRejectedClaimsWithEmpNo(
+      String empNo) {
+    return requestCollectionReference
+        .where("status", isEqualTo: "Rejected")
+        .orderBy("empNo")
+        .startAt([empNo]).endAt([empNo + '\uf8ff']).snapshots();
   }
 }
