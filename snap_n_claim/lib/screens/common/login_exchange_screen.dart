@@ -40,7 +40,7 @@ class _LoginExchangeScreenState extends State<LoginExchangeScreen> {
             decodedUser["email"],
             decodedUser["emp_grade"],
             decodedUser["emp_type"],
-            decodedUser["first_login"],
+            decodedUser["first_login"] == "true",
             decodedUser["password"],
             decodedUser["phone"]);
 
