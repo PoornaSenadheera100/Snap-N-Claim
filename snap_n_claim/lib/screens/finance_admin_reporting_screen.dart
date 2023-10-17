@@ -93,7 +93,7 @@ class _FinanceAdminReportingScreenState
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
           textColor: Colors.white,
-          fontSize: 16.0);
+          fontSize: widget._width / 24.54545454545454);
     } else if (_yearDropdownValue == '') {
       Fluttertoast.showToast(
           msg: "Select an year!",
@@ -102,7 +102,7 @@ class _FinanceAdminReportingScreenState
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
           textColor: Colors.white,
-          fontSize: 16.0);
+          fontSize: widget._width / 24.54545454545454);
     } else {
       _getEmpReportData();
     }
@@ -126,7 +126,7 @@ class _FinanceAdminReportingScreenState
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
           textColor: Colors.white,
-          fontSize: 16.0);
+          fontSize: widget._width / 24.54545454545454);
     } else if (_monthDropdownValue == '') {
       Fluttertoast.showToast(
           msg: "Select a month!",
@@ -135,7 +135,7 @@ class _FinanceAdminReportingScreenState
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
           textColor: Colors.white,
-          fontSize: 16.0);
+          fontSize: widget._width / 24.54545454545454);
     } else {
       _getDeptReportData();
     }
@@ -148,6 +148,30 @@ class _FinanceAdminReportingScreenState
     setState(() {
       _deptReportData = res;
     });
+  }
+
+  void _onTapExpenseReportViewBtn() {
+    if (_yearDropdownValue == '') {
+      Fluttertoast.showToast(
+          msg: "Select an year!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: widget._width / 24.54545454545454);
+    } else if (_monthDropdownValue == '') {
+      Fluttertoast.showToast(
+          msg: "Select a month!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: widget._width / 24.54545454545454);
+    } else {
+      _getExpenseReportData();
+    }
   }
 
   Future<void> _getExpenseReportData() async {
@@ -782,7 +806,7 @@ class _FinanceAdminReportingScreenState
             ? Container(
                 height: widget._height / 1.665786495662014,
                 alignment: Alignment.center,
-                child: Text("No Data"),
+                child: const Text("No Data"),
               )
             : Expanded(
                 child: PieChart(PieChartData(
@@ -902,7 +926,7 @@ class _FinanceAdminReportingScreenState
               ),
               ElevatedButton(
                   onPressed: () {
-                    _getExpenseReportData();
+                    _onTapExpenseReportViewBtn();
                   },
                   child: const Text("View"))
             ],
