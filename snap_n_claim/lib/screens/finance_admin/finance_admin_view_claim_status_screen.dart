@@ -42,7 +42,10 @@ class _FinanceAdminViewClaimStatusScreenState
                   Expanded(
                       child: SizedBox(
                           child: TextField(
-                    decoration: InputDecoration(border: OutlineInputBorder(), labelText: "Emp No",),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Emp No",
+                    ),
                   ))),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -73,6 +76,42 @@ class _FinanceAdminViewClaimStatusScreenState
                   )
                 ],
               ),
+            ),
+          ),
+          Container(
+            color: Color(0xFFD7D7D7),
+            child: DataTable(
+              dividerThickness: 3,
+              showBottomBorder: true,
+              columnSpacing: 40,
+              columns: [
+                DataColumn(
+                    label: Expanded(
+                  child: Text(
+                    "Emp No",
+                  ),
+                )),
+                DataColumn(
+                    label: Expanded(
+                  child: Text("Name"),
+                )),
+                DataColumn(
+                    label: Expanded(
+                  child: Text("Expense Type"),
+                )),
+                DataColumn(
+                    label: Expanded(
+                  child: Text("Cost"),
+                ))
+              ],
+              rows: [
+                DataRow(cells: [
+                  DataCell(Text("Test")),
+                  DataCell(Text("Test")),
+                  DataCell(Center(child: Text("Test"))),
+                  DataCell(Text("Test"))
+                ])
+              ],
             ),
           )
         ],
