@@ -205,7 +205,6 @@ class BudgetAllocationAndReportingService {
       "Health and Safety": 0,
       "MAX": 0,
     };
-
     try {
       final QuerySnapshot querySnapshot = await requestCollectionReference
           .where('paymentStatus', isEqualTo: "Paid")

@@ -5,10 +5,10 @@ import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.da
 import '../utils/pie_chart_indicator.dart';
 
 class FinanceAdminReportingScreen extends StatefulWidget {
-  FinanceAdminReportingScreen(this._width, this._height, {super.key});
+  const FinanceAdminReportingScreen(this._width, this._height, {super.key});
 
-  double _width;
-  double _height;
+  final double _width;
+  final double _height;
 
   @override
   State<FinanceAdminReportingScreen> createState() =>
@@ -68,12 +68,12 @@ class _FinanceAdminReportingScreenState
     "Equipment and Supplies": 0,
     "Communication": 0,
     "Health and Safety": 0,
-    "MAX" : 0,
+    "MAX": 0,
   };
 
   List<Color> gradientColors = [
-    Color(0xFF50E4FF),
-    Color(0xFF2196F3),
+    const Color(0xFF50E4FF),
+    const Color(0xFF2196F3),
   ];
 
   @override
@@ -87,19 +87,15 @@ class _FinanceAdminReportingScreenState
     Map<String, dynamic> res =
         await BudgetAllocationAndReportingService.getEmpReportData(
             _empNoController.text, int.parse(_yearDropdownValue));
-    print(res.toString());
     setState(() {
       _empReportData = res;
     });
   }
 
   Future<void> _getDeptReportData() async {
-    print(_monthDropdownValue);
-    print(_yearDropdownValue);
     Map<String, dynamic> res =
         await BudgetAllocationAndReportingService.getDeptReportData(
             int.parse(_yearDropdownValue), getMonthNumber(_monthDropdownValue));
-    print(res.toString());
     setState(() {
       _deptReportData = res;
     });
@@ -112,7 +108,6 @@ class _FinanceAdminReportingScreenState
     setState(() {
       _expenseReportData = res;
     });
-
   }
 
   int getMonthNumber(String month) {
@@ -207,17 +202,17 @@ class _FinanceAdminReportingScreenState
 
   List<PieChartSectionData> showingSections() {
     return List.generate(6, (i) {
-      final fontSize = 16.0;
-      final radius = 180.0;
+      const fontSize = 16.0;
+      const radius = 180.0;
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
       switch (i) {
         case 0:
           return PieChartSectionData(
-            color: Color(0xFF2196F3),
+            color: const Color(0xFF2196F3),
             value: _deptReportData["Production Department"].toDouble(),
             title: _deptReportData["Production Department"].toString(),
             radius: radius,
-            titleStyle: TextStyle(
+            titleStyle: const TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -226,11 +221,11 @@ class _FinanceAdminReportingScreenState
           );
         case 1:
           return PieChartSectionData(
-            color: Color(0xFFFFC300),
+            color: const Color(0xFFFFC300),
             value: _deptReportData["IT Department"].toDouble(),
             title: _deptReportData["IT Department"].toString(),
             radius: radius,
-            titleStyle: TextStyle(
+            titleStyle: const TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -240,11 +235,11 @@ class _FinanceAdminReportingScreenState
 
         case 2:
           return PieChartSectionData(
-            color: Color(0xFF3BFF49),
+            color: const Color(0xFF3BFF49),
             value: _deptReportData["Finance Department"].toDouble(),
             title: _deptReportData["Finance Department"].toString(),
             radius: radius,
-            titleStyle: TextStyle(
+            titleStyle: const TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -253,11 +248,11 @@ class _FinanceAdminReportingScreenState
           );
         case 3:
           return PieChartSectionData(
-            color: Color(0xFF91C922),
+            color: const Color(0xFF91C922),
             value: _deptReportData["HR Department"].toDouble(),
             title: _deptReportData["HR Department"].toString(),
             radius: radius,
-            titleStyle: TextStyle(
+            titleStyle: const TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -270,7 +265,7 @@ class _FinanceAdminReportingScreenState
             value: _deptReportData["Marketing Department"].toDouble(),
             title: _deptReportData["Marketing Department"].toString(),
             radius: radius,
-            titleStyle: TextStyle(
+            titleStyle: const TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -279,11 +274,11 @@ class _FinanceAdminReportingScreenState
           );
         case 5:
           return PieChartSectionData(
-            color: Color(0xFF6E1BFF),
+            color: const Color(0xFF6E1BFF),
             value: _deptReportData["Safety and Security Department"].toDouble(),
             title: _deptReportData["Safety and Security Department"].toString(),
             radius: radius,
-            titleStyle: TextStyle(
+            titleStyle: const TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -320,7 +315,7 @@ class _FinanceAdminReportingScreenState
       );
 
   Widget getTitles(double value, TitleMeta meta) {
-    final style = TextStyle(
+    const style = TextStyle(
       color: Color(0xFF2196F3),
       fontWeight: FontWeight.bold,
       fontSize: 14,
@@ -381,7 +376,7 @@ class _FinanceAdminReportingScreenState
         show: false,
       );
 
-  LinearGradient get _barsGradient => LinearGradient(
+  LinearGradient get _barsGradient => const LinearGradient(
         colors: [
           Color(0xFF2196F3),
           Color(0xFF50E4FF),
@@ -511,7 +506,7 @@ class _FinanceAdminReportingScreenState
                       onPressed: () {
                         _getEmpReportData();
                       },
-                      child: Text("View")),
+                      child: const Text("View")),
                 )
               ],
             ),
@@ -672,7 +667,7 @@ class _FinanceAdminReportingScreenState
                   onPressed: () {
                     _getDeptReportData();
                   },
-                  child: Text("View"))
+                  child: const Text("View"))
             ],
           ),
         ),
@@ -689,8 +684,8 @@ class _FinanceAdminReportingScreenState
             sections: showingSections(),
           )),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -791,7 +786,7 @@ class _FinanceAdminReportingScreenState
                 onPressed: () {
                   _getExpenseReportData();
                 },
-                child: Text("View"))
+                child: const Text("View"))
           ],
         ),
         AspectRatio(
