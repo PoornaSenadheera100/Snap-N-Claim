@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
 import '../utils/pie_chart_indicator.dart';
@@ -83,6 +84,30 @@ class _FinanceAdminReportingScreenState
     _monthDropdownValue = "";
   }
 
+  void _onTapEmpReportViewBtn() {
+    if (_empNoController.text == '') {
+      Fluttertoast.showToast(
+          msg: "Enter an employee number!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    } else if (_yearDropdownValue == '') {
+      Fluttertoast.showToast(
+          msg: "Select an year!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    } else {
+      _getEmpReportData();
+    }
+  }
+
   Future<void> _getEmpReportData() async {
     Map<String, dynamic> res =
         await BudgetAllocationAndReportingService.getEmpReportData(
@@ -90,6 +115,30 @@ class _FinanceAdminReportingScreenState
     setState(() {
       _empReportData = res;
     });
+  }
+
+  void _onTapDeptReportViewBtn() {
+    if (_yearDropdownValue == '') {
+      Fluttertoast.showToast(
+          msg: "Select an year!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    } else if (_monthDropdownValue == '') {
+      Fluttertoast.showToast(
+          msg: "Select a month!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    } else {
+      _getDeptReportData();
+    }
   }
 
   Future<void> _getDeptReportData() async {
@@ -149,16 +198,16 @@ class _FinanceAdminReportingScreenState
     Widget text;
     switch (value.toInt()) {
       case 2:
-        text =  Text('MAR', style: style);
+        text = Text('MAR', style: style);
         break;
       case 5:
-        text =  Text('JUN', style: style);
+        text = Text('JUN', style: style);
         break;
       case 8:
-        text =  Text('SEP', style: style);
+        text = Text('SEP', style: style);
         break;
       default:
-        text =  Text('', style: style);
+        text = Text('', style: style);
         break;
     }
 
@@ -209,10 +258,11 @@ class _FinanceAdminReportingScreenState
         case 0:
           return PieChartSectionData(
             color: const Color(0xFF2196F3),
-            value: _deptReportData["Production Department"].toDouble(),
-            title: _deptReportData["Production Department"].toString(),
+            value: double.parse(
+                _deptReportData["Production Department"].toStringAsFixed(2)),
+            title: 'Rs.${_deptReportData["Production Department"]}',
             radius: radius,
-            titleStyle:  TextStyle(
+            titleStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -222,10 +272,11 @@ class _FinanceAdminReportingScreenState
         case 1:
           return PieChartSectionData(
             color: const Color(0xFFFFC300),
-            value: _deptReportData["IT Department"].toDouble(),
-            title: _deptReportData["IT Department"].toString(),
+            value: double.parse(
+                _deptReportData["IT Department"].toStringAsFixed(2)),
+            title: 'Rs.${_deptReportData["IT Department"]}',
             radius: radius,
-            titleStyle:  TextStyle(
+            titleStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -236,10 +287,11 @@ class _FinanceAdminReportingScreenState
         case 2:
           return PieChartSectionData(
             color: const Color(0xFF3BFF49),
-            value: _deptReportData["Finance Department"].toDouble(),
-            title: _deptReportData["Finance Department"].toString(),
+            value: double.parse(
+                _deptReportData["Finance Department"].toStringAsFixed(2)),
+            title: 'Rs.${_deptReportData["Finance Department"]}',
             radius: radius,
-            titleStyle:  TextStyle(
+            titleStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -249,10 +301,11 @@ class _FinanceAdminReportingScreenState
         case 3:
           return PieChartSectionData(
             color: const Color(0xFF91C922),
-            value: _deptReportData["HR Department"].toDouble(),
-            title: _deptReportData["HR Department"].toString(),
+            value: double.parse(
+                _deptReportData["HR Department"].toStringAsFixed(2)),
+            title: 'Rs.${_deptReportData["HR Department"]}',
             radius: radius,
-            titleStyle:  TextStyle(
+            titleStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -262,10 +315,11 @@ class _FinanceAdminReportingScreenState
         case 4:
           return PieChartSectionData(
             color: Colors.deepOrangeAccent,
-            value: _deptReportData["Marketing Department"].toDouble(),
-            title: _deptReportData["Marketing Department"].toString(),
+            value: double.parse(
+                _deptReportData["Marketing Department"].toStringAsFixed(2)),
+            title: "Rs.${_deptReportData["Marketing Department"]}",
             radius: radius,
-            titleStyle:  TextStyle(
+            titleStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -275,10 +329,12 @@ class _FinanceAdminReportingScreenState
         case 5:
           return PieChartSectionData(
             color: const Color(0xFF6E1BFF),
-            value: _deptReportData["Safety and Security Department"].toDouble(),
-            title: _deptReportData["Safety and Security Department"].toString(),
+            value: double.parse(
+                _deptReportData["Safety and Security Department"]
+                    .toStringAsFixed(2)),
+            title: 'Rs.${_deptReportData["Safety and Security Department"]}',
             radius: radius,
-            titleStyle:  TextStyle(
+            titleStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -454,13 +510,15 @@ class _FinanceAdminReportingScreenState
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(bottom: widget._height / 100.3636363636364),
+            padding:
+                EdgeInsets.only(bottom: widget._height / 100.3636363636364),
             child: Row(
               children: [
                 Expanded(
                   child: SizedBox(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: widget._width / 78.54545454545454),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: widget._width / 78.54545454545454),
                       child: TextField(
                         controller: _empNoController,
                         decoration: const InputDecoration(
@@ -472,7 +530,8 @@ class _FinanceAdminReportingScreenState
                 Expanded(
                   child: SizedBox(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: widget._width / 78.54545454545454),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: widget._width / 78.54545454545454),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                             value: _yearDropdownValue.isNotEmpty
@@ -501,10 +560,11 @@ class _FinanceAdminReportingScreenState
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: widget._width / 78.54545454545454),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: widget._width / 78.54545454545454),
                   child: ElevatedButton(
                       onPressed: () {
-                        _getEmpReportData();
+                        _onTapEmpReportViewBtn();
                       },
                       child: const Text("View")),
                 )
@@ -570,18 +630,54 @@ class _FinanceAdminReportingScreenState
                   LineChartBarData(
                     preventCurveOverShooting: true,
                     spots: [
-                      FlSpot(0, _empReportData["JAN"].toDouble()),
-                      FlSpot(1, _empReportData["FEB"].toDouble()),
-                      FlSpot(2, _empReportData["MAR"].toDouble()),
-                      FlSpot(3, _empReportData["APR"].toDouble()),
-                      FlSpot(4, _empReportData["MAY"].toDouble()),
-                      FlSpot(5, _empReportData["JUN"].toDouble()),
-                      FlSpot(6, _empReportData["JUL"].toDouble()),
-                      FlSpot(7, _empReportData["AUG"].toDouble()),
-                      FlSpot(8, _empReportData["SEP"].toDouble()),
-                      FlSpot(9, _empReportData["OCT"].toDouble()),
-                      FlSpot(10, _empReportData["NOV"].toDouble()),
-                      FlSpot(11, _empReportData["DEC"].toDouble()),
+                      FlSpot(
+                          0,
+                          double.parse(
+                              _empReportData["JAN"].toStringAsFixed(2))),
+                      FlSpot(
+                          1,
+                          double.parse(
+                              _empReportData["FEB"].toStringAsFixed(2))),
+                      FlSpot(
+                          2,
+                          double.parse(
+                              _empReportData["MAR"].toStringAsFixed(2))),
+                      FlSpot(
+                          3,
+                          double.parse(
+                              _empReportData["APR"].toStringAsFixed(2))),
+                      FlSpot(
+                          4,
+                          double.parse(
+                              _empReportData["MAY"].toStringAsFixed(2))),
+                      FlSpot(
+                          5,
+                          double.parse(
+                              _empReportData["JUN"].toStringAsFixed(2))),
+                      FlSpot(
+                          6,
+                          double.parse(
+                              _empReportData["JUL"].toStringAsFixed(2))),
+                      FlSpot(
+                          7,
+                          double.parse(
+                              _empReportData["AUG"].toStringAsFixed(2))),
+                      FlSpot(
+                          8,
+                          double.parse(
+                              _empReportData["SEP"].toStringAsFixed(2))),
+                      FlSpot(
+                          9,
+                          double.parse(
+                              _empReportData["OCT"].toStringAsFixed(2))),
+                      FlSpot(
+                          10,
+                          double.parse(
+                              _empReportData["NOV"].toStringAsFixed(2))),
+                      FlSpot(
+                          11,
+                          double.parse(
+                              _empReportData["DEC"].toStringAsFixed(2))),
                     ],
                     isCurved: true,
                     gradient: LinearGradient(
@@ -614,7 +710,10 @@ class _FinanceAdminReportingScreenState
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: widget._width / 19.63636363636364, vertical: widget._height / 160.5818181818182,),
+          padding: EdgeInsets.symmetric(
+            horizontal: widget._width / 19.63636363636364,
+            vertical: widget._height / 160.5818181818182,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -665,27 +764,39 @@ class _FinanceAdminReportingScreenState
               ),
               ElevatedButton(
                   onPressed: () {
-                    _getDeptReportData();
+                    _onTapDeptReportViewBtn();
                   },
                   child: const Text("View"))
             ],
           ),
         ),
-         SizedBox(
+        SizedBox(
           width: widget._width / 14.02597402597403,
         ),
-        Expanded(
-          child: PieChart(PieChartData(
-            borderData: FlBorderData(
-              show: false,
-            ),
-            sectionsSpace: 0,
-            centerSpaceRadius: 0,
-            sections: showingSections(),
-          )),
-        ),
-         Padding(
-          padding: EdgeInsets.symmetric(horizontal: widget._width / 19.63636363636364),
+        (_deptReportData["Production Department"] == 0 &&
+                _deptReportData["IT Department"] == 0 &&
+                _deptReportData["Finance Department"] == 0 &&
+                _deptReportData["HR Department"] == 0 &&
+                _deptReportData["Marketing Department"] == 0 &&
+                _deptReportData["Safety and Security Department"] == 0)
+            ? Container(
+                height: widget._height / 1.665786495662014,
+                alignment: Alignment.center,
+                child: Text("No Data"),
+              )
+            : Expanded(
+                child: PieChart(PieChartData(
+                  borderData: FlBorderData(
+                    show: false,
+                  ),
+                  sectionsSpace: 0,
+                  centerSpaceRadius: 0,
+                  sections: showingSections(),
+                )),
+              ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: widget._width / 19.63636363636364),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -726,7 +837,7 @@ class _FinanceAdminReportingScreenState
             ],
           ),
         ),
-         SizedBox(
+        SizedBox(
           width: widget._width / 14.02597402597403,
         ),
       ],
@@ -737,7 +848,10 @@ class _FinanceAdminReportingScreenState
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: widget._width / 19.63636363636364, vertical: widget._height / 160.5818181818182,),
+          padding: EdgeInsets.symmetric(
+            horizontal: widget._width / 19.63636363636364,
+            vertical: widget._height / 160.5818181818182,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -811,7 +925,9 @@ class _FinanceAdminReportingScreenState
         SizedBox(
           width: widget._width,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: widget._width / 26.18181818181818, vertical: widget._height / 32.11636363636364),
+            padding: EdgeInsets.symmetric(
+                horizontal: widget._width / 26.18181818181818,
+                vertical: widget._height / 32.11636363636364),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
