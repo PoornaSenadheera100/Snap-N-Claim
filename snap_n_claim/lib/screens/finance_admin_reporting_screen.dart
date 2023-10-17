@@ -67,7 +67,8 @@ class _FinanceAdminReportingScreenState
     "Accommodation": 0,
     "Equipment and Supplies": 0,
     "Communication": 0,
-    "Health and Safety": 0
+    "Health and Safety": 0,
+    "MAX" : 0,
   };
 
   List<Color> gradientColors = [
@@ -105,10 +106,13 @@ class _FinanceAdminReportingScreenState
   }
 
   Future<void> _getExpenseReportData() async {
-    Map<String, dynamic> res = await BudgetAllocationAndReportingService.getExpenseReportData(2023, 10);
+    Map<String, dynamic> res =
+        await BudgetAllocationAndReportingService.getExpenseReportData(
+            int.parse(_yearDropdownValue), getMonthNumber(_monthDropdownValue));
     setState(() {
       _expenseReportData = res;
     });
+
   }
 
   int getMonthNumber(String month) {
@@ -293,27 +297,27 @@ class _FinanceAdminReportingScreenState
   }
 
   BarTouchData get barTouchData => BarTouchData(
-    enabled: false,
-    touchTooltipData: BarTouchTooltipData(
-      tooltipBgColor: Colors.transparent,
-      tooltipPadding: EdgeInsets.zero,
-      tooltipMargin: 8,
-      getTooltipItem: (
-          BarChartGroupData group,
-          int groupIndex,
-          BarChartRodData rod,
-          int rodIndex,
+        enabled: false,
+        touchTooltipData: BarTouchTooltipData(
+          tooltipBgColor: Colors.transparent,
+          tooltipPadding: EdgeInsets.zero,
+          tooltipMargin: 8,
+          getTooltipItem: (
+            BarChartGroupData group,
+            int groupIndex,
+            BarChartRodData rod,
+            int rodIndex,
           ) {
-        return BarTooltipItem(
-          rod.toY.round().toString(),
-          const TextStyle(
-            color: Color(0xFF50E4FF),
-            fontWeight: FontWeight.bold,
-          ),
-        );
-      },
-    ),
-  );
+            return BarTooltipItem(
+              rod.toY.round().toString(),
+              const TextStyle(
+                color: Color(0xFF50E4FF),
+                fontWeight: FontWeight.bold,
+              ),
+            );
+          },
+        ),
+      );
 
   Widget getTitles(double value, TitleMeta meta) {
     final style = TextStyle(
@@ -354,100 +358,100 @@ class _FinanceAdminReportingScreenState
   }
 
   FlTitlesData get titlesData => FlTitlesData(
-    show: true,
-    bottomTitles: AxisTitles(
-      sideTitles: SideTitles(
-        showTitles: true,
-        reservedSize: 30,
-        getTitlesWidget: getTitles,
-      ),
-    ),
-    leftTitles: const AxisTitles(
-      sideTitles: SideTitles(showTitles: false),
-    ),
-    topTitles: const AxisTitles(
-      sideTitles: SideTitles(showTitles: false),
-    ),
-    rightTitles: const AxisTitles(
-      sideTitles: SideTitles(showTitles: false),
-    ),
-  );
+        show: true,
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            getTitlesWidget: getTitles,
+          ),
+        ),
+        leftTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+      );
 
   FlBorderData get borderData => FlBorderData(
-    show: false,
-  );
+        show: false,
+      );
 
   LinearGradient get _barsGradient => LinearGradient(
-    colors: [
-      Color(0xFF2196F3),
-      Color(0xFF50E4FF),
-    ],
-    begin: Alignment.bottomCenter,
-    end: Alignment.topCenter,
-  );
+        colors: [
+          Color(0xFF2196F3),
+          Color(0xFF50E4FF),
+        ],
+        begin: Alignment.bottomCenter,
+        end: Alignment.topCenter,
+      );
 
   List<BarChartGroupData> get barGroups => [
-    BarChartGroupData(
-      x: 0,
-      barRods: [
-        BarChartRodData(
-          toY: _expenseReportData["Transportation"].toDouble(),
-          gradient: _barsGradient,
-        )
-      ],
-      showingTooltipIndicators: [0],
-    ),
-    BarChartGroupData(
-      x: 1,
-      barRods: [
-        BarChartRodData(
-          toY: _expenseReportData["Meals and Food"].toDouble(),
-          gradient: _barsGradient,
-        )
-      ],
-      showingTooltipIndicators: [0],
-    ),
-    BarChartGroupData(
-      x: 2,
-      barRods: [
-        BarChartRodData(
-          toY: _expenseReportData["Accommodation"].toDouble(),
-          gradient: _barsGradient,
-        )
-      ],
-      showingTooltipIndicators: [0],
-    ),
-    BarChartGroupData(
-      x: 3,
-      barRods: [
-        BarChartRodData(
-          toY: _expenseReportData["Equipment and Supplies"].toDouble(),
-          gradient: _barsGradient,
-        )
-      ],
-      showingTooltipIndicators: [0],
-    ),
-    BarChartGroupData(
-      x: 4,
-      barRods: [
-        BarChartRodData(
-          toY: _expenseReportData["Communication"].toDouble(),
-          gradient: _barsGradient,
-        )
-      ],
-      showingTooltipIndicators: [0],
-    ),
-    BarChartGroupData(
-      x: 5,
-      barRods: [
-        BarChartRodData(
-          toY: _expenseReportData["Health and Safety"].toDouble(),
-          gradient: _barsGradient,
-        )
-      ],
-      showingTooltipIndicators: [0],
-    ),
-  ];
+        BarChartGroupData(
+          x: 0,
+          barRods: [
+            BarChartRodData(
+              toY: _expenseReportData["Transportation"].toDouble(),
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 1,
+          barRods: [
+            BarChartRodData(
+              toY: _expenseReportData["Meals and Food"].toDouble(),
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 2,
+          barRods: [
+            BarChartRodData(
+              toY: _expenseReportData["Accommodation"].toDouble(),
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 3,
+          barRods: [
+            BarChartRodData(
+              toY: _expenseReportData["Equipment and Supplies"].toDouble(),
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 4,
+          barRods: [
+            BarChartRodData(
+              toY: _expenseReportData["Communication"].toDouble(),
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+        BarChartGroupData(
+          x: 5,
+          barRods: [
+            BarChartRodData(
+              toY: _expenseReportData["Health and Safety"].toDouble(),
+              gradient: _barsGradient,
+            )
+          ],
+          showingTooltipIndicators: [0],
+        ),
+      ];
 
   Widget _employeeReportTab() {
     return Padding(
@@ -742,9 +746,8 @@ class _FinanceAdminReportingScreenState
           children: [
             DropdownButtonHideUnderline(
               child: DropdownButton<String>(
-                  value: _yearDropdownValue.isNotEmpty
-                      ? _yearDropdownValue
-                      : null,
+                  value:
+                      _yearDropdownValue.isNotEmpty ? _yearDropdownValue : null,
                   hint: const Text("Year"),
                   items: _years.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem(
@@ -768,8 +771,7 @@ class _FinanceAdminReportingScreenState
                       ? _monthDropdownValue
                       : null,
                   hint: const Text("Month"),
-                  items:
-                  _months.map<DropdownMenuItem<String>>((String value) {
+                  items: _months.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem(
                       value: value,
                       child: Text(
@@ -792,17 +794,20 @@ class _FinanceAdminReportingScreenState
                 child: Text("View"))
           ],
         ),
-        AspectRatio(aspectRatio: 1.0, child: BarChart(
-          BarChartData(
-            barTouchData: barTouchData,
-            titlesData: titlesData,
-            borderData: borderData,
-            barGroups: barGroups,
-            gridData: const FlGridData(show: false),
-            alignment: BarChartAlignment.spaceAround,
-            maxY: 20,
+        AspectRatio(
+          aspectRatio: 1.0,
+          child: BarChart(
+            BarChartData(
+              barTouchData: barTouchData,
+              titlesData: titlesData,
+              borderData: borderData,
+              barGroups: barGroups,
+              gridData: const FlGridData(show: false),
+              alignment: BarChartAlignment.spaceAround,
+              maxY: (_expenseReportData["MAX"] + 1000).toDouble(),
+            ),
           ),
-        ),),
+        ),
       ],
     );
   }

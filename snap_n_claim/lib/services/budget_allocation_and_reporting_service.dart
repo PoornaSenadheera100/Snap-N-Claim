@@ -202,7 +202,8 @@ class BudgetAllocationAndReportingService {
       "Accommodation": 0,
       "Equipment and Supplies": 0,
       "Communication": 0,
-      "Health and Safety": 0
+      "Health and Safety": 0,
+      "MAX": 0,
     };
 
     try {
@@ -217,6 +218,9 @@ class BudgetAllocationAndReportingService {
         final double total = document['total'].toDouble();
         if (result.containsKey(category)) {
           result[category] += total;
+          if (result["MAX"] < result[category]) {
+            result["MAX"] = result[category];
+          }
         }
       }
       return result;
