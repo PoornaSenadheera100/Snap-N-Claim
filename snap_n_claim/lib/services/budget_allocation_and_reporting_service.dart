@@ -237,9 +237,19 @@ class BudgetAllocationAndReportingService {
   }
 
   // TODO - Test
-  static Stream<QuerySnapshot<Object?>> getApprovedAndRejectedClaims() {
+  static Stream<QuerySnapshot<Object?>> getApprovedClaims() {
     return requestCollectionReference
-        .where("status", whereIn: ["Approved", "Rejected"])
+        .where("status", isEqualTo: "Approved")
+        .orderBy("empNo")
+        .orderBy("category")
+        .orderBy("total")
+        .snapshots();
+  }
+
+  // TODO - Test
+  static Stream<QuerySnapshot<Object?>> getRejectedClaims() {
+    return requestCollectionReference
+        .where("status", isEqualTo: "Rejected")
         .orderBy("empNo")
         .orderBy("category")
         .orderBy("total")
