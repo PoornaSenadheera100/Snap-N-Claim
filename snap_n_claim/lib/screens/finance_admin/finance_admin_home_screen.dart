@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:snap_n_claim/screens/finance_admin_menu_drawer.dart';
+import 'package:snap_n_claim/screens/finance_admin/finance_admin_menu_drawer.dart';
 
 class FinanceAdminHomeScreen extends StatefulWidget {
   const FinanceAdminHomeScreen(this._width, this._height, {super.key});

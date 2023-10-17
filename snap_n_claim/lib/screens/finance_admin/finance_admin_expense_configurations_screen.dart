@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snap_n_claim/models/response.dart';
 
-import '../services/budget_allocation_and_reporting_service.dart';
+import '../../services/budget_allocation_and_reporting_service.dart';
 
 class FinanceAdminExpenseConfigurationsScreen extends StatefulWidget {
   const FinanceAdminExpenseConfigurationsScreen(this._width, this._height,

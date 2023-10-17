@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:snap_n_claim/screens/finance_admin_expense_configurations_screen.dart';
-import 'package:snap_n_claim/screens/finance_admin_expense_mapping_selection_screen.dart';
-import 'package:snap_n_claim/screens/finance_admin_menu_drawer.dart';
+import 'package:snap_n_claim/screens/finance_admin/finance_admin_expense_configurations_screen.dart';
+import 'package:snap_n_claim/screens/finance_admin/finance_admin_expense_mapping_selection_screen.dart';
+import 'package:snap_n_claim/screens/finance_admin/finance_admin_menu_drawer.dart';
 
 class FinanceAdminBudgetAllocationSelectionScreen extends StatelessWidget {
   const FinanceAdminBudgetAllocationSelectionScreen(this._width, this._height,

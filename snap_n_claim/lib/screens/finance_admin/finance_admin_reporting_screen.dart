@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
-import '../utils/pie_chart_indicator.dart';
+import '../../utils/pie_chart_indicator.dart';
 
 class FinanceAdminReportingScreen extends StatefulWidget {
   const FinanceAdminReportingScreen(this._width, this._height, {super.key});

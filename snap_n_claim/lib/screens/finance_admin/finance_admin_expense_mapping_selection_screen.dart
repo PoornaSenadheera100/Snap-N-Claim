@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:snap_n_claim/screens/finance_admin_expense_mapping_screen.dart';
+import 'package:snap_n_claim/screens/finance_admin/finance_admin_expense_mapping_screen.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
 class FinanceAdminExpenseMappingSelectionScreen extends StatefulWidget {

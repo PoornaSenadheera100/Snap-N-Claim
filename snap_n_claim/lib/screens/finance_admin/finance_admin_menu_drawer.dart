@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:snap_n_claim/screens/finance_admin_budget_allocation_selection_screen.dart';
-import 'package:snap_n_claim/screens/finance_admin_home_screen.dart';
-import 'package:snap_n_claim/screens/finance_admin_reports_selection_screen.dart';
+import 'package:snap_n_claim/screens/finance_admin/finance_admin_budget_allocation_selection_screen.dart';
+import 'package:snap_n_claim/screens/finance_admin/finance_admin_home_screen.dart';
+import 'package:snap_n_claim/screens/finance_admin/finance_admin_reports_selection_screen.dart';
 
 class FinanceAdminMenuDrawer extends StatelessWidget {
   const FinanceAdminMenuDrawer(this._width, this._height, this.currentPage,
