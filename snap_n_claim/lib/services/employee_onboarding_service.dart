@@ -58,7 +58,7 @@ class EmployeeOnboardingService {
   }
 
   static Future<Response> addAccount(
-      String empNo, String name, String department, String empGrade, String password, String email, bool firstLogin, String phone) async {
+      String empNo, String name, String department, String empGrade, String password, String email,String phone,String empType) async {
     Response response = Response();
     Map<String, dynamic> data = <String, dynamic>{
       "emp_no": empNo,
@@ -67,7 +67,9 @@ class EmployeeOnboardingService {
       "emp_grade": empGrade,
       "password": password,
       "email": email,
-
+      "phone": phone,
+      "first_login":true,
+      "emp_type": empType
     };
 
     await employeeCollectionReference.doc().set(data).whenComplete(() {

@@ -33,10 +33,14 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
   TextEditingController();
   final TextEditingController _employeeInitialPasswordController =
   TextEditingController();
+  final TextEditingController _employeePhoneNoController =
+  TextEditingController();
   final List<String> employeeDepartmentList = <String>['Production Department', 'IT Department', 'Finance Department', 'HR Department','Marketing Department','Safety and Security Department'];
   final List<String> employeeGradesList = <String>['Junior', 'Senior', 'Manager', 'Executive','Senior Executive'];
+  final List<String> employeeTypeList = <String>['hod', 'emp'];
   String _departmentDropdownValue = "";
   String _employeeGradeDropdownValue = '';
+  String _empTypeDropDownValue = '';
   String? _validateEmployeeNo(String value) {
     if (value == '') {
       return "This field is required!";
@@ -70,6 +74,39 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
       return "Please enter a valid email address.";
     }
     return null;
+  }
+
+  String? _validateEmployeePhone(String value) {
+    if (value.isEmpty) {
+      return "This field is required!";
+    } else if (!RegExp(r'^\d{10}$').hasMatch(value)) {
+      return "Please enter a valid 10-digit phone number.";
+    }
+    return null;
+  }
+
+
+  Future<void> _onTapCreateAccountButton() async {
+    Response response = await EmployeeOnboardingService.addAccount(_employeeNoController.text, _employeeNameController.text, _departmentDropdownValue, _employeeGradeDropdownValue, _employeeInitialPasswordController.text, _employeeEmailController.text, _employeePhoneNoController.text,_empTypeDropDownValue );
+    if (response.code == 200) {
+      Fluttertoast.showToast(
+          msg: "Account Created Successfully!🎉",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    } else {
+      Fluttertoast.showToast(
+          msg: "Something went wrong! Please try again.☹️",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 
   void _navigate() {
@@ -183,6 +220,30 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
               ),
               DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
+                    value: _empTypeDropDownValue.isNotEmpty
+                        ? _empTypeDropDownValue
+                        : null,
+                    hint: const Text("Employee Type"),
+                    items: employeeTypeList
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: TextStyle(
+                              fontSize:
+                              widget._width / 26.18181818181818),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _empTypeDropDownValue = newValue!;
+                      });
+                    }),
+              ),
+              DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
                     value: _departmentDropdownValue.isNotEmpty
                         ? _departmentDropdownValue
                         : null,
@@ -203,29 +264,25 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
                       setState(() {
                         _departmentDropdownValue = newValue!;
                       });
-                      // _filterClaims(_empNoController.text);
                     }),
               ),
-              // DropdownButton<String>(
-              //   value: _selectedEmployeeGrade,
-              //   onChanged: (String? newValue) {
-              //     setState(() {
-              //       _selectedEmployeeGrade = newValue!; // Use the null assertion operator
-              //     });
-              //   },
-              //   items: employeeGradesList
-              //       .map<DropdownMenuItem<String>>((String value) {
-              //     return DropdownMenuItem<String>(
-              //       value: value,
-              //       child: Text(value),
-              //     );
-              //   })
-              //       .toList(),
-              // ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: TextFormField(
+                  obscureText: true,
+                  controller: _employeePhoneNoController,
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Enter Phone Number"),
+                  validator: (value) {
+                    return _validateEmployeePhone(value!);
+                  },
+                ),
+              ),
               ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // _updateUser();
+                      _onTapCreateAccountButton();
                     }
                   },
                   child: const Text("Create Account"))
