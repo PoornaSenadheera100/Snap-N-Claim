@@ -33,18 +33,31 @@ class ApproverNavBar extends StatelessWidget {
         ListTile(
           leading: Icon(Icons.home),
           title: Text("Approver Dashboard"),
-          onTap: null
+          onTap: null,
+          trailing: ClipOval(
+            child: Container(
+              color: Colors.red,
+                width: 20,
+                height: 20,
+              child: Center(
+                child: Text('8',style: TextStyle(color: Colors.grey,fontSize: 12,),),
+              ),
+            ),
+          ),
         ),
+        Divider(),
         ListTile(
             leading: Icon(Icons.analytics_outlined),
             title: Text("View Reports"),
             onTap: null
         ),
+        Divider(),
         ListTile(
             leading: Icon(Icons.monetization_on),
             title: Text("My Claims"),
             onTap: null
         ),
+        Divider(),
       ],
     ));
   }
