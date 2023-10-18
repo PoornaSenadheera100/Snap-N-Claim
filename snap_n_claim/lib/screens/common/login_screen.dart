@@ -51,8 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _validateLogin(BuildContext context) async {
     QuerySnapshot snapshot =
-        await EmployeeOnboardingService.getUserByEmail(
-            _emailController.text);
+        await EmployeeOnboardingService.getUserByEmail(_emailController.text);
     if (snapshot.docs.isEmpty) {
       Fluttertoast.showToast(
           msg: "Please Register Your Account!",
@@ -78,81 +77,9 @@ class _LoginScreenState extends State<LoginScreen> {
         _navigate(employee, context);
       }
     }
-
-    //   var siteManager =
-    //   await DBService.login(_emailController.text, _passwordController.text);
-    //   if (siteManager.isEmpty) {
-    //     Fluttertoast.showToast(
-    //         msg: "Invalid Credentials!",
-    //         toastLength: Toast.LENGTH_SHORT,
-    //         gravity: ToastGravity.CENTER,
-    //         timeInSecForIosWeb: 1,
-    //         backgroundColor: Colors.red,
-    //         textColor: Colors.white,
-    //         fontSize: 16.0);
-    //   } else {
-    //     if (siteManager[0]["userRole"] == "site manager") {
-    //       SiteManager user = SiteManager(
-    //           siteManager[0]["empId"],
-    //           siteManager[0]["name"],
-    //           siteManager[0]["phoneNumber"],
-    //           siteManager[0]["email"],
-    //           siteManager[0]["password"],
-    //           siteManager[0]["userRole"],
-    //           siteManager[0]["siteID"],
-    //           siteManager[0]["location"]);
-    //
-    //       String userData = '{"empId" : "' +
-    //           siteManager[0]["empId"] +
-    //           '", "name" : "' +
-    //           siteManager[0]["name"] +
-    //           '", "phoneNumber" : "' +
-    //           siteManager[0]["phoneNumber"] +
-    //           '", "email" : "' +
-    //           siteManager[0]["email"] +
-    //           '", "password" : "' +
-    //           siteManager[0]["password"] +
-    //           '", "userRole" : "' +
-    //           siteManager[0]["userRole"] +
-    //           '", "siteID" : "' +
-    //           siteManager[0]["siteID"] +
-    //           '", "location" : "' +
-    //           siteManager[0]["location"] +
-    //           '"}';
-    //       final directory = await getApplicationDocumentsDirectory();
-    //       final path = directory.path;
-    //       File file = File('$path/userdata.txt');
-    //       file.writeAsString(userData);
-    //
-    //       Navigator.of(context).pushReplacement(MaterialPageRoute(
-    //           builder: (BuildContext context) =>
-    //               SiteManagerHomePage(widget._width, widget._height, user)));
-    //     } else {
-    //       Fluttertoast.showToast(
-    //           msg: "Unauthorized!",
-    //           toastLength: Toast.LENGTH_SHORT,
-    //           gravity: ToastGravity.CENTER,
-    //           timeInSecForIosWeb: 1,
-    //           backgroundColor: Colors.red,
-    //           textColor: Colors.white,
-    //           fontSize: 16.0);
-    //     }
-    //   }
   }
 
   Future<Employee> _saveCredentials(QueryDocumentSnapshot doc) async {
-    // String user = '{
-    //   "department": "' + doc["department"] + '",
-    //   "email": doc["email"],
-    //   "emp_grade": doc["emp_grade"],
-    //   "emp_no": doc["emp_no"],
-    //   "emp_type": doc["emp_type"],
-    //   "first_login": doc["first_login"],
-    //   "name": doc["name"],
-    //   "password": doc["password"],
-    //   "phone": doc["phone"],
-    // }';
-
     String userData = '{"department" : "' +
         doc["department"] +
         '", "email" : "' +
@@ -184,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
         doc["password"],
         doc["phone"]);
 
-    if(employee.firstLogin == false){
+    if (employee.firstLogin == false) {
       final directory = await getApplicationDocumentsDirectory();
       final path = directory.path;
       File file = File('$path/userdata.txt');
@@ -200,21 +127,21 @@ class _LoginScreenState extends State<LoginScreen> {
           builder: (BuildContext context) =>
               FinanceAdminHomeScreen(widget._width, widget._height, employee)));
     } else if (employee.empType == "hod") {
-      if(employee.firstLogin == false){
+      if (employee.firstLogin == false) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) =>
-                ApproverDashboardScreen(widget._width, widget._height, employee)));
-      }else{
+            builder: (BuildContext context) => ApproverDashboardScreen(
+                widget._width, widget._height, employee)));
+      } else {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (BuildContext context) =>
                 ChangePasswordScreen(widget._width, widget._height, employee)));
       }
     } else {
-      if(employee.firstLogin == false){
+      if (employee.firstLogin == false) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (BuildContext context) =>
                 EmployeeHomeScreen(widget._width, widget._height, employee)));
-      }else{
+      } else {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (BuildContext context) =>
                 ChangePasswordScreen(widget._width, widget._height, employee)));
@@ -259,14 +186,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         onSaved: (text) {},
                         decoration: InputDecoration(
                           hintText: 'name@gmail.com',
-                          prefixIcon: Icon(Icons.mail),
+                          prefixIcon: const Icon(Icons.mail),
                           suffixIcon: _emailController.text.isEmpty
                               ? Container(width: 0)
                               : IconButton(
-                                  icon: Icon(Icons.close),
+                                  icon: const Icon(Icons.close),
                                   onPressed: () => _emailController.clear(),
                                 ),
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                         ),
                       ),
                     ),

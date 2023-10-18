@@ -7,10 +7,12 @@ import 'package:snap_n_claim/models/response.dart';
 import '../../services/budget_allocation_and_reporting_service.dart';
 
 class FinanceAdminExpenseConfigurationsScreen extends StatefulWidget {
-  const FinanceAdminExpenseConfigurationsScreen(this._width, this._height, this.user,
+  const FinanceAdminExpenseConfigurationsScreen(
+      this._width, this._height, this.user,
       {super.key});
 
   final double _width;
+
   // ignore: unused_field
   final double _height;
   final Employee user;
@@ -582,15 +584,6 @@ class _FinanceAdminExpenseConfigurationsScreenState
               );
             }
           }),
-      // floatingActionButton: ElevatedButton(
-      //   onPressed: () {
-      //     if (_formKey.currentState!.validate()) {
-      //       _formKey.currentState?.save();
-      //       update(context);
-      //     }
-      //   },
-      //   child: Text("Save"),
-      // ),
     );
   }
 }

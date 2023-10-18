@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:snap_n_claim/models/employee.dart';
 
 import '../models/response.dart';
 
@@ -162,7 +161,7 @@ class BudgetAllocationAndReportingService {
 
       return result;
     } catch (e) {
-      return result; // Return the initialized result with zeros if there's an error
+      return result;
     }
   }
 
@@ -193,7 +192,7 @@ class BudgetAllocationAndReportingService {
       }
       return result;
     } catch (e) {
-      return result; // Return the initialized result with zeros if there's an error
+      return result;
     }
   }
 
@@ -227,11 +226,9 @@ class BudgetAllocationAndReportingService {
       }
       return result;
     } catch (e) {
-      return result; // Return the initialized result with zeros if there's an error
+      return result;
     }
   }
-
-
 
   static Stream<QuerySnapshot<Object?>> getApprovedClaims() {
     return requestCollectionReference
@@ -247,7 +244,7 @@ class BudgetAllocationAndReportingService {
     return requestCollectionReference
         .where("status", isEqualTo: "Approved")
         .orderBy("empNo")
-        .startAt([empNo]).endAt([empNo + '\uf8ff']).snapshots();
+        .startAt([empNo]).endAt(['$empNo\uf8ff']).snapshots();
   }
 
   static Stream<QuerySnapshot<Object?>> getRejectedClaims() {
@@ -264,32 +261,6 @@ class BudgetAllocationAndReportingService {
     return requestCollectionReference
         .where("status", isEqualTo: "Rejected")
         .orderBy("empNo")
-        .startAt([empNo]).endAt([empNo + '\uf8ff']).snapshots();
+        .startAt([empNo]).endAt(['$empNo\uf8ff']).snapshots();
   }
-
-  // TODO - Move to Employee Onboarding
-  // static Future<Response> updateEmployee(Employee employee) async {
-  //   Response response = Response();
-  //   WriteBatch batch = FirebaseFirestore.instance.batch();
-  //   QuerySnapshot querySnapshot = await employeeCollectionReference
-  //       .where("email", isEqualTo: employee.email)
-  //       .get();
-  //   QueryDocumentSnapshot document = querySnapshot.docs[0];
-  //   Map<String, dynamic> data = <String, dynamic>{
-  //     "department": employee.department,
-  //     "email": employee.email,
-  //     "emp_grade": employee.empGrade,
-  //     "emp_no": employee.empNo,
-  //     "emp_type": employee.empType,
-  //     "first_login": employee.firstLogin,
-  //     "name": employee.name,
-  //     "password": employee.password,
-  //     "phone": employee.phone,
-  //   };
-  //
-  //   batch.update(document, data);
-  //   await batch.commit();
-  //
-  // }
-
 }

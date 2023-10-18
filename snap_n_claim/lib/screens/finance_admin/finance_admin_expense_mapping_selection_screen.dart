@@ -5,7 +5,8 @@ import 'package:snap_n_claim/screens/finance_admin/finance_admin_expense_mapping
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
 class FinanceAdminExpenseMappingSelectionScreen extends StatefulWidget {
-  const FinanceAdminExpenseMappingSelectionScreen(this._width, this._height, this.user,
+  const FinanceAdminExpenseMappingSelectionScreen(
+      this._width, this._height, this.user,
       {super.key});
 
   final double _width;
@@ -36,12 +37,12 @@ class _FinanceAdminExpenseMappingSelectionScreenState
             glCode,
             glName,
             transactionLimit,
-            monthlyLimit, widget.user)));
+            monthlyLimit,
+            widget.user)));
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Expense Mapping"),
@@ -120,7 +121,8 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                                                         e["monthly_limit"]
                                                             .toDouble());
                                                   },
-                                                  child: const Text("Configure")),
+                                                  child:
+                                                      const Text("Configure")),
                                             ),
                                           ),
                                         ],

@@ -7,7 +7,8 @@ import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.da
 import '../../utils/pie_chart_indicator.dart';
 
 class FinanceAdminReportingScreen extends StatefulWidget {
-  const FinanceAdminReportingScreen(this._width, this._height, this.user, {super.key});
+  const FinanceAdminReportingScreen(this._width, this._height, this.user,
+      {super.key});
 
   final double _width;
   final double _height;
@@ -651,7 +652,6 @@ class _FinanceAdminReportingScreenState
                 maxX: 11,
                 minY: 0,
                 maxY: _empReportData["MAX"].toDouble() + 1000,
-                //6,
                 lineBarsData: [
                   LineChartBarData(
                     preventCurveOverShooting: true,

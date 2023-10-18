@@ -7,8 +7,14 @@ import 'package:snap_n_claim/models/response.dart';
 import '../../services/budget_allocation_and_reporting_service.dart';
 
 class FinanceAdminExpenseMappingScreen extends StatefulWidget {
-  const FinanceAdminExpenseMappingScreen(this._width, this._height,
-      this._glCode, this._glName, this._transactionLimit, this._monthlyLimit, this.user,
+  const FinanceAdminExpenseMappingScreen(
+      this._width,
+      this._height,
+      this._glCode,
+      this._glName,
+      this._transactionLimit,
+      this._monthlyLimit,
+      this.user,
       {super.key});
 
   final double _width;

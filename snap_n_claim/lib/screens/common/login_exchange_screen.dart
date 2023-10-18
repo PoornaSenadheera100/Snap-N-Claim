@@ -66,8 +66,8 @@ class _LoginExchangeScreenState extends State<LoginExchangeScreen> {
               FinanceAdminHomeScreen(widget._width, widget._height, employee)));
     } else if (employee.empType == "hod") {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (BuildContext context) =>
-              ApproverDashboardScreen(widget._width, widget._height, employee)));
+          builder: (BuildContext context) => ApproverDashboardScreen(
+              widget._width, widget._height, employee)));
     } else {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (BuildContext context) =>

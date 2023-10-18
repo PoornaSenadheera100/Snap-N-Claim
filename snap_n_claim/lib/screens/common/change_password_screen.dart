@@ -5,7 +5,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:snap_n_claim/models/response.dart';
 import 'package:snap_n_claim/screens/head_of_department/approver_dashboard_screen.dart';
-import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 import 'package:snap_n_claim/services/employee_onboarding_service.dart';
 
 import '../../models/employee.dart';
@@ -63,8 +62,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           fontSize: 16.0);
       await _saveCredentials();
       _navigate();
-      // Navigator.of(context).pop();
-      // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context)=>))
     } else {
       Fluttertoast.showToast(
           msg: "Something went wrong! Please try again.",
@@ -108,8 +105,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     if (widget._user.empType == "hod") {
       Navigator.of(context).pop();
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (BuildContext context) =>
-              ApproverDashboardScreen(widget._width, widget._height, widget._user)));
+          builder: (BuildContext context) => ApproverDashboardScreen(
+              widget._width, widget._height, widget._user)));
     } else {
       Navigator.of(context).pop();
       Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -130,8 +127,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 20.0),
                 child: Text(
                   "Please change your password from the initial password.",
                   style: TextStyle(fontSize: 15),
@@ -140,7 +137,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               TextFormField(
                 obscureText: true,
                 controller: _newPasswordController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(), labelText: "New Password"),
                 validator: (value) {
                   return _validateNewPassword(value!);
@@ -151,7 +148,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 child: TextFormField(
                   obscureText: true,
                   controller: _retypePasswordController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Re-type Password"),
                   validator: (value) {
@@ -165,7 +162,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       _updateUser();
                     }
                   },
-                  child: Text("Update"))
+                  child: const Text("Update"))
             ],
           ),
         ),
