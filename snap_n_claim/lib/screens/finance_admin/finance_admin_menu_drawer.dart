@@ -9,6 +9,8 @@ import 'package:snap_n_claim/screens/finance_admin/finance_admin_budget_allocati
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_home_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_reports_selection_screen.dart';
 
+import 'create_account_screen.dart';
+
 class FinanceAdminMenuDrawer extends StatelessWidget {
   const FinanceAdminMenuDrawer(
       this._width, this._height, this.currentPage, this.user,
@@ -68,7 +70,22 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
     }
   }
 
-  void _onTapUserConfigBtn(BuildContext context) {}
+  void _onTapUserConfigBtn(BuildContext context) {
+    Navigator.of(context).pop();
+    if (currentPage != "User Configuration Screen") {
+      Navigator.pushReplacement(
+        context,
+        PageTransition(
+          child: CreateAccountScreen(
+              _width, _height, user),
+          type: PageTransitionType.rightToLeft,
+          alignment: Alignment.center,
+          isIos: true,
+          duration: const Duration(seconds: 1),
+        ),
+      );
+    }
+  }
 
   void _onTapMyClaimsBtn(BuildContext context) {}
 

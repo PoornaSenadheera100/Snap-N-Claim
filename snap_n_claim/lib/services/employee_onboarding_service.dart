@@ -56,4 +56,24 @@ class EmployeeOnboardingService {
 
     return response;
   }
+
+  static Future<Response> addAllocation(
+      String glCode, String empGrade, String costCenter) async {
+    Response response = Response();
+    Map<String, dynamic> data = <String, dynamic>{
+      "gl_code": glCode,
+      "emp_grade": empGrade,
+      "department": costCenter
+    };
+
+    await employeeCollectionReference.doc().set(data).whenComplete(() {
+      response.code = 200;
+      response.message = "Account Created";
+    }).catchError((e) {
+      response.code = 500;
+      response.message = e;
+    });
+
+    return response;
+  }
 }
