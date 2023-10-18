@@ -231,12 +231,7 @@ class BudgetAllocationAndReportingService {
     }
   }
 
-  // TODO - Move to Employee Onboarding
-  static Future<QuerySnapshot<Object?>> getUserByEmail(String email) async {
-    return await employeeCollectionReference
-        .where("email", isEqualTo: email)
-        .get();
-  }
+
 
   static Stream<QuerySnapshot<Object?>> getApprovedClaims() {
     return requestCollectionReference
@@ -296,4 +291,5 @@ class BudgetAllocationAndReportingService {
   //   await batch.commit();
   //
   // }
+
 }
