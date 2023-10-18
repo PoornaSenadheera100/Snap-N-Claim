@@ -10,4 +10,16 @@ final CollectionReference requestCollectionReference =
 final CollectionReference employeeCollectionReference =
     _firestore.collection("Employee");
 
-class ExpenseApprovalProcessAndSlaCalculationService {}
+class ExpenseApprovalProcessAndSlaCalculationService {
+
+    static Stream<QuerySnapshot<Object?>> getPendingClaims(String empNo) {
+        return requestCollectionReference
+            .where("status", isEqualTo: "Pending")
+            .orderBy("empNo")
+            .orderBy("category")
+            .orderBy("total")
+            .snapshots();
+    }
+
+}
+
