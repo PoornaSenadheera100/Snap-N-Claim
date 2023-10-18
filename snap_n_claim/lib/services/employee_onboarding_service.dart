@@ -57,13 +57,17 @@ class EmployeeOnboardingService {
     return response;
   }
 
-  static Future<Response> addAllocation(
-      String glCode, String empGrade, String costCenter) async {
+  static Future<Response> addAccount(
+      String empNo, String name, String department, String empGrade, String password, String email, bool firstLogin, String phone) async {
     Response response = Response();
     Map<String, dynamic> data = <String, dynamic>{
-      "gl_code": glCode,
+      "emp_no": empNo,
+      "name": name,
+      "department": department,
       "emp_grade": empGrade,
-      "department": costCenter
+      "password": password,
+      "email": email,
+
     };
 
     await employeeCollectionReference.doc().set(data).whenComplete(() {
