@@ -263,4 +263,11 @@ class BudgetAllocationAndReportingService {
         .orderBy("empNo")
         .startAt([empNo]).endAt(['$empNo\uf8ff']).snapshots();
   }
+
+  static Stream<QuerySnapshot<Object?>> getFinancePendingClaims() {
+    return requestCollectionReference
+        .where("status", isEqualTo: "Approved").where("paymentStatus", isEqualTo: "Pending")
+        .orderBy("date")
+        .snapshots();
+  }
 }
