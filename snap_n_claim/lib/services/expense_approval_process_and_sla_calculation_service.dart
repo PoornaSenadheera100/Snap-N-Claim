@@ -12,12 +12,10 @@ final CollectionReference employeeCollectionReference =
 
 class ExpenseApprovalProcessAndSlaCalculationService {
 
-    static Stream<QuerySnapshot<Object?>> getPendingClaims(String empNo) {
+    static Stream<QuerySnapshot<Object?>> getPendingClaims(String department) {
         return requestCollectionReference
-            .where("status", isEqualTo: "Pending")
-            .orderBy("empNo")
-            .orderBy("category")
-            .orderBy("total")
+            .where("status", isEqualTo: "Pending").where("department", isEqualTo: department)
+            .orderBy("date")
             .snapshots();
     }
 
