@@ -21,7 +21,6 @@ class SnapNClaim extends StatelessWidget {
     _width = MediaQuery.of(context).size.width;
     _height = MediaQuery.of(context).size.height;
     return MaterialApp(
-      // home: FinanceAdminHomeScreen(_width, _height),
       home: LoginExchangeScreen(_width, _height),
     );
   }
