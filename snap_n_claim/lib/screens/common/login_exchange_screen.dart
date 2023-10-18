@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:snap_n_claim/screens/head_of_department/approver_dashboard_screen.dart';
 import 'package:snap_n_claim/screens/employee/employee_home_screen.dart';
-import 'package:snap_n_claim/screens/head_of_department/hod_home_screen.dart';
 
 import '../../models/employee.dart';
 import '../finance_admin/finance_admin_home_screen.dart';

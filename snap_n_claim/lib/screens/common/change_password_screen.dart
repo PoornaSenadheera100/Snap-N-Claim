@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:snap_n_claim/models/response.dart';
+import 'package:snap_n_claim/screens/head_of_department/approver_dashboard_screen.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 import 'package:snap_n_claim/services/employee_onboarding_service.dart';
 
 import '../../models/employee.dart';
 import '../employee/employee_home_screen.dart';
-import '../head_of_department/hod_home_screen.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen(this._width, this._height, this._user,
@@ -109,7 +109,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       Navigator.of(context).pop();
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (BuildContext context) =>
-              HodHomeScreen(widget._width, widget._height, widget._user)));
+              ApproverDashboardScreen(widget._width, widget._height, widget._user)));
     } else {
       Navigator.of(context).pop();
       Navigator.of(context).pushReplacement(MaterialPageRoute(
