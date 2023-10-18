@@ -109,19 +109,19 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
     }
   }
 
-  void _navigate() {
-    if (widget._user.empType == "hod") {
-      Navigator.of(context).pop();
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (BuildContext context) => ApproverDashboardScreen(
-              widget._width, widget._height, widget._user)));
-    } else {
-      Navigator.of(context).pop();
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (BuildContext context) =>
-              EmployeeHomeScreen(widget._width, widget._height, widget._user)));
-    }
-  }
+  // void _navigate() {
+  //   if (widget._user.empType == "hod") {
+  //     Navigator.of(context).pop();
+  //     Navigator.of(context).pushReplacement(MaterialPageRoute(
+  //         builder: (BuildContext context) => ApproverDashboardScreen(
+  //             widget._width, widget._height, widget._user)));
+  //   } else {
+  //     Navigator.of(context).pop();
+  //     Navigator.of(context).pushReplacement(MaterialPageRoute(
+  //         builder: (BuildContext context) =>
+  //             EmployeeHomeScreen(widget._width, widget._height, widget._user)));
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -137,13 +137,6 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 20.0),
-                child: Text(
-                  "Please change your password from the initial password.",
-                  style: TextStyle(fontSize: 15),
-                ),
-              ),
               TextFormField(
                 obscureText: true,
                 controller: _employeeNoController,
@@ -193,78 +186,90 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
                 ),
               ),
  // Add some spacing between the TextFormField and Dropdown
-              DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                    value: _employeeGradeDropdownValue.isNotEmpty
-                        ? _employeeGradeDropdownValue
-                        : null,
-                    hint: const Text("Employee Grade"),
-                    items: employeeGradesList
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(
-                              fontSize:
-                              widget._width / 26.18181818181818),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _employeeGradeDropdownValue = newValue!;
-                      });
-                      // _filterClaims(_empNoController.text);
-                    }),
+              Expanded(
+                child: SizedBox(
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                        value: _employeeGradeDropdownValue.isNotEmpty
+                            ? _employeeGradeDropdownValue
+                            : null,
+                        hint: const Text("Employee Grade"),
+                        items: employeeGradesList
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: TextStyle(
+                                  fontSize:
+                                  widget._width / 26.18181818181818),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _employeeGradeDropdownValue = newValue!;
+                          });
+                          // _filterClaims(_empNoController.text);
+                        }),
+                  ),
+                ),
               ),
-              DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                    value: _empTypeDropDownValue.isNotEmpty
-                        ? _empTypeDropDownValue
-                        : null,
-                    hint: const Text("Employee Type"),
-                    items: employeeTypeList
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(
-                              fontSize:
-                              widget._width / 26.18181818181818),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _empTypeDropDownValue = newValue!;
-                      });
-                    }),
+              Expanded(
+                child: SizedBox(
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                        value: _empTypeDropDownValue.isNotEmpty
+                            ? _empTypeDropDownValue
+                            : null,
+                        hint: const Text("Employee Type"),
+                        items: employeeTypeList
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: TextStyle(
+                                  fontSize:
+                                  widget._width / 26.18181818181818),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _empTypeDropDownValue = newValue!;
+                          });
+                        }),
+                  ),
+                ),
               ),
-              DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                    value: _departmentDropdownValue.isNotEmpty
-                        ? _departmentDropdownValue
-                        : null,
-                    hint: const Text("Departments"),
-                    items: employeeDepartmentList
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(
-                              fontSize:
-                              widget._width / 26.18181818181818),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _departmentDropdownValue = newValue!;
-                      });
-                    }),
+              Expanded(
+                child: SizedBox(
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                        value: _departmentDropdownValue.isNotEmpty
+                            ? _departmentDropdownValue
+                            : null,
+                        hint: const Text("Departments"),
+                        items: employeeDepartmentList
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: TextStyle(
+                                  fontSize:
+                                  widget._width / 26.18181818181818),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _departmentDropdownValue = newValue!;
+                          });
+                        }),
+                  ),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
