@@ -96,6 +96,13 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
               child: Image.asset('assets/avatarpic.jpg'),
             ),
           ),
+          decoration: BoxDecoration(
+            color: Colors.blueAccent,
+            image: new DecorationImage(
+              image: new AssetImage('assets/useravatarimage.jpg'),
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
         Padding(
           padding: EdgeInsets.symmetric(

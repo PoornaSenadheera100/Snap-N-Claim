@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../../models/employee.dart';
 import 'approver_navbar_widget.dart';
 
 
 class ApproverDashboardScreen extends StatefulWidget {
-  const ApproverDashboardScreen(this._width, this._height, {Key? key})
+  const ApproverDashboardScreen(this._width, this._height, this._user, {Key? key})
       : super(key: key);
 
   final double _width;
   final double _height;
+  final Employee _user;
 
   @override
   State<ApproverDashboardScreen> createState() =>
@@ -23,7 +25,7 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            centerTitle: true, title: Text("Approver Screen")),drawer:ApproverNavBar(),);
+            centerTitle: true, title: Text("Approver Screen")),drawer:ApproverNavBar(widget._user),);
   }
 }
 String currentOption = options[0];

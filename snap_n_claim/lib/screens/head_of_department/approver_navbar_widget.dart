@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 
+import '../../models/employee.dart';
+
 class ApproverNavBar extends StatelessWidget {
-  const ApproverNavBar({Key? key}) : super(key: key);
+  const ApproverNavBar(this.user, {super.key});
+
+  final Employee user;
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
         child: ListView(
-          padding: EdgeInsets.zero,
+      padding: EdgeInsets.zero,
       children: [
         UserAccountsDrawerHeader(
           accountName: Text('Head of department'),
-          accountEmail: Text('Approver@gmail.com'),
+          accountEmail: Text(user.email),
           currentAccountPicture: CircleAvatar(
             child: ClipOval(
               child: Image.asset(
@@ -25,7 +29,7 @@ class ApproverNavBar extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.blueAccent,
             image: new DecorationImage(
-              image:new AssetImage('assets/useravatarimage.jpg'),
+              image: new AssetImage('assets/useravatarimage.jpg'),
               fit: BoxFit.cover,
             ),
           ),
@@ -37,10 +41,16 @@ class ApproverNavBar extends StatelessWidget {
           trailing: ClipOval(
             child: Container(
               color: Colors.red,
-                width: 20,
-                height: 20,
+              width: 20,
+              height: 20,
               child: Center(
-                child: Text('8',style: TextStyle(color: Colors.grey,fontSize: 12,),),
+                child: Text(
+                  '8',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12,
+                  ),
+                ),
               ),
             ),
           ),
@@ -49,14 +59,12 @@ class ApproverNavBar extends StatelessWidget {
         ListTile(
             leading: Icon(Icons.analytics_outlined),
             title: Text("View Reports"),
-            onTap: null
-        ),
+            onTap: null),
         Divider(),
         ListTile(
             leading: Icon(Icons.monetization_on),
             title: Text("My Claims"),
-            onTap: null
-        ),
+            onTap: null),
         Divider(),
       ],
     ));

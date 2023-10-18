@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:snap_n_claim/models/employee.dart';
+import 'package:snap_n_claim/screens/head_of_department/approver_dashboard_screen.dart';
 import 'package:snap_n_claim/screens/common/change_password_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_home_screen.dart';
 import 'package:snap_n_claim/screens/head_of_department/hod_home_screen.dart';
@@ -203,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if(employee.firstLogin == false){
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (BuildContext context) =>
-                HodHomeScreen(widget._width, widget._height, employee)));
+                ApproverDashboardScreen(widget._width, widget._height, employee)));
       }else{
         Navigator.of(context).push(MaterialPageRoute(
             builder: (BuildContext context) =>
