@@ -33,7 +33,8 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
       appBar: AppBar(
           centerTitle: true, title: Text("Approver Screen")),
       drawer: ApproverNavBar(widget._user),
-    body: LoadPurchaseRequests(),);
+    body: Column(
+      children:[radioButtonGroup(),LoadPurchaseRequests()],));
   }
 
   void initState() {
@@ -123,7 +124,7 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                                 height: 10,
                               ),
                               Text(
-                                'PO Number : ${e["pOrderId"]}',
+                                'PO Number : ',
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.black,
@@ -146,14 +147,14 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                                     .spaceBetween,
                                 children: [
                                   Text(
-                                    'Item : ${e["itemName"]}',
+                                    'Item : ''',
                                     style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.black,
                                     ),
                                   ),
                                   Text(
-                                    'Quantity : ${e["qty"]}',
+                                    'Quantity : ''',
                                     style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.black,
