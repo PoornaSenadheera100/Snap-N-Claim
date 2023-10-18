@@ -54,19 +54,10 @@ class _FinanceAdminViewClaimStatusScreenState
     });
   }
 
-  // void _searchByEmpNo(String empNo) {
-  //   setState(() {
-  //     if (empNo != '' && _statusDropdownValue == _statusDropdownItems[0]) {
-  //       _requestsCollectionReference =
-  //           BudgetAllocationAndReportingService.getApprovedClaimsWithEmpNo(
-  //               empNo.toUpperCase());
-  //     } else if (empNo != '' &&
-  //         _statusDropdownValue == _statusDropdownItems[1]) {}
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
+    print(widget._width);
+    print(widget._height);
     return Scaffold(
       appBar: AppBar(
         title: Text("Claim Report"),
@@ -141,7 +132,6 @@ class _FinanceAdminViewClaimStatusScreenState
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                      // if (true) {
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

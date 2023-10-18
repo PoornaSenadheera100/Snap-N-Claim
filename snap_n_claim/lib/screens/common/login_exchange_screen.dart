@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:snap_n_claim/screens/employee/employee_home_screen.dart';
+import 'package:snap_n_claim/screens/head_of_department/hod_home_screen.dart';
 
 import '../../models/employee.dart';
 import '../finance_admin/finance_admin_home_screen.dart';
@@ -63,7 +65,14 @@ class _LoginExchangeScreenState extends State<LoginExchangeScreen> {
           builder: (BuildContext context) =>
               FinanceAdminHomeScreen(widget._width, widget._height, employee)));
     } else if (employee.empType == "hod") {
-    } else {}
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (BuildContext context) =>
+              HodHomeScreen(widget._width, widget._height, employee)));
+    } else {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (BuildContext context) =>
+              EmployeeHomeScreen(widget._width, widget._height, employee)));
+    }
   }
 
   @override

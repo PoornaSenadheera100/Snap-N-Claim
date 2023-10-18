@@ -5,8 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:snap_n_claim/models/employee.dart';
+import 'package:snap_n_claim/screens/common/change_password_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_home_screen.dart';
+import 'package:snap_n_claim/screens/head_of_department/hod_home_screen.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
+
+import '../employee/employee_home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen(this._width, this._height, {super.key});
@@ -180,10 +184,12 @@ class _LoginScreenState extends State<LoginScreen> {
         doc["password"],
         doc["phone"]);
 
-    final directory = await getApplicationDocumentsDirectory();
-    final path = directory.path;
-    File file = File('$path/userdata.txt');
-    file.writeAsString(userData);
+    if(employee.firstLogin == false){
+      final directory = await getApplicationDocumentsDirectory();
+      final path = directory.path;
+      File file = File('$path/userdata.txt');
+      file.writeAsString(userData);
+    }
 
     return employee;
   }
@@ -194,7 +200,26 @@ class _LoginScreenState extends State<LoginScreen> {
           builder: (BuildContext context) =>
               FinanceAdminHomeScreen(widget._width, widget._height, employee)));
     } else if (employee.empType == "hod") {
-    } else {}
+      if(employee.firstLogin == false){
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) =>
+                HodHomeScreen(widget._width, widget._height, employee)));
+      }else{
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) =>
+                ChangePasswordScreen(widget._width, widget._height, employee)));
+      }
+    } else {
+      if(employee.firstLogin == false){
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) =>
+                EmployeeHomeScreen(widget._width, widget._height, employee)));
+      }else{
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) =>
+                ChangePasswordScreen(widget._width, widget._height, employee)));
+      }
+    }
   }
 
   @override
