@@ -154,85 +154,87 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                  bottom: widget._height / 26.76363636363636,
-                  left: widget._width / 6.545454545454545,
-                  right: widget._width / 6.545454545454545),
-              child: Image.asset(
-                "assets/logo.png",
-                // scale: 3,
-              ),
-            ),
-            Form(
-              key: _formKey,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 7.854545454545454),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
-                        controller: _emailController,
-                        validator: (text) {
-                          return _validateEmail(text!);
-                        },
-                        onSaved: (text) {},
-                        decoration: InputDecoration(
-                          hintText: 'name@gmail.com',
-                          prefixIcon: const Icon(Icons.mail),
-                          suffixIcon: _emailController.text.isEmpty
-                              ? Container(width: 0)
-                              : IconButton(
-                                  icon: const Icon(Icons.close),
-                                  onPressed: () => _emailController.clear(),
-                                ),
-                          border: const OutlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: _passwordController,
-                        keyboardType: TextInputType.text,
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                          hintText: "Password",
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.password),
-                        ),
-                        validator: (text) {
-                          return _validatePassword(text!);
-                        },
-                        onSaved: (text) {},
-                        textInputAction: TextInputAction.done,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: widget._height / 26.76363636363636),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState?.save();
-                            _validateLogin(context);
-                          }
-                        },
-                        child: const Text("Login"),
-                      ),
-                    )
-                  ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                    bottom: widget._height / 26.76363636363636,
+                    left: widget._width / 6.545454545454545,
+                    right: widget._width / 6.545454545454545),
+                child: Image.asset(
+                  "assets/logo.png",
+                  // scale: 3,
                 ),
               ),
-            )
-          ],
+              Form(
+                key: _formKey,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: widget._width / 7.854545454545454),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(widget._width / 49.09090909090909),
+                        child: TextFormField(
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          controller: _emailController,
+                          validator: (text) {
+                            return _validateEmail(text!);
+                          },
+                          onSaved: (text) {},
+                          decoration: InputDecoration(
+                            hintText: 'name@gmail.com',
+                            prefixIcon: const Icon(Icons.mail),
+                            suffixIcon: _emailController.text.isEmpty
+                                ? Container(width: 0)
+                                : IconButton(
+                                    icon: const Icon(Icons.close),
+                                    onPressed: () => _emailController.clear(),
+                                  ),
+                            border: const OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(widget._width / 49.09090909090909),
+                        child: TextFormField(
+                          controller: _passwordController,
+                          keyboardType: TextInputType.text,
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            hintText: "Password",
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.password),
+                          ),
+                          validator: (text) {
+                            return _validatePassword(text!);
+                          },
+                          onSaved: (text) {},
+                          textInputAction: TextInputAction.done,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: widget._height / 26.76363636363636),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState?.save();
+                              _validateLogin(context);
+                            }
+                          },
+                          child: const Text("Login"),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
