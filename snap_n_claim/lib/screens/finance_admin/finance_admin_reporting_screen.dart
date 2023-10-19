@@ -114,7 +114,7 @@ class _FinanceAdminReportingScreenState
   Future<void> _getEmpReportData() async {
     Map<String, dynamic> res =
         await BudgetAllocationAndReportingService.getEmpReportData(
-            _empNoController.text, int.parse(_yearDropdownValue));
+            _empNoController.text.toUpperCase(), int.parse(_yearDropdownValue));
     setState(() {
       _empReportData = res;
     });
