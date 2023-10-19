@@ -74,9 +74,9 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                 value: option,
                 groupValue: currentOption,
                 onChanged: (value) {
-                  /*setState(() {
+                  setState(() {
                   currentOption = value.toString();
-                });*/
+                });
                   filter(value!);
                 },
               ),
