@@ -8,8 +8,8 @@ import '../../models/employee.dart';
 import '../../services/expense_submission_and_viewing_claim_state_service.dart';
 
 class FinanceAdminClaimsPaymentScreen extends StatefulWidget {
-  const FinanceAdminClaimsPaymentScreen(this._width, this._height, this.user,
-      this._request,
+  const FinanceAdminClaimsPaymentScreen(
+      this._width, this._height, this.user, this._request,
       {super.key});
 
   final double _width;
@@ -37,12 +37,12 @@ class _FinanceAdminClaimsPaymentScreenState
   final TextEditingController _invoiceDateController = TextEditingController();
   final TextEditingController _invoiceNoController = TextEditingController();
   final TextEditingController _invoiceAmountController =
-  TextEditingController();
+      TextEditingController();
   late String _claimExpenseValue = '';
   final TextEditingController _remainingBalanceController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _transactionLimitController =
-  TextEditingController();
+      TextEditingController();
 
   final List<String> _claimExpenseList = [
     "Transportation",
@@ -84,22 +84,20 @@ class _FinanceAdminClaimsPaymentScreenState
   Future<void> _onTapPayBtn(BuildContext context) async {
     var dialogRes = await showDialog<bool>(
       context: context,
-      builder: (context) =>
-          AlertDialog(
-            title: const Text('Are you sure?'),
-            content: const Text(
-                'Do you want to mark this claim request as paid?'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('No'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Yes'),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: const Text('Are you sure?'),
+        content: const Text('Do you want to mark this claim request as paid?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('No'),
           ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
     );
     if (dialogRes == true) {
       Map<String, dynamic> updatedClaim = {
@@ -115,8 +113,10 @@ class _FinanceAdminClaimsPaymentScreenState
         "status": widget._request["status"],
         "total": widget._request["total"]
       };
-      Response response = await BudgetAllocationAndReportingService.updateRequestPaymentStatus(updatedClaim);
-      if(response.code == 200){
+      Response response =
+          await BudgetAllocationAndReportingService.updateRequestPaymentStatus(
+              updatedClaim);
+      if (response.code == 200) {
         Fluttertoast.showToast(
             msg: "Marked as Paid!",
             toastLength: Toast.LENGTH_SHORT,
@@ -126,7 +126,7 @@ class _FinanceAdminClaimsPaymentScreenState
             textColor: Colors.white,
             fontSize: 16.0);
         Navigator.of(context).pop();
-      }else{
+      } else {
         Fluttertoast.showToast(
             msg: "Something went wrong!",
             toastLength: Toast.LENGTH_SHORT,
@@ -218,8 +218,7 @@ class _FinanceAdminClaimsPaymentScreenState
                                 textAlign: TextAlign.center,
                                 controller: TextEditingController(
                                     text:
-                                    'Rs.${widget._request["total"]
-                                        .toStringAsFixed(2)}'),
+                                        'Rs.${widget._request["total"].toStringAsFixed(2)}'),
                                 readOnly: true,
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder())),
@@ -242,62 +241,61 @@ class _FinanceAdminClaimsPaymentScreenState
                   height: 510,
                   child: ListView(
                     children: widget._request["lineItems"]
-                        .map<Widget>((e) =>
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 10),
-                          child: Container(
-                            height: 100,
-                            color: Color(0x9A5987EF),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Container(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .spaceEvenly,
-                                      children: [
-                                        Text(e["invoiceDate"]
-                                            .toDate()
-                                            .toString()
-                                            .substring(0, 10)),
-                                        Text(widget._request["category"])
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceEvenly,
-                                    children: [
-                                      Text(e["invoiceNo"]),
-                                      Text(
-                                          'Rs.${e["invoiceAmount"]
-                                              .toStringAsFixed(2)}'),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 20.0),
-                                  child: Container(
-                                    child: Row(
-                                      children: [
-
-                                        IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(Icons.attach_file),
+                        .map<Widget>((e) => Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 10),
+                              child: Container(
+                                height: 100,
+                                color: Color(0x9A5987EF),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Container(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text(e["invoiceDate"]
+                                                .toDate()
+                                                .toString()
+                                                .substring(0, 10)),
+                                            Text(widget._request["category"])
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ))
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(e["invoiceNo"]),
+                                          Text(
+                                              'Rs.${e["invoiceAmount"].toStringAsFixed(2)}'),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 20.0),
+                                      child: Container(
+                                        child: Row(
+                                          children: [
+                                            IconButton(
+                                              onPressed: () {},
+                                              icon: Icon(Icons.attach_file),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ))
                         .toList(),
                   )),
               Padding(
