@@ -203,7 +203,7 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('assets/noPendingItems.png'),
+                Image.asset('assets/no_pending_items.png'),
                 Text('You have no pending items'),
               ],
             ),
