@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:snap_n_claim/models/response.dart';
+import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
 import '../../models/employee.dart';
 import '../../services/expense_submission_and_viewing_claim_state_service.dart';
 
 class FinanceAdminClaimsPaymentScreen extends StatefulWidget {
-  const FinanceAdminClaimsPaymentScreen(
-      this._width, this._height, this.user, this._request,
+  const FinanceAdminClaimsPaymentScreen(this._width, this._height, this.user,
+      this._request,
       {super.key});
 
   final double _width;
@@ -35,12 +37,12 @@ class _FinanceAdminClaimsPaymentScreenState
   final TextEditingController _invoiceDateController = TextEditingController();
   final TextEditingController _invoiceNoController = TextEditingController();
   final TextEditingController _invoiceAmountController =
-      TextEditingController();
+  TextEditingController();
   late String _claimExpenseValue = '';
   final TextEditingController _remainingBalanceController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController _transactionLimitController =
-      TextEditingController();
+  TextEditingController();
 
   final List<String> _claimExpenseList = [
     "Transportation",
@@ -75,12 +77,66 @@ class _FinanceAdminClaimsPaymentScreenState
         fontSize: 16.0);
   }
 
-  void _onTapCancelBtn(BuildContext context){
+  void _onTapCancelBtn(BuildContext context) {
     Navigator.of(context).pop();
   }
 
-  void _onTapPayBtn(BuildContext context){
-
+  Future<void> _onTapPayBtn(BuildContext context) async {
+    var dialogRes = await showDialog<bool>(
+      context: context,
+      builder: (context) =>
+          AlertDialog(
+            title: const Text('Are you sure?'),
+            content: const Text(
+                'Do you want to mark this claim request as paid?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Yes'),
+              ),
+            ],
+          ),
+    );
+    if (dialogRes == true) {
+      Map<String, dynamic> updatedClaim = {
+        "category": widget._request["category"],
+        "claimNo": widget._request["claimNo"],
+        "date": widget._request["date"],
+        "department": widget._request["department"],
+        "empName": widget._request["empName"],
+        "empNo": widget._request["empNo"],
+        "lineItems": widget._request["lineItems"],
+        "paymentStatus": "Paid",
+        "rejectReason": widget._request["rejectReason"],
+        "status": widget._request["status"],
+        "total": widget._request["total"]
+      };
+      Response response = await BudgetAllocationAndReportingService.updateRequestPaymentStatus(updatedClaim);
+      if(response.code == 200){
+        Fluttertoast.showToast(
+            msg: "Marked as Paid!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        Navigator.of(context).pop();
+      }else{
+        Fluttertoast.showToast(
+            msg: "Something went wrong!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    }
   }
 
   @override
@@ -162,7 +218,8 @@ class _FinanceAdminClaimsPaymentScreenState
                                 textAlign: TextAlign.center,
                                 controller: TextEditingController(
                                     text:
-                                        'Rs.${widget._request["total"].toStringAsFixed(2)}'),
+                                    'Rs.${widget._request["total"]
+                                        .toStringAsFixed(2)}'),
                                 readOnly: true,
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder())),
@@ -185,58 +242,62 @@ class _FinanceAdminClaimsPaymentScreenState
                   height: 510,
                   child: ListView(
                     children: widget._request["lineItems"]
-                        .map<Widget>((e) => Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 10),
-                              child: Container(
-                                height: 100,
-                                color: Color(0x9A5987EF),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
-                                      child: Container(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text(e["invoiceDate"]
-                                                .toDate()
-                                                .toString()
-                                                .substring(0, 10)),
-                                            Text(widget._request["category"])
-                                          ],
-                                        ),
-                                      ),
+                        .map<Widget>((e) =>
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 10),
+                          child: Container(
+                            height: 100,
+                            color: Color(0x9A5987EF),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Container(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .spaceEvenly,
+                                      children: [
+                                        Text(e["invoiceDate"]
+                                            .toDate()
+                                            .toString()
+                                            .substring(0, 10)),
+                                        Text(widget._request["category"])
+                                      ],
                                     ),
-                                    Container(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Text(e["invoiceNo"]),
-                                          Text(
-                                              'Rs.${e["invoiceAmount"].toStringAsFixed(2)}'),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 20.0),
-                                      child: Container(
-                                        child: Row(
-                                          children: [
-
-                                            IconButton(
-                                              onPressed: () {},
-                                              icon: Icon(Icons.attach_file),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ))
+                                Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .spaceEvenly,
+                                    children: [
+                                      Text(e["invoiceNo"]),
+                                      Text(
+                                          'Rs.${e["invoiceAmount"]
+                                              .toStringAsFixed(2)}'),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 20.0),
+                                  child: Container(
+                                    child: Row(
+                                      children: [
+
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(Icons.attach_file),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ))
                         .toList(),
                   )),
               Padding(

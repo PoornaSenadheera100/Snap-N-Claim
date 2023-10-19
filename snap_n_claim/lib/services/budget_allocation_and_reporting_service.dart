@@ -314,4 +314,41 @@ class BudgetAllocationAndReportingService {
         .where("department", isEqualTo: department)
         .get();
   }
+
+  static Future<Response> updateRequestPaymentStatus(Map<String, dynamic> request) async {
+    Response response = Response();
+
+    try {
+      QuerySnapshot querySnapshot = await requestCollectionReference
+          .where("claimNo", isEqualTo: request["claimNo"])
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        QueryDocumentSnapshot document = querySnapshot.docs[0];
+
+        // Map<String, dynamic> data = <String, dynamic>{
+        //   "department": employee.department,
+        //   "emp_grade": employee.empGrade,
+        //   "emp_no": employee.empNo,
+        //   "emp_type": employee.empType,
+        //   "first_login": employee.firstLogin,
+        //   "name": employee.name,
+        //   "password": employee.password,
+        //   "phone": employee.phone,
+        // };
+
+        await document.reference.update(request); // Update the document
+        response.code = 200;
+        response.message = "Claim request updated!";
+      } else {
+        response.code = 404;
+        response.message = "Claim request not found with the specified claim number";
+      }
+    } catch (e) {
+      response.code = 500;
+      response.message = e.toString();
+    }
+
+    return response;
+  }
 }
