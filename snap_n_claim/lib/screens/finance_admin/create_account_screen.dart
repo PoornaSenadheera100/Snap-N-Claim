@@ -131,167 +131,157 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
       ),
       drawer: FinanceAdminMenuDrawer(
           widget._width, widget._height, "User Configuration Screen", widget._user),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              TextFormField(
-                obscureText: true,
-                controller: _employeeNoController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: "Employee No"),
-                validator: (value) {
-                  return _validateEmployeeNo(value!);
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: TextFormField(
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                TextFormField(
                   obscureText: true,
-                  controller: _employeeNameController,
+                  controller: _employeeNoController,
                   decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Enter Employee Name"),
+                      border: OutlineInputBorder(), labelText: "Employee No"),
                   validator: (value) {
-                    return _validateEmployeeName(value!);
+                    return _validateEmployeeNo(value!);
                   },
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: TextFormField(
-                  obscureText: true,
-                  controller: _employeeEmailController,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Enter Employee Email"),
-                  validator: (value) {
-                    return _validateEmployeeEmail(value!);
-                  },
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: TextFormField(
+                    obscureText: true,
+                    controller: _employeeNameController,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Enter Employee Name"),
+                    validator: (value) {
+                      return _validateEmployeeName(value!);
+                    },
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: TextFormField(
-                  obscureText: true,
-                  controller: _employeeInitialPasswordController,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Enter Initial Password"),
-                  validator: (value) {
-                    return _validateEmployeeInitialPassword(value!);
-                  },
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: TextFormField(
+                    obscureText: true,
+                    controller: _employeeEmailController,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Enter Employee Email"),
+                    validator: (value) {
+                      return _validateEmployeeEmail(value!);
+                    },
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: TextFormField(
+                    obscureText: true,
+                    controller: _employeeInitialPasswordController,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Enter Initial Password"),
+                    validator: (value) {
+                      return _validateEmployeeInitialPassword(value!);
+                    },
+                  ),
+                ),
  // Add some spacing between the TextFormField and Dropdown
-              Expanded(
-                child: SizedBox(
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                        value: _employeeGradeDropdownValue.isNotEmpty
-                            ? _employeeGradeDropdownValue
-                            : null,
-                        hint: const Text("Employee Grade"),
-                        items: employeeGradesList
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: TextStyle(
-                                  fontSize:
-                                  widget._width / 26.18181818181818),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _employeeGradeDropdownValue = newValue!;
-                          });
-                          // _filterClaims(_empNoController.text);
-                        }),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                      value: _employeeGradeDropdownValue.isNotEmpty
+                          ? _employeeGradeDropdownValue
+                          : null,
+                      hint: const Text("Employee Grade"),
+                      items: employeeGradesList
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: TextStyle(
+                                fontSize:
+                                widget._width / 26.18181818181818),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _employeeGradeDropdownValue = newValue!;
+                        });
+                        // _filterClaims(_empNoController.text);
+                      }),
+                ),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                      value: _empTypeDropDownValue.isNotEmpty
+                          ? _empTypeDropDownValue
+                          : null,
+                      hint: const Text("Employee Type"),
+                      items: employeeTypeList
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: TextStyle(
+                                fontSize:
+                                widget._width / 26.18181818181818),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _empTypeDropDownValue = newValue!;
+                        });
+                      }),
+                ),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                      value: _departmentDropdownValue.isNotEmpty
+                          ? _departmentDropdownValue
+                          : null,
+                      hint: const Text("Departments"),
+                      items: employeeDepartmentList
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: TextStyle(
+                                fontSize:
+                                widget._width / 26.18181818181818),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _departmentDropdownValue = newValue!;
+                        });
+                      }),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: TextFormField(
+                    obscureText: true,
+                    controller: _employeePhoneNoController,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Enter Phone Number"),
+                    validator: (value) {
+                      return _validateEmployeePhone(value!);
+                    },
                   ),
                 ),
-              ),
-              Expanded(
-                child: SizedBox(
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                        value: _empTypeDropDownValue.isNotEmpty
-                            ? _empTypeDropDownValue
-                            : null,
-                        hint: const Text("Employee Type"),
-                        items: employeeTypeList
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: TextStyle(
-                                  fontSize:
-                                  widget._width / 26.18181818181818),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _empTypeDropDownValue = newValue!;
-                          });
-                        }),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: SizedBox(
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                        value: _departmentDropdownValue.isNotEmpty
-                            ? _departmentDropdownValue
-                            : null,
-                        hint: const Text("Departments"),
-                        items: employeeDepartmentList
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: TextStyle(
-                                  fontSize:
-                                  widget._width / 26.18181818181818),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _departmentDropdownValue = newValue!;
-                          });
-                        }),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: TextFormField(
-                  obscureText: true,
-                  controller: _employeePhoneNoController,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Enter Phone Number"),
-                  validator: (value) {
-                    return _validateEmployeePhone(value!);
-                  },
-                ),
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _onTapCreateAccountButton();
-                    }
-                  },
-                  child: const Text("Create Account"))
-            ],
+                ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _onTapCreateAccountButton();
+                      }
+                    },
+                    child: const Text("Create Account"))
+              ],
+            ),
           ),
         ),
       ),
