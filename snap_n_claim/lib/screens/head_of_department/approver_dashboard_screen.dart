@@ -103,16 +103,16 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
             child: ListView(
                 children: snapShot.data!.docs
                     .map((e) => GestureDetector(
-                          onTap: () {
-                            // Navigate to the my claims page when the item is tapped
-                            Navigator.of(context).pop(); // Close the drawer
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => ViewClaimInDetail(
-                                    widget._width, widget._height, widget._user),
-                              ),
-                            );
-                          },
+                          // onTap: () {
+                          //   // Navigate to the my claims page when the item is tapped
+                          //   Navigator.of(context).pop(); // Close the drawer
+                          //   Navigator.of(context).push(
+                          //     MaterialPageRoute(
+                          //       builder: (context) => ViewClaimInDetail(
+                          //           widget._width, widget._height, widget._user),
+                          //     ),
+                          //   );
+                          // },
                           key: UniqueKey(),
                           child: Card(
                             elevation: 5,
