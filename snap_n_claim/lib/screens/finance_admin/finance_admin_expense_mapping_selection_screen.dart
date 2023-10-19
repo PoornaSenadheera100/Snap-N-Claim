@@ -50,7 +50,23 @@ class _FinanceAdminExpenseMappingSelectionScreenState
       body: StreamBuilder(
         stream: _collectionReference,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasData) {
+          if(snapshot.connectionState == ConnectionState.waiting){
+            return SizedBox(
+              width: widget._width,
+              child: const Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator.adaptive(),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20.0),
+                    child: Text("Loading..."),
+                  ),
+                ],
+              ),
+            );
+          }
+          else if (snapshot.data!.docs.length > 0) {
             return Column(
               children: [
                 Padding(
