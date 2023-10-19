@@ -219,7 +219,7 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                       Text('You have no pending items'),
                     ],
                   ),
-                )
+                );
 
             }
           }
