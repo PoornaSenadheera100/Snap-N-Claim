@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:snap_n_claim/models/request.dart';
 
 import '../../models/employee.dart';
 import '../../services/expense_submission_and_viewing_claim_state_service.dart';
@@ -54,6 +55,11 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
 
   late final DateTime _currDate;
 
+  double balance = 10000;
+  double transActionLimit = 1000;
+
+  late final Request request;
+
   @override
   void initState() {
     super.initState();
@@ -67,19 +73,23 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
 
       setState(() {
         _claimNoController.text = 'R' + newClaimNo.toString().padLeft(3, '0');
+
+        _collectionReferenceExpenses =
+            ExpenseSubmissionAndViewingClaimStateService.getExpensesByClaimNo(
+                _claimNoController.text);
       });
     });
-
-    _collectionReferenceExpenses =
-        ExpenseSubmissionAndViewingClaimStateService.getExpensesByClaimNo(
-            _claimNoController.text);
 
     //set current date
     setState(() {
       _claimDateController.text = DateTime.now().toString().substring(0, 10);
     });
 
-    print('date : ' + _claimDateController.text);
+    _totalAmountController.text = '0.0';
+
+    _remainingBalanceController.text = balance.toString();
+
+    _transactionLimitController.text = transActionLimit.toString();
   }
 
   void callToast(String msg) {
@@ -98,28 +108,27 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
     String transactionLimitString = _transactionLimitController.text;
 
     double invoiceAmount = 0.0;
-    double transactionLimit = 0.0;
+    double transactionLimit = transActionLimit;
 
-    if(invoiceAmountString != ''){
+    if (invoiceAmountString != '') {
       invoiceAmount = double.parse(invoiceAmountString);
     }
 
-    if(transactionLimitString != ''){
+    if (transactionLimitString != '') {
       transactionLimit = double.parse(transactionLimitString);
-
     }
 
     DateTime currDate = DateTime.now();
     DateTime invoiceDate = DateTime.now();
 
-    if(_invoiceDateController.text != ''){
+    if (_invoiceDateController.text != '') {
       invoiceDate = DateTime.parse(_invoiceDateController.text);
     }
 
-    int balance = 0;
+    double balance = 0.0;
 
-    if(_remainingBalanceController.text != ''){
-      balance = int.parse(_remainingBalanceController.text);
+    if (_remainingBalanceController.text != '') {
+      balance = double.parse(_remainingBalanceController.text);
     }
 
     if (_invoiceDateController.text == '') {
@@ -134,9 +143,74 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
       callToast('Invoice amount cannot be greater than limit!');
     } else if (_claimExpenseValue == '') {
       callToast('Claim expense cannot be empty!');
-    } else if (balance < 0 ){
+    } else if (balance < 0) {
       callToast('Claim expense too high, insufficient balance');
+    } else {
+      updateTotal(_invoiceAmountController.text);
+      clearFields();
+      sendData();
     }
+  }
+
+  void updateTotal(String invoiceAmount) {
+    double total = 0.0;
+    double amount = 0.0;
+
+    if (_totalAmountController.text != '') {
+      total = double.parse(_totalAmountController.text);
+    }
+
+    if (invoiceAmount != '') {
+      amount = double.parse(invoiceAmount);
+    }
+
+    total += double.parse(invoiceAmount);
+
+    setState(() {
+      _totalAmountController.text = total.toString();
+    });
+
+    updateBalance(total.toString());
+  }
+
+  void updateBalance(String total) {
+    balance -= double.parse(total);
+
+    setState(() {
+      _remainingBalanceController.text = balance.toString();
+    });
+  }
+
+  void clearFields() {
+    _invoiceDateController.text = '';
+    _invoiceNoController.text = '';
+    _invoiceAmountController.text = '';
+    _claimExpenseValue = '';
+  }
+
+  void sendData() {
+    Map<String, dynamic> req = <String, dynamic>{
+      "category": _claimExpenseValue,
+      "claimNo": _claimNoController.text,
+      "date": DateTime.parse(_claimDateController.text),
+      "department": widget.user.department,
+      "empName": widget.user.name,
+      "empNo": widget.user.empNo,
+      "lineItems": [
+        {
+          "invoiceAmount": _invoiceAmountController.text,
+          "invoiceDate": _invoiceDateController.text,
+          "invoiceNo": _invoiceNoController.text,
+          "invoiceImage": '',
+        }
+      ],
+      "paymentStatus": "Pending",
+      "rejectReason": "",
+      "status": "Draft",
+      "total": double.parse(_totalAmountController.text),
+    };
+
+    ExpenseSubmissionAndViewingClaimStateService.addRequest(req);
   }
 
   @override
@@ -264,6 +338,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                                 controller: _invoiceDateController,
                                 readOnly: true,
                                 decoration: InputDecoration(
+                                    hintText: 'yyyy--mm-dd',
                                     border: OutlineInputBorder())),
                           ),
                         ],
@@ -279,7 +354,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                                 textAlign: TextAlign.center,
                                 controller: _invoiceNoController,
                                 decoration: const InputDecoration(
-                                    hintText: 'C001', hintStyle: TextStyle(fontSize: 12),
+                                    hintText: 'CXXX',
+                                    hintStyle: TextStyle(fontSize: 12),
                                     border: OutlineInputBorder())),
                           ),
                         ],
@@ -291,11 +367,12 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                             width: widget._width / (deviceWidth / 116),
                             height: widget._height / (deviceHeight / 40),
                             child: TextFormField(
-                              keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.number,
                                 style: TextStyle(fontSize: 12),
                                 textAlign: TextAlign.center,
                                 controller: _invoiceAmountController,
                                 decoration: const InputDecoration(
+                                    hintText: '0.00',
                                     border: OutlineInputBorder())),
                           ),
                         ],
@@ -315,28 +392,34 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                           Text('\nClaim Expense'),
                           DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
-                                hint: Text('Pick Category'),
-                                  items: _claimExpenseList.map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                        return DropdownMenuItem(
-                                          value: value,
-                                          child: Text(value, style: TextStyle(fontSize: widget._width / (deviceWidth / 12))),
-                                        );
-                                      }
-                                  ).toList(),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      _claimExpenseValue = newValue!;
-                                    });
-                                  },
-                                value: _claimExpenseValue.isNotEmpty ? _claimExpenseValue : null,
-                              )
-                          ),
+                            hint: Text('Pick Category'),
+                            items: _claimExpenseList
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(value,
+                                    style: TextStyle(
+                                        fontSize: widget._width /
+                                            (deviceWidth / 12))),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _claimExpenseValue = newValue!;
+                              });
+                            },
+                            value: _claimExpenseValue.isNotEmpty
+                                ? _claimExpenseValue
+                                : null,
+                          )),
                         ],
                       ),
                       Column(
                         children: [
-                          Text('Remaining\nBalance',textAlign: TextAlign.center,),
+                          Text(
+                            'Remaining\nBalance',
+                            textAlign: TextAlign.center,
+                          ),
                           SizedBox(
                             width: widget._width / (deviceWidth / 80),
                             height: widget._height / (deviceHeight / 40),
@@ -352,7 +435,10 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                       ),
                       Column(
                         children: [
-                          Text('Transaction\nLimit' ,textAlign: TextAlign.center,),
+                          Text(
+                            'Transaction\nLimit',
+                            textAlign: TextAlign.center,
+                          ),
                           SizedBox(
                             width: widget._width / (deviceWidth / 80),
                             height: widget._height / (deviceHeight / 40),
@@ -378,7 +464,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                       SizedBox(
                         width: widget._width / (deviceWidth / 50),
                       ),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.add_a_photo)),
+                      IconButton(
+                          onPressed: () {}, icon: Icon(Icons.add_a_photo)),
                       ElevatedButton(
                           onPressed: () {
                             validateForm();
@@ -405,18 +492,75 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                         child: CircularProgressIndicator.adaptive(),
                       );
                     } else if (snapshot.data!.docs.length > 0) {
-                      return Container(
-                        height: widget._height / (deviceHeight / 240),
-                        child: ListView(
-                          children: snapshot.data!.docs
-                              .map(
-                                  (e) => Container(child: Text('Data goes here')))
-                              .toList(),
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: widget._width / (deviceWidth / 8)),
+                        child: Container(
+                          height: widget._height / (deviceHeight / 240),
+                          child: ListView(
+                            children: snapshot.data!.docs.map((e) {
+                              List<dynamic> lineItems = e['lineItems'];
+
+                              // Now you can iterate through the lineItems
+                              List<Widget> lineItemWidgets = lineItems.map((lineItem) {
+                                return Card(
+                                  color: Colors.blueAccent,
+                                  child: SizedBox(
+                                    width: widget._width / (deviceWidth / 400),
+                                    height: widget._height / (deviceHeight / 55),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: widget._width / (deviceWidth / 8)),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text("${lineItem['invoiceDate'].toDate().day}/${lineItem['invoiceDate'].toDate().month}/${lineItem['invoiceDate'].toDate().year}"),
+                                                  Text("${e['category']}"),
+                                                ],
+                                              ),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text("${lineItem['invoiceNo']}"),
+                                                Text("Rs : ${lineItem['invoiceAmount'].toStringAsFixed(2)}"),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                IconButton(onPressed: () {}, icon: Icon(Icons.edit_outlined)),
+                                                IconButton(onPressed: () {}, icon: Icon(Icons.delete_outline)),
+                                                IconButton(onPressed: () {}, icon: Icon(Icons.file_open)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }).toList();
+
+                              return Column(
+                                children: lineItemWidgets,
+                              );
+                            }).toList(),
+                          ),
                         ),
                       );
+
                     } else {
                       return SizedBox(
                         height: widget._height / (deviceHeight / 240),
+                        child: Center(
+                          child: SizedBox(
+                            width: widget._width / (deviceWidth / 100),
+                            child: Text('No data found'),
+                          ),
+                        ),
                       );
                     }
                   }),
@@ -432,15 +576,15 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                       child: ElevatedButton(
                         onPressed: () {},
                         child: Text('Cancel'),
-                        style:
-                            ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red),
                       ),
                     ),
                     ElevatedButton(
                       onPressed: () {},
                       child: Text('Submit'),
-                      style:
-                          ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green),
                     ),
                   ],
                 ),
