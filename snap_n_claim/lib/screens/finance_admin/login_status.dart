@@ -48,7 +48,7 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Login Status"),
+        title: const Text("Account Creation and Management"),
       ),
       drawer: FinanceAdminMenuDrawer(widget._width, widget._height,
           "User Configuration Screen", widget.user),

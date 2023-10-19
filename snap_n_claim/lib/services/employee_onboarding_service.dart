@@ -85,4 +85,42 @@ class EmployeeOnboardingService {
   static Stream <QuerySnapshot> getAllEmployees(){
     return employeeCollectionReference.snapshots();
   }
+
+  //METHOD 1 - COUNT OF LOGGED IN USERS
+  // static Stream <QuerySnapshot> getAllLoggedInUsersCount(bool firstLogin){
+  //   // return employeeCollectionReference.count().
+  //   return employeeCollectionReference
+  //       .where("firstLogin", isEqualTo: true)
+  //       .snapshots();
+  // }
+
+
+  //METHOD 2 COUNT OF LOGGED IN USERS.
+  // static Future<int> countEmployeesWithFirstLogin() async {
+  // try {
+  // final querySnapshot = await employeeCollectionReference
+  //     .where("first_login", isEqualTo: true)
+  //     .get();
+  //
+  // return querySnapshot.docs.length;
+  // } catch (e) {
+  // // print("Error counting employees with first login: $e");
+  // return 0;
+  // }
+  // }
+
+//METHOD 1 COUNT OF TO BE LOGGED IN USERS
+// static Future<int> countEmployeesWithoutFirstLogin() async {
+// try {
+// final querySnapshot = await employeeCollectionReference
+//     .where("first_login", isEqualTo: false)
+//     .get();
+//
+// return querySnapshot.docs.length;
+// } catch (e) {
+// // print("Error counting employees with first login: $e");
+// return 0;
+// }
+// }
+
 }
