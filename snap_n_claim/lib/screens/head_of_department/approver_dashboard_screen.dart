@@ -133,21 +133,14 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                                       height: 10,
                                     ),
                                     Text(
-                                      'PO Number : ',
+                                      'Date : ${e["date"].toDate().toString().substring(0,10)
+                                      }',
                                       style: TextStyle(
                                         fontSize: 15,
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    // Text(
-                                    //   'DO Number : ${e["deliveryId"]}',
-                                    //   style: TextStyle(
-                                    //     fontSize: 15,
-                                    //     color: Colors.black,
-                                    //     fontWeight: FontWeight.w500,
-                                    //   ),
-                                    // ),
                                     const SizedBox(
                                       height: 10,
                                     ),
@@ -156,14 +149,14 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          'Item : ' '',
+                                          '${e["empName"]}',
                                           style: TextStyle(
                                             fontSize: 15,
                                             color: Colors.black,
                                           ),
                                         ),
                                         Text(
-                                          'Quantity : ' '',
+                                          '${e["claimNo"]}',
                                           style: TextStyle(
                                             fontSize: 15,
                                             color: Colors.black,
@@ -179,14 +172,14 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          'Amount : Rs.10,000',
+                                          'Rs.${e["total"]}.00',
                                           style: TextStyle(
                                             fontSize: 15,
                                             color: Colors.black,
                                           ),
                                         ),
                                         Text(
-                                          'Date : ${e["date"].toString().substring(0, 10)}',
+                                          '${e["category"]}',
                                           style: TextStyle(
                                             fontSize: 15,
                                             color: Colors.black,
