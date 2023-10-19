@@ -75,6 +75,14 @@ class _FinanceAdminClaimsPaymentScreenState
         fontSize: 16.0);
   }
 
+  void _onTapCancelBtn(BuildContext context){
+    Navigator.of(context).pop();
+  }
+
+  void _onTapPayBtn(BuildContext context){
+
+  }
+
   @override
   Widget build(BuildContext context) {
     print(widget._width);
@@ -174,9 +182,62 @@ class _FinanceAdminClaimsPaymentScreenState
                 ),
               ),
               Container(
-                  height: 200,
+                  height: 510,
                   child: ListView(
-                    children: widget._request["lineItems"].map<Widget>((e)=>Text("data")).toList(),
+                    children: widget._request["lineItems"]
+                        .map<Widget>((e) => Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 10),
+                              child: Container(
+                                height: 100,
+                                color: Color(0x9A5987EF),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Container(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text(e["invoiceDate"]
+                                                .toDate()
+                                                .toString()
+                                                .substring(0, 10)),
+                                            Text(widget._request["category"])
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(e["invoiceNo"]),
+                                          Text(
+                                              'Rs.${e["invoiceAmount"].toStringAsFixed(2)}'),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 20.0),
+                                      child: Container(
+                                        child: Row(
+                                          children: [
+
+                                            IconButton(
+                                              onPressed: () {},
+                                              icon: Icon(Icons.attach_file),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ))
+                        .toList(),
                   )),
               Padding(
                 padding: EdgeInsets.symmetric(
@@ -188,15 +249,17 @@ class _FinanceAdminClaimsPaymentScreenState
                           horizontal: widget._width / 49.09090909090909375,
                           vertical: widget._height / 97.9090909090909125),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          _onTapCancelBtn(context);
+                        },
                         child: Text('Cancel'),
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red),
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
-                      child: Text('Submit'),
+                      onPressed: () {
+                        _onTapPayBtn(context);
+                      },
+                      child: Text('Mark as Paid'),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green),
                     ),
