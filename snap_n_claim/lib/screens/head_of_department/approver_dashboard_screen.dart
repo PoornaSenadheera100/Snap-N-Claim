@@ -210,7 +210,17 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
               );
             }
             else {
-              return Text("Hurray There are no Pending Claims");
+              return
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('assets/noPendingItems.png'),
+                      Text('You have no pending items'),
+                    ],
+                  ),
+                )
+
             }
           }
       );
