@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:snap_n_claim/services/employee_onboarding_service.dart';
 
 import '../../models/employee.dart';
+import 'create_account_screen.dart';
 import 'finance_admin_menu_drawer.dart';
 
 class LoginStatusScreen extends StatefulWidget {
@@ -24,17 +25,24 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
     super.initState();
     employeeCollectionReference = EmployeeOnboardingService.getAllEmployees();
 
-    // Widget getStatusIndicator(bool isFirstLogin) {
-    //   return Container(
-    //     width: 24, // Adjust the size as needed
-    //     height: 24,
-    //     decoration: BoxDecoration(
-    //       shape: BoxShape.circle,
-    //       color: isFirstLogin ? Colors.green : Colors.red,
-    //     ),
-    //   );
-    // }
 
+  }
+  Widget getStatusIndicator(bool isFirstLogin) {
+    return Container(
+      width: 24, // Adjust the size as needed
+      height: 24,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: isFirstLogin ? Colors.green : Colors.red,
+      ),
+    );
+  }
+
+  void _navigate() {
+      Navigator.of(context).pop();
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (BuildContext context) => CreateAccountScreen(
+              widget._width, widget._height, widget.user)));
   }
   @override
   Widget build(BuildContext context) {
@@ -48,6 +56,12 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            //CREATE ACCOUNT BUTTON.
+            ElevatedButton(
+                onPressed: () {
+                  _navigate();
+                },
+                child: const Text("Create Account")),
             Container(
                 width: 120,
                 height: widget._height / 6.176223776223776,
@@ -66,7 +80,7 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
                   Container(
                       width: 120,
                       height: widget._height / 6.176223776223776,
-                      color: Colors.green,
+                      color: Colors.purple,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -78,7 +92,7 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
                   Container(
                       width: 120,
                       height: widget._height / 6.176223776223776,
-                      color: Colors.green,
+                      color: Colors.red,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -121,7 +135,7 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
                               child: Center(child: Text("Status")),
                             ))
 
-                        // DataCell(getStatusIndicator(e["firstLogin"])),
+
                       ],
                       rows: snapshot.data!.docs
                           .map((e) => DataRow(
@@ -130,7 +144,8 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
                             DataCell(Text(e["empName"])),
                             DataCell(Center(
                                 child: Text(e["email"]))),
-                            DataCell(Text(e["firstLogin"].toString()))
+                            // DataCell(Text(e["firstLogin"].toString()))
+                            DataCell(getStatusIndicator(e["firstLogin"])),
                           ],
                           // color: MaterialStateProperty.resolveWith(
                           //         (states) => Color(0x98A2C5FF)),
