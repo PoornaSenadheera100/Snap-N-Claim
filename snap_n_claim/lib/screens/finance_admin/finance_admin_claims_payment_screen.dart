@@ -6,17 +6,22 @@ import '../../models/employee.dart';
 import '../../services/expense_submission_and_viewing_claim_state_service.dart';
 
 class FinanceAdminClaimsPaymentScreen extends StatefulWidget {
-  const FinanceAdminClaimsPaymentScreen(this._width, this._height, this.user, {super.key});
+  const FinanceAdminClaimsPaymentScreen(
+      this._width, this._height, this.user, this._request,
+      {super.key});
 
   final double _width;
   final double _height;
   final Employee user;
+  final QueryDocumentSnapshot<Object?> _request;
 
   @override
-  State<FinanceAdminClaimsPaymentScreen> createState() => _FinanceAdminClaimsPaymentScreenState();
+  State<FinanceAdminClaimsPaymentScreen> createState() =>
+      _FinanceAdminClaimsPaymentScreenState();
 }
 
-class _FinanceAdminClaimsPaymentScreenState extends State<FinanceAdminClaimsPaymentScreen> {
+class _FinanceAdminClaimsPaymentScreenState
+    extends State<FinanceAdminClaimsPaymentScreen> {
   final double _heightDenominator1 = 40.14545454545455;
   final double _heightDenominator2 = 80.29090909090909;
   final double _widthDenominator1 = 1.05;
@@ -57,29 +62,6 @@ class _FinanceAdminClaimsPaymentScreenState extends State<FinanceAdminClaimsPaym
   @override
   void initState() {
     super.initState();
-
-    // _collectionReference =
-    //     ExpenseSubmissionAndViewingClaimStateService.getLatestClaimNo();
-
-    // _collectionReference.then((value) {
-    //   _claimNoController.text = value.docs[0].get('claimNo');
-    //   int newClaimNo = int.parse(_claimNoController.text.substring(1)) + 1;
-
-    //   setState(() {
-    //     _claimNoController.text = 'R' + newClaimNo.toString().padLeft(3, '0');
-    //   });
-    // });
-
-    // _collectionReferenceExpenses =
-    //     ExpenseSubmissionAndViewingClaimStateService.getExpensesByClaimNo(
-    //         _claimNoController.text);
-
-    //set current date
-    // setState(() {
-    //   _claimDateController.text = DateTime.now().toString().substring(0, 10);
-    // });
-    //
-    // print('date : ' + _claimDateController.text);
   }
 
   void callToast(String msg) {
@@ -93,59 +75,13 @@ class _FinanceAdminClaimsPaymentScreenState extends State<FinanceAdminClaimsPaym
         fontSize: 16.0);
   }
 
-  void validateForm() {
-    String invoiceAmountString = _invoiceAmountController.text;
-    String transactionLimitString = _transactionLimitController.text;
-
-    double invoiceAmount = 0.0;
-    double transactionLimit = 0.0;
-
-    if(invoiceAmountString != ''){
-      invoiceAmount = double.parse(invoiceAmountString);
-    }
-
-    if(transactionLimitString != ''){
-      transactionLimit = double.parse(transactionLimitString);
-
-    }
-
-    DateTime currDate = DateTime.now();
-    DateTime invoiceDate = DateTime.now();
-
-    if(_invoiceDateController.text != ''){
-      invoiceDate = DateTime.parse(_invoiceDateController.text);
-    }
-
-    int balance = 0;
-
-    if(_remainingBalanceController.text != ''){
-      balance = int.parse(_remainingBalanceController.text);
-    }
-
-    if (_invoiceDateController.text == '') {
-      callToast('Invoice date cannot be empty!');
-    } else if (invoiceDate.isAfter(currDate)) {
-      callToast('Invoice date cannot be after claim date!');
-    } else if (_invoiceNoController.text == '') {
-      callToast('Invoice number cannot be empty!');
-    } else if (_invoiceAmountController.text == '') {
-      callToast('Invoice amount cannot be empty!');
-    } else if (invoiceAmount > transactionLimit) {
-      callToast('Invoice amount cannot be greater than limit!');
-    } else if (_claimExpenseValue == '') {
-      callToast('Claim expense cannot be empty!');
-    } else if (balance < 0 ){
-      callToast('Claim expense too high, insufficient balance');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     print(widget._width);
     print(widget._height);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add New Claim"),
+        title: Text('Claim ${widget._request["claimNo"]}'),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -178,7 +114,8 @@ class _FinanceAdminClaimsPaymentScreenState extends State<FinanceAdminClaimsPaym
                             child: TextField(
                                 style: TextStyle(fontSize: 12),
                                 textAlign: TextAlign.center,
-                                controller: _claimNoController,
+                                controller: TextEditingController(
+                                    text: widget._request["claimNo"]),
                                 readOnly: true,
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder())),
@@ -194,7 +131,11 @@ class _FinanceAdminClaimsPaymentScreenState extends State<FinanceAdminClaimsPaym
                             child: TextField(
                               style: TextStyle(fontSize: 12),
                               textAlign: TextAlign.center,
-                              controller: _claimDateController,
+                              controller: TextEditingController(
+                                  text: widget._request["date"]
+                                      .toDate()
+                                      .toString()
+                                      .substring(0, 10)),
                               readOnly: true,
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder()),
@@ -211,7 +152,9 @@ class _FinanceAdminClaimsPaymentScreenState extends State<FinanceAdminClaimsPaym
                             child: TextField(
                                 style: TextStyle(fontSize: 12),
                                 textAlign: TextAlign.center,
-                                controller: _totalAmountController,
+                                controller: TextEditingController(
+                                    text:
+                                        'Rs.${widget._request["total"].toStringAsFixed(2)}'),
                                 readOnly: true,
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder())),
@@ -220,7 +163,6 @@ class _FinanceAdminClaimsPaymentScreenState extends State<FinanceAdminClaimsPaym
                       ),
                     ]),
               ),
-
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: widget._width / 49.09090909090909375,
@@ -231,7 +173,11 @@ class _FinanceAdminClaimsPaymentScreenState extends State<FinanceAdminClaimsPaym
                   child: Center(child: Text('Added Expenses')),
                 ),
               ),
-              // ListView(children: [Text("data")],),
+              Container(
+                  height: 200,
+                  child: ListView(
+                    children: widget._request["lineItems"].map<Widget>((e)=>Text("data")).toList(),
+                  )),
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: widget._width / (deviceWidth / 8)),
@@ -244,15 +190,15 @@ class _FinanceAdminClaimsPaymentScreenState extends State<FinanceAdminClaimsPaym
                       child: ElevatedButton(
                         onPressed: () {},
                         child: Text('Cancel'),
-                        style:
-                            ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red),
                       ),
                     ),
                     ElevatedButton(
                       onPressed: () {},
                       child: Text('Submit'),
-                      style:
-                          ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green),
                     ),
                   ],
                 ),

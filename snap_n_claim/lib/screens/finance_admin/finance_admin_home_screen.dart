@@ -72,7 +72,7 @@ class _FinanceAdminHomeScreenState extends State<FinanceAdminHomeScreen> {
                                         FinanceAdminClaimsPaymentScreen(
                                             widget._width,
                                             widget._height,
-                                            widget.user)));
+                                            widget.user, e)));
                               },
                               key: UniqueKey(),
                               child: Card(
