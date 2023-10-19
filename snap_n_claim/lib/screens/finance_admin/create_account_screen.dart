@@ -145,8 +145,7 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
       appBar: AppBar(
         title: const Text("Create Account"),
       ),
-      drawer: FinanceAdminMenuDrawer(widget._width, widget._height,
-          "User Configuration Screen", widget._user),
+
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,

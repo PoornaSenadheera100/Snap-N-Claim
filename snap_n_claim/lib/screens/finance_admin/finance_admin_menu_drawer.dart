@@ -8,8 +8,10 @@ import 'package:snap_n_claim/screens/common/login_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_budget_allocation_selection_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_home_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_reports_selection_screen.dart';
+import 'package:snap_n_claim/screens/finance_admin/login_status.dart';
 
 import 'create_account_screen.dart';
+
 
 class FinanceAdminMenuDrawer extends StatelessWidget {
   const FinanceAdminMenuDrawer(
@@ -76,7 +78,7 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
       Navigator.pushReplacement(
         context,
         PageTransition(
-          child: CreateAccountScreen(
+          child: LoginStatusScreen(
               _width, _height, user),
           type: PageTransitionType.rightToLeft,
           alignment: Alignment.center,

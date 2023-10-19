@@ -82,4 +82,7 @@ class EmployeeOnboardingService {
 
     return response;
   }
+  static Stream <QuerySnapshot> getAllEmployees(){
+    return employeeCollectionReference.snapshots();
+  }
 }
