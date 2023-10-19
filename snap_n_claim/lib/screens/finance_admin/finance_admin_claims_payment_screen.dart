@@ -5,7 +5,6 @@ import 'package:snap_n_claim/models/response.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
 import '../../models/employee.dart';
-import '../../services/expense_submission_and_viewing_claim_state_service.dart';
 
 class FinanceAdminClaimsPaymentScreen extends StatefulWidget {
   const FinanceAdminClaimsPaymentScreen(
@@ -24,42 +23,11 @@ class FinanceAdminClaimsPaymentScreen extends StatefulWidget {
 
 class _FinanceAdminClaimsPaymentScreenState
     extends State<FinanceAdminClaimsPaymentScreen> {
-  final double _heightDenominator1 = 40.14545454545455;
-  final double _heightDenominator2 = 80.29090909090909;
   final double _widthDenominator1 = 1.05;
-
   final double deviceWidth = 392.72727272727275;
   final double deviceHeight = 783.2727272727273;
 
-  final TextEditingController _claimNoController = TextEditingController();
-  final TextEditingController _claimDateController = TextEditingController();
-  final TextEditingController _totalAmountController = TextEditingController();
-  final TextEditingController _invoiceDateController = TextEditingController();
-  final TextEditingController _invoiceNoController = TextEditingController();
-  final TextEditingController _invoiceAmountController =
-      TextEditingController();
-  late String _claimExpenseValue = '';
-  final TextEditingController _remainingBalanceController =
-      TextEditingController();
-  final TextEditingController _transactionLimitController =
-      TextEditingController();
-
-  final List<String> _claimExpenseList = [
-    "Transportation",
-    "Accommodation",
-    "Meals and Food",
-    "Health and Safety",
-    "Equipment and Supplies",
-    "Communication"
-  ];
-
-  // late Future<QuerySnapshot<Object?>> _collectionReference;
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  late Stream<QuerySnapshot> _collectionReferenceExpenses;
-
-  late final DateTime _currDate;
 
   @override
   void initState() {
@@ -141,8 +109,6 @@ class _FinanceAdminClaimsPaymentScreenState
 
   @override
   Widget build(BuildContext context) {
-    print(widget._width);
-    print(widget._height);
     return Scaffold(
       appBar: AppBar(
         title: Text('Claim ${widget._request["claimNo"]}'),
@@ -154,46 +120,54 @@ class _FinanceAdminClaimsPaymentScreenState
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 49.09090909090909375,
-                    vertical: widget._height / 97.9090909090909125),
+                  horizontal: widget._width / 49.09090909090909375,
+                  vertical: widget._height / 97.9090909090909125,
+                ),
                 child: Container(
                   color: Colors.grey,
                   width: widget._width / _widthDenominator1,
-                  child: Center(child: Text('Claim header Information')),
+                  child: const Center(child: Text('Claim header Information')),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 49.09090909090909375,
-                    vertical: widget._height / 97.9090909090909125),
+                  horizontal: widget._width / 49.09090909090909375,
+                  vertical: widget._height / 97.9090909090909125,
+                ),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Column(
                         children: [
-                          Text('Claim No'),
+                          const Text('Claim No'),
                           SizedBox(
-                            width: widget._width / (deviceWidth / 116),
-                            height: widget._height / (deviceHeight / 40),
+                            width: widget._width / 3.385579937304075,
+                            height: widget._height / 20.07272727272727,
                             child: TextField(
-                                style: TextStyle(fontSize: 12),
-                                textAlign: TextAlign.center,
-                                controller: TextEditingController(
-                                    text: widget._request["claimNo"]),
-                                readOnly: true,
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder())),
+                              style: TextStyle(
+                                fontSize: widget._width / 32.72727272727273,
+                              ),
+                              textAlign: TextAlign.center,
+                              controller: TextEditingController(
+                                text: widget._request["claimNo"],
+                              ),
+                              readOnly: true,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
                           ),
                         ],
                       ),
                       Column(
                         children: [
-                          Text('Claim Date'),
+                          const Text('Claim Date'),
                           SizedBox(
-                            width: widget._width / (deviceWidth / 116),
-                            height: widget._height / (deviceHeight / 40),
+                            width: widget._width / 3.385579937304075,
+                            height: widget._height / 20.07272727272727,
                             child: TextField(
-                              style: TextStyle(fontSize: 12),
+                              style: TextStyle(
+                                  fontSize: widget._width / 32.72727272727273),
                               textAlign: TextAlign.center,
                               controller: TextEditingController(
                                   text: widget._request["date"]
@@ -209,12 +183,14 @@ class _FinanceAdminClaimsPaymentScreenState
                       ),
                       Column(
                         children: [
-                          Text('Total Amount'),
+                          const Text('Total Amount'),
                           SizedBox(
-                            width: widget._width / (deviceWidth / 116),
-                            height: widget._height / (deviceHeight / 40),
+                            width: widget._width / 3.385579937304075,
+                            height: widget._height / 20.07272727272727,
                             child: TextField(
-                                style: TextStyle(fontSize: 12),
+                                style: TextStyle(
+                                    fontSize:
+                                        widget._width / 32.72727272727273),
                                 textAlign: TextAlign.center,
                                 controller: TextEditingController(
                                     text:
@@ -234,73 +210,74 @@ class _FinanceAdminClaimsPaymentScreenState
                 child: Container(
                   color: Colors.grey,
                   width: widget._width / _widthDenominator1,
-                  child: Center(child: Text('Added Expenses')),
+                  child: const Center(child: Text('Added Expenses')),
                 ),
               ),
-              Container(
-                  height: 510,
-                  child: ListView(
-                    children: widget._request["lineItems"]
-                        .map<Widget>((e) => Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 10),
-                              child: Container(
-                                height: 100,
-                                color: Color(0x9A5987EF),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
-                                      child: Container(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text(e["invoiceDate"]
-                                                .toDate()
-                                                .toString()
-                                                .substring(0, 10)),
-                                            Text(widget._request["category"])
-                                          ],
-                                        ),
-                                      ),
+              SizedBox(
+                height: widget._height / 1.574331550802139,
+                child: ListView(
+                  children: widget._request["lineItems"]
+                      .map<Widget>((e) => Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: widget._height / 100.3636363636364,
+                              horizontal: widget._width / 39.27272727272727,
+                            ),
+                            child: Container(
+                              height: widget._height / 8.029090909090909,
+                              color: const Color(0x9A5987EF),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        left:
+                                            widget._width / 49.09090909090909),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(e["invoiceDate"]
+                                            .toDate()
+                                            .toString()
+                                            .substring(0, 10)),
+                                        Text(widget._request["category"])
+                                      ],
                                     ),
-                                    Container(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Text(e["invoiceNo"]),
-                                          Text(
-                                              'Rs.${e["invoiceAmount"].toStringAsFixed(2)}'),
-                                        ],
-                                      ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(e["invoiceNo"]),
+                                      Text(
+                                          'Rs.${e["invoiceAmount"].toStringAsFixed(2)}'),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      right: widget._width / 19.63636363636364,
                                     ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 20.0),
-                                      child: Container(
-                                        child: Row(
-                                          children: [
-                                            IconButton(
-                                              onPressed: () {},
-                                              icon: Icon(Icons.attach_file),
-                                            ),
-                                          ],
+                                    child: Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: const Icon(Icons.attach_file),
                                         ),
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                      ],
+                                    ),
+                                  )
+                                ],
                               ),
-                            ))
-                        .toList(),
-                  )),
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / (deviceWidth / 8)),
+                  horizontal: widget._width / 49.09090909090909,
+                ),
                 child: Row(
                   children: [
                     Padding(
@@ -311,16 +288,16 @@ class _FinanceAdminClaimsPaymentScreenState
                         onPressed: () {
                           _onTapCancelBtn(context);
                         },
-                        child: Text('Cancel'),
+                        child: const Text('Cancel'),
                       ),
                     ),
                     ElevatedButton(
                       onPressed: () {
                         _onTapPayBtn(context);
                       },
-                      child: Text('Mark as Paid'),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green),
+                      child: const Text('Mark as Paid'),
                     ),
                   ],
                 ),
