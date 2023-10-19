@@ -42,15 +42,18 @@ class _FinanceAdminHomeScreenState extends State<FinanceAdminHomeScreen> {
         stream: _pendingClaimsReference,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator.adaptive(),
-                Padding(
-                  padding: EdgeInsets.only(top: 20.0),
-                  child: Text("Loading..."),
-                ),
-              ],
+            return Container(
+              width: widget._width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator.adaptive(),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20.0),
+                    child: Text("Loading..."),
+                  ),
+                ],
+              ),
             );
           } else if (snapshot.data!.docs.length > 0) {
             return SingleChildScrollView(
