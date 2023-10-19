@@ -48,7 +48,7 @@ class EmployeeMenuDrawer extends StatelessWidget {
     Navigator.of(context).pop();
 
     if (currentPage != 'Add New Claim') {
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
         PageTransition(
           child: EmployeeAddNewClaim(_width, _height, user),
