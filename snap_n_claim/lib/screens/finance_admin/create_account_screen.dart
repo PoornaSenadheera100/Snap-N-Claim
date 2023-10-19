@@ -1,20 +1,14 @@
-import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:snap_n_claim/models/response.dart';
-import 'package:snap_n_claim/screens/head_of_department/approver_dashboard_screen.dart';
 import 'package:snap_n_claim/services/employee_onboarding_service.dart';
 
 import '../../models/employee.dart';
-import '../employee/employee_home_screen.dart';
 import 'finance_admin_menu_drawer.dart';
 
 class CreateAccountScreen extends StatefulWidget {
-  const CreateAccountScreen(this._width, this._height, this._user,
-      {super.key});
+  const CreateAccountScreen(this._width, this._height, this._user, {super.key});
 
   final double _width;
   final double _height;
@@ -28,19 +22,32 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _employeeNoController = TextEditingController();
   final TextEditingController _employeeEmailController =
-  TextEditingController();
-  final TextEditingController _employeeNameController =
-  TextEditingController();
+      TextEditingController();
+  final TextEditingController _employeeNameController = TextEditingController();
   final TextEditingController _employeeInitialPasswordController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _employeePhoneNoController =
-  TextEditingController();
-  final List<String> employeeDepartmentList = <String>['Production Department', 'IT Department', 'Finance Department', 'HR Department','Marketing Department','Safety and Security Department'];
-  final List<String> employeeGradesList = <String>['Junior', 'Senior', 'Manager', 'Executive','Senior Executive'];
+      TextEditingController();
+  final List<String> employeeDepartmentList = <String>[
+    'Production Department',
+    'IT Department',
+    'Finance Department',
+    'HR Department',
+    'Marketing Department',
+    'Safety and Security Department'
+  ];
+  final List<String> employeeGradesList = <String>[
+    'Junior',
+    'Senior',
+    'Manager',
+    'Executive',
+    'Senior Executive'
+  ];
   final List<String> employeeTypeList = <String>['hod', 'emp'];
   String _departmentDropdownValue = "";
   String _employeeGradeDropdownValue = '';
   String _empTypeDropDownValue = '';
+
   String? _validateEmployeeNo(String value) {
     if (value == '') {
       return "This field is required!";
@@ -58,6 +65,7 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
     }
     return null;
   }
+
   String? _validateEmployeeInitialPassword(String value) {
     if (value == '') {
       return "This field is required!";
@@ -70,7 +78,8 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
   String? _validateEmployeeEmail(String value) {
     if (value == '') {
       return "This field is required!";
-    } else if (!RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$').hasMatch(value)) {
+    } else if (!RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$')
+        .hasMatch(value)) {
       return "Please enter a valid email address.";
     }
     return null;
@@ -85,9 +94,16 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
     return null;
   }
 
-
   Future<void> _onTapCreateAccountButton() async {
-    Response response = await EmployeeOnboardingService.addAccount(_employeeNoController.text, _employeeNameController.text, _departmentDropdownValue, _employeeGradeDropdownValue, _employeeInitialPasswordController.text, _employeeEmailController.text, _employeePhoneNoController.text,_empTypeDropDownValue );
+    Response response = await EmployeeOnboardingService.addAccount(
+        _employeeNoController.text,
+        _employeeNameController.text,
+        _departmentDropdownValue,
+        _employeeGradeDropdownValue,
+        _employeeInitialPasswordController.text,
+        _employeeEmailController.text,
+        _employeePhoneNoController.text,
+        _empTypeDropDownValue);
     if (response.code == 200) {
       Fluttertoast.showToast(
           msg: "Account Created Successfully!🎉",
@@ -129,8 +145,8 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
       appBar: AppBar(
         title: const Text("Create Account"),
       ),
-      drawer: FinanceAdminMenuDrawer(
-          widget._width, widget._height, "User Configuration Screen", widget._user),
+      drawer: FinanceAdminMenuDrawer(widget._width, widget._height,
+          "User Configuration Screen", widget._user),
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -139,7 +155,6 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
             child: Column(
               children: [
                 TextFormField(
-                  obscureText: true,
                   controller: _employeeNoController,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(), labelText: "Employee No"),
@@ -150,7 +165,6 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: TextFormField(
-                    obscureText: true,
                     controller: _employeeNameController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -163,7 +177,6 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: TextFormField(
-                    obscureText: true,
                     controller: _employeeEmailController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -186,7 +199,7 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
                     },
                   ),
                 ),
- // Add some spacing between the TextFormField and Dropdown
+                // Add some spacing between the TextFormField and Dropdown
                 DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                       value: _employeeGradeDropdownValue.isNotEmpty
@@ -200,8 +213,7 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
                           child: Text(
                             value,
                             style: TextStyle(
-                                fontSize:
-                                widget._width / 26.18181818181818),
+                                fontSize: widget._width / 26.18181818181818),
                           ),
                         );
                       }).toList(),
@@ -222,12 +234,19 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem(
                           value: value,
-                          child: Text(
-                            value,
-                            style: TextStyle(
-                                fontSize:
-                                widget._width / 26.18181818181818),
-                          ),
+                          child: value == "hod"
+                              ? Text(
+                                  "Head of Department",
+                                  style: TextStyle(
+                                      fontSize:
+                                          widget._width / 26.18181818181818),
+                                )
+                              : Text(
+                                  "Employee",
+                                  style: TextStyle(
+                                      fontSize:
+                                          widget._width / 26.18181818181818),
+                                ),
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
@@ -249,8 +268,7 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
                           child: Text(
                             value,
                             style: TextStyle(
-                                fontSize:
-                                widget._width / 26.18181818181818),
+                                fontSize: widget._width / 26.18181818181818),
                           ),
                         );
                       }).toList(),
@@ -263,7 +281,6 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: TextFormField(
-                    obscureText: true,
                     controller: _employeePhoneNoController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
