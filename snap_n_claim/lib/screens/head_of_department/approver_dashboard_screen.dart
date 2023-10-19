@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../models/employee.dart';
 import '../../services/expense_approval_process_and_sla_calculation_service.dart';
 import 'approver_navbar_widget.dart';
+import 'approver_viewclaimindetail_screen.dart';
 
 
 class ApproverDashboardScreen extends StatefulWidget {
@@ -104,6 +105,16 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
             else if (snapShot.data!.docs.length > 0) {
               return ListView(children: snapShot.data!.docs.map((e) =>
                   GestureDetector(
+                    onTap: ()  {
+                      // Navigate to the my claims page when the item is tapped
+                      Navigator.of(context).pop(); // Close the drawer
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ViewClaimInDetail(
+                              widget._width, widget._height, widget._user),
+                        ),
+                      );
+                    } ,
                     key: UniqueKey(),
                     child: Card(
                       elevation: 5,
