@@ -230,6 +230,41 @@ class BudgetAllocationAndReportingService {
     }
   }
 
+  static Future<Map<String, dynamic>> getExpenseReportDataToHod(
+      int year, int month, String department) async {
+    final Map<String, dynamic> result = {
+      "Transportation": 0,
+      "Meals and Food": 0,
+      "Accommodation": 0,
+      "Equipment and Supplies": 0,
+      "Communication": 0,
+      "Health and Safety": 0,
+      "MAX": 0,
+    };
+    try {
+      final QuerySnapshot querySnapshot = await requestCollectionReference
+          .where('paymentStatus', isEqualTo: "Paid")
+          .where("department", isEqualTo: department)
+          .where('date', isGreaterThanOrEqualTo: DateTime(year, month, 1))
+          .where('date', isLessThanOrEqualTo: DateTime(year, month, 31))
+          .get();
+
+      for (final QueryDocumentSnapshot document in querySnapshot.docs) {
+        final category = document['category'];
+        final double total = document['total'].toDouble();
+        if (result.containsKey(category)) {
+          result[category] += total;
+          if (result["MAX"] < result[category]) {
+            result["MAX"] = result[category];
+          }
+        }
+      }
+      return result;
+    } catch (e) {
+      return result;
+    }
+  }
+
   static Stream<QuerySnapshot<Object?>> getApprovedClaims() {
     return requestCollectionReference
         .where("status", isEqualTo: "Approved")
@@ -266,8 +301,17 @@ class BudgetAllocationAndReportingService {
 
   static Stream<QuerySnapshot<Object?>> getFinancePendingClaims() {
     return requestCollectionReference
-        .where("status", isEqualTo: "Approved").where("paymentStatus", isEqualTo: "Pending")
+        .where("status", isEqualTo: "Approved")
+        .where("paymentStatus", isEqualTo: "Pending")
         .orderBy("date")
         .snapshots();
+  }
+
+  static Future<QuerySnapshot<Object?>> verifyUserWithDept(
+      String empNo, String department) async {
+    return await employeeCollectionReference
+        .where("emp_no", isEqualTo: empNo)
+        .where("department", isEqualTo: department)
+        .get();
   }
 }
