@@ -39,8 +39,8 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
 
   Widget getStatusIndicator(bool isFirstLogin) {
     return Container(
-      width: 24, // Adjust the size as needed
-      height: 24,
+      width: widget._width / 16.36363636363636, // Adjust the size as needed
+      height: widget._height / 33.45454545454545,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: isFirstLogin ? Colors.red : Colors.green,
@@ -56,8 +56,6 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget._width);
-    print(widget._height);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Account Creation and Management"),
@@ -73,7 +71,7 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
+                  padding: EdgeInsets.only(right: widget._width / 49.09090909090909),
                   child: ElevatedButton(
                       onPressed: () {
                         _navigate();
@@ -83,7 +81,7 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
               ],
             ),
             Container(
-                width: 180,
+                width: widget._width / 2.181818181818182,
                 height: widget._height / 6.176223776223776,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
@@ -92,17 +90,17 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("No of Accounts Created", textAlign: TextAlign.center),
+                    const Text("No of Accounts Created", textAlign: TextAlign.center),
                     Text(_accLoginInfo["total"].toString()),
                   ],
                 )),
             Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+              padding: EdgeInsets.only(top: widget._height / 100.3636363636364),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
-                        width: 180,
+                        width: widget._width / 2.181818181818182,
                         height: widget._height / 6.176223776223776,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
@@ -111,13 +109,13 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("Successfully Logged In Users",
+                            const Text("Successfully Logged In Users",
                                 textAlign: TextAlign.center),
                             Text(_accLoginInfo["loggedInCount"].toString()),
                           ],
                         )),
                     Container(
-                        width: 180,
+                        width: widget._width / 2.181818181818182,
                         height: widget._height / 6.176223776223776,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
@@ -126,7 +124,7 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("Users to be Logged In",
+                            const Text("Users to be Logged In",
                                 textAlign: TextAlign.center),
                             Text((_accLoginInfo["total"] -
                                     _accLoginInfo["loggedInCount"])
@@ -136,16 +134,16 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
                   ]),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 10.0),
+              padding: EdgeInsets.only(top: widget._height / 80.29090909090909),
               child: StreamBuilder(
                   stream: employeeCollectionReference,
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator.adaptive();
-                    } else if (snapshot.data!.docs.length > 0) {
-                      return Container(
-                        height: 390,
+                      return const CircularProgressIndicator.adaptive();
+                    } else if (snapshot.data!.docs.isNotEmpty) {
+                      return SizedBox(
+                        height: widget._height / 2.058741258741259,
                         child: SingleChildScrollView(
                           child: DataTable(
                             dividerThickness: 3,
@@ -153,7 +151,7 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
                             border: TableBorder.all(color: Colors.grey),
                             showBottomBorder: true,
                             columnSpacing: 6,
-                            columns: [
+                            columns: const [
                               DataColumn(
                                   label: Expanded(
                                 child: Text(
@@ -187,13 +185,13 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
                                   // color: MaterialStateProperty.resolveWith(
                                   //         (states) => Color(0x98A2C5FF)),
                                   color: MaterialStateProperty.resolveWith(
-                                      (states) => Color(0x98A2C5FF)));
+                                      (states) => const Color(0x98A2C5FF)));
                             }).toList(),
                           ),
                         ),
                       );
                     } else {
-                      return Text('No Data');
+                      return const Text('No Data');
                     }
                   }),
             )
