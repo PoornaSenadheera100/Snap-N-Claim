@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -357,6 +358,29 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
                         ),
                       ]),
                 ),
+                widget._request["status"] == "Rejected" ?
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: widget._width / 25.09090909090909375,
+                    vertical: widget._height / 97.9090909090909125,
+                  ),
+                  child: Row(
+                    children: [
+                      Text("Reject Reason : "),
+                      Expanded(
+                          child: SizedBox(
+                              child: TextField(
+                                readOnly: true,
+                                controller: TextEditingController(text: widget._request["rejectReason"]),
+                        minLines: 1,
+                        maxLines: 20,
+                        style: TextStyle(color: Colors.red),
+                        decoration:
+                            InputDecoration(border: OutlineInputBorder(),),
+                      )))
+                    ],
+                  ),
+                ) : Container(),
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: widget._width / 49.09090909090909375,
