@@ -33,11 +33,13 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
         // drawer: ApproverNavBar(widget._user),
         drawer: ApproverMenuDrawer(
             widget._width, widget._height, "Approver Dashboard", widget._user),
-        body: Column(
-          children: [
-            radioButtonGroup(),
-            _loadPurchaseRequests(),
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              radioButtonGroup(),
+              _loadPurchaseRequests(),
+            ],
+          ),
         ));
   }
 
