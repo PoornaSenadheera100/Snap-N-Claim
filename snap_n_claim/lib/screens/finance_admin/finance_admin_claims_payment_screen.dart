@@ -111,8 +111,11 @@ class _FinanceAdminClaimsPaymentScreenState
     var dialogRes = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-              content:
-                  Container(height: 200, width: 200, child: Image.network(url)),
+              content: SizedBox(
+                height: widget._height / 2.676363636363636,
+                width: widget._width / 1.309090909090909,
+                child: Image.network(url),
+              ),
             ));
   }
 
