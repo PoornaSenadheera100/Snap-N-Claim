@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:snap_n_claim/models/request.dart';
 
 import '../../models/employee.dart';
@@ -51,7 +55,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  late Stream<QuerySnapshot> _collectionReferenceExpenses;
+  late Stream<QuerySnapshot> _collectionReferenceExpenses = Stream.empty();
 
   late final DateTime _currDate;
 
@@ -59,6 +63,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
   double transActionLimit = 1000;
 
   late final Request request;
+
+  String imageUrl = '';
 
   @override
   void initState() {
@@ -103,7 +109,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
         fontSize: 16.0);
   }
 
-  void validateForm() {
+  Future<void> validateForm() async {
     String invoiceAmountString = _invoiceAmountController.text;
     String transactionLimitString = _transactionLimitController.text;
 
@@ -145,10 +151,14 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
       callToast('Claim expense cannot be empty!');
     } else if (balance < 0) {
       callToast('Claim expense too high, insufficient balance');
-    } else {
+    }
+    else if (imageUrl == '') {
+      callToast('Please upload an image');
+    }
+    else {
       updateTotal(_invoiceAmountController.text);
+      await sendData();
       clearFields();
-      sendData();
     }
   }
 
@@ -186,9 +196,32 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
     _invoiceNoController.text = '';
     _invoiceAmountController.text = '';
     _claimExpenseValue = '';
+    imageUrl = '';
   }
 
-  void sendData() {
+  Future<void> sendData() async{
+    String invoiceAmountString = _invoiceAmountController.text;
+    String totalAmountString = _totalAmountController.text;
+
+    double invoiceAmount = 0.0;
+    double totalAmount = 0;
+
+    if (invoiceAmountString != '') {
+      invoiceAmount = double.parse(invoiceAmountString);
+    }
+
+    if (totalAmountString != '') {
+      totalAmount = double.parse(totalAmountString);
+    }
+
+    print('Claim date : ');
+    print(DateTime.parse(_claimDateController.text));
+    print(_claimDateController.text);
+
+    print('Invoice date : ');
+    print(_invoiceDateController.text);
+    print(DateTime.parse(_invoiceDateController.text));
+
     Map<String, dynamic> req = <String, dynamic>{
       "category": _claimExpenseValue,
       "claimNo": _claimNoController.text,
@@ -198,19 +231,54 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
       "empNo": widget.user.empNo,
       "lineItems": [
         {
-          "invoiceAmount": _invoiceAmountController.text,
-          "invoiceDate": _invoiceDateController.text,
+          "invoiceAmount": invoiceAmount,
+          "invoiceDate": DateTime.parse(_invoiceDateController.text),
           "invoiceNo": _invoiceNoController.text,
-          "invoiceImage": '',
+          "invoiceImage": imageUrl,
         }
       ],
       "paymentStatus": "Pending",
       "rejectReason": "",
       "status": "Draft",
-      "total": double.parse(_totalAmountController.text),
+      "total": totalAmount,
     };
 
     ExpenseSubmissionAndViewingClaimStateService.addRequest(req);
+  }
+
+  Future<void> addImage() async {
+    ImagePicker imagePicker = ImagePicker();
+    XFile? file = await imagePicker.pickImage(source: ImageSource.camera);
+
+    if (file == null) {
+      return;
+    }
+
+    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+    //upload to firebase
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDirImages = referenceRoot.child('images');
+
+    //file reference
+    Reference referenceImageUpload = referenceDirImages.child(uniqueFileName);
+
+    try {
+      await referenceImageUpload.putFile(File(file!.path));
+
+      imageUrl = await referenceImageUpload.getDownloadURL();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void showImage(BuildContext context, String url) async {
+    var dialogRes = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+              content:
+                  Container(height: 200, width: 200, child: Image.network(url)),
+            ));
   }
 
   @override
@@ -329,6 +397,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                                       _invoiceDateController.text = selectedDate
                                           .toString()
                                           .substring(0, 10);
+
+                                      print(_invoiceDateController.text);
                                       // _dueDateErrorMsg = '';
                                     });
                                   }
@@ -465,7 +535,10 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                         width: widget._width / (deviceWidth / 50),
                       ),
                       IconButton(
-                          onPressed: () {}, icon: Icon(Icons.add_a_photo)),
+                          onPressed: () {
+                            addImage();
+                          },
+                          icon: Icon(Icons.add_a_photo)),
                       ElevatedButton(
                           onPressed: () {
                             validateForm();
@@ -491,49 +564,83 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                       return const Center(
                         child: CircularProgressIndicator.adaptive(),
                       );
+                    } else if (!snapshot.hasData) {
+                      return SizedBox(
+                        height: widget._height / (deviceHeight / 240),
+                        child: Center(
+                          child: SizedBox(
+                            width: widget._width / (deviceWidth / 100),
+                            child: Text('No data found'),
+                          ),
+                        ),
+                      );
                     } else if (snapshot.data!.docs.length > 0) {
                       return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: widget._width / (deviceWidth / 8)),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: widget._width / (deviceWidth / 8)),
                         child: Container(
                           height: widget._height / (deviceHeight / 240),
                           child: ListView(
                             children: snapshot.data!.docs.map((e) {
                               List<dynamic> lineItems = e['lineItems'];
 
-                              // Now you can iterate through the lineItems
-                              List<Widget> lineItemWidgets = lineItems.map((lineItem) {
+                              List<Widget> lineItemWidgets =
+                                  lineItems.map((lineItem) {
                                 return Card(
                                   color: Colors.blueAccent,
                                   child: SizedBox(
                                     width: widget._width / (deviceWidth / 400),
-                                    height: widget._height / (deviceHeight / 55),
+                                    height:
+                                        widget._height / (deviceHeight / 55),
                                     child: Column(
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Padding(
-                                              padding: EdgeInsets.symmetric(horizontal: widget._width / (deviceWidth / 8)),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: widget._width /
+                                                      (deviceWidth / 8)),
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  Text("${lineItem['invoiceDate'].toDate().day}/${lineItem['invoiceDate'].toDate().month}/${lineItem['invoiceDate'].toDate().year}"),
+                                                  Text(
+                                                      "${lineItem['invoiceDate'].toDate().day}/${lineItem['invoiceDate'].toDate().month}/${lineItem['invoiceDate'].toDate().year}"),
                                                   Text("${e['category']}"),
                                                 ],
                                               ),
                                             ),
                                             Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                Text("${lineItem['invoiceNo']}"),
-                                                Text("Rs : ${lineItem['invoiceAmount'].toStringAsFixed(2)}"),
+                                                Text(
+                                                    "${lineItem['invoiceNo']}"),
+                                                Text(
+                                                    "Rs : ${lineItem['invoiceAmount'].toStringAsFixed(2)}"),
                                               ],
                                             ),
                                             Row(
                                               children: [
-                                                IconButton(onPressed: () {}, icon: Icon(Icons.edit_outlined)),
-                                                IconButton(onPressed: () {}, icon: Icon(Icons.delete_outline)),
-                                                IconButton(onPressed: () {}, icon: Icon(Icons.file_open)),
+                                                IconButton(
+                                                    onPressed: () {},
+                                                    icon: Icon(
+                                                        Icons.edit_outlined)),
+                                                IconButton(
+                                                    onPressed: () {},
+                                                    icon: Icon(
+                                                        Icons.delete_outline)),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      showImage(
+                                                          context,
+                                                          lineItem[
+                                                              'invoiceImage']);
+                                                    },
+                                                    icon:
+                                                        Icon(Icons.file_open)),
                                               ],
                                             ),
                                           ],
@@ -551,7 +658,6 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                           ),
                         ),
                       );
-
                     } else {
                       return SizedBox(
                         height: widget._height / (deviceHeight / 240),
