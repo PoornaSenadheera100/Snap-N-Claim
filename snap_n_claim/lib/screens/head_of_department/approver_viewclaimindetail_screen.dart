@@ -11,6 +11,7 @@ class ViewClaimInDetail extends StatefulWidget {
   final Employee _user;
   final QueryDocumentSnapshot <Object?> request;
 
+
   @override
   State<ViewClaimInDetail> createState() =>
       _ViewClaimInDetail();
@@ -83,6 +84,8 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
        ),
     ),
   );
+
+
 
    Widget PONumber() => TextField(
      decoration: InputDecoration(
