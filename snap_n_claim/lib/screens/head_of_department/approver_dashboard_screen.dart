@@ -24,22 +24,24 @@ class ApproverDashboardScreen extends StatefulWidget {
 List<String> options = ['Pending', 'Rejected', 'Approved', 'Completed'];
 
 class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
-  late Stream<QuerySnapshot> PendingClaims;
+  late Stream<QuerySnapshot> _pendingClaims;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(centerTitle: true, title: Text("Approver Screen")),
+        appBar: AppBar(centerTitle: true, title: const Text("Approver Screen")),
         // drawer: ApproverNavBar(widget._user),
-        drawer: ApproverMenuDrawer(widget._width, widget._height, "Approver Dashboard", widget._user),
+        drawer: ApproverMenuDrawer(
+            widget._width, widget._height, "Approver Dashboard", widget._user),
         body: Column(
           children: [
             radioButtonGroup(),
-            LoadPurchaseRequests(),
+            _loadPurchaseRequests(),
           ],
         ));
   }
 
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -50,38 +52,33 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
 
 //Method : Get all pending requests
   void getPendingPurchaseOrders() {
-    PendingClaims =
+    _pendingClaims =
         ExpenseApprovalProcessAndSlaCalculationService.getPendingClaims(
             widget._user.department);
   }
 
   void _filter(String option) {
-    /*setState(() {
-    purchaseorders2 = purchaseorders1
-        .where((element) => element["status"] == option)
-        .toList();
-  });*/
     if (option == options[0]) {
-      PendingClaims =
+      _pendingClaims =
           ExpenseApprovalProcessAndSlaCalculationService.getPendingClaims(
               widget._user.department);
     } else if (option == options[1]) {
-      PendingClaims =
+      _pendingClaims =
           ExpenseApprovalProcessAndSlaCalculationService.getRejectedClaims(
               widget._user.department);
     } else if (option == options[2]) {
-      PendingClaims =
+      _pendingClaims =
           ExpenseApprovalProcessAndSlaCalculationService.getApprovedClaims(
               widget._user.department);
     } else {
-      PendingClaims =
+      _pendingClaims =
           ExpenseApprovalProcessAndSlaCalculationService.getCompletedClaims(
               widget._user.department);
     }
   }
 
   Widget radioButtonGroup() {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -101,7 +98,8 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
               Text(
                 option,
                 style: TextStyle(
-                    fontSize: 10), // You can adjust the font size here
+                  fontSize: widget._width / 39.27272727272727,
+                ),
               ),
             ],
           );
@@ -110,13 +108,13 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
     );
   }
 
-  Widget LoadPurchaseRequests() => StreamBuilder(
-      stream: PendingClaims,
+  Widget _loadPurchaseRequests() => StreamBuilder(
+      stream: _pendingClaims,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapShot) {
         if (snapShot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator.adaptive();
-        } else if (snapShot.data!.docs.length > 0) {
-          return Container(
+          return const CircularProgressIndicator.adaptive();
+        } else if (snapShot.data!.docs.isNotEmpty) {
+          return SizedBox(
             height: widget._height / 1.247012987012987,
             child: ListView(
                 children: snapShot.data!.docs
@@ -138,34 +136,40 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                             elevation: 5,
                             shadowColor: Colors.black,
                             color: e["status"] == "Rejected"
-                                ? Color(0xFFDA8383)
+                                ? const Color(0xFFDA8383)
                                 : (e["status"] == "Approved" &&
                                         e["paymentStatus"] == "Pending")
-                                    ? Color(0xFF948BB4)
+                                    ? const Color(0xFF948BB4)
                                     : (e["status"] == "Approved" &&
                                             e["paymentStatus"] == "Paid")
-                                        ? Color(0xFF66DE87)
-                                        : Color(0xFFD6D156),
+                                        ? const Color(0xFF66DE87)
+                                        : const Color(0xFFD6D156),
                             child: SizedBox(
-                              width: 400,
-                              height: 160,
+                              width: widget._width / 0.9818181818181818,
+                              height: widget._height / 5.018181818181818,
                               child: Padding(
-                                padding: const EdgeInsets.all(20.0),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: widget._height / 40.14545454545455,
+                                  horizontal: widget._width / 19.63636363636364,
+                                ),
                                 child: Column(
                                   children: [
-                                    const SizedBox(
-                                      height: 10,
+                                    SizedBox(
+                                      height:
+                                          widget._height / 80.29090909090909,
                                     ),
                                     Text(
                                       'Date : ${e["date"].toDate().toString().substring(0, 10)}',
                                       style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize:
+                                            widget._width / 26.18181818181818,
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    const SizedBox(
-                                      height: 10,
+                                    SizedBox(
+                                      height:
+                                          widget._height / 80.29090909090909,
                                     ),
                                     Row(
                                       mainAxisAlignment:
@@ -174,21 +178,24 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                                         Text(
                                           '${e["empName"]}',
                                           style: TextStyle(
-                                            fontSize: 15,
+                                            fontSize: widget._width /
+                                                26.18181818181818,
                                             color: Colors.black,
                                           ),
                                         ),
                                         Text(
                                           '${e["claimNo"]}',
                                           style: TextStyle(
-                                            fontSize: 15,
+                                            fontSize: widget._width /
+                                                26.18181818181818,
                                             color: Colors.black,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(
-                                      height: 10,
+                                    SizedBox(
+                                      height:
+                                          widget._height / 80.29090909090909,
                                     ),
                                     Row(
                                       mainAxisAlignment:
@@ -197,21 +204,24 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                                         Text(
                                           'Rs.${e["total"]}.00',
                                           style: TextStyle(
-                                            fontSize: 15,
+                                            fontSize: widget._width /
+                                                26.18181818181818,
                                             color: Colors.black,
                                           ),
                                         ),
                                         Text(
                                           '${e["category"]}',
                                           style: TextStyle(
-                                            fontSize: 15,
+                                            fontSize: widget._width /
+                                                26.18181818181818,
                                             color: Colors.black,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(
-                                      height: 10,
+                                    SizedBox(
+                                      height:
+                                          widget._height / 80.29090909090909,
                                     ),
                                   ],
                                 ),

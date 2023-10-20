@@ -5,9 +5,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:snap_n_claim/models/employee.dart';
 import 'package:snap_n_claim/screens/common/login_screen.dart';
-import 'package:snap_n_claim/screens/finance_admin/finance_admin_budget_allocation_selection_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_home_screen.dart';
-import 'package:snap_n_claim/screens/finance_admin/finance_admin_reports_selection_screen.dart';
 
 class ApproverMenuDrawer extends StatelessWidget {
   const ApproverMenuDrawer(
@@ -50,7 +48,6 @@ class ApproverMenuDrawer extends StatelessWidget {
       // );
     }
   }
-
 
   void _onTapMyClaimsBtn(BuildContext context) {}
 
@@ -108,8 +105,6 @@ class ApproverMenuDrawer extends StatelessWidget {
             child: const Text("View Reports"),
           ),
         ),
-
-
         Padding(
           padding: EdgeInsets.symmetric(
             horizontal: _width / 19.63636363636364,

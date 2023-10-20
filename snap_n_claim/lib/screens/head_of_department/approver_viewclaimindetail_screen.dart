@@ -161,25 +161,30 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
     return Form(
       key: _formKey,
       child: Container(
-        width: 370,
-        height: 30,
-        color: Color(0xD7D7D7FF),
+        width: widget._width / 1.061425061425061,
+        height: widget._height / 26.76363636363636,
+        color: const Color(0xD7D7D7FF),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 20.0,
-                horizontal: 20,
+              padding: EdgeInsets.symmetric(
+                vertical: widget._height / 40.14545454545455,
+                horizontal: widget._width / 19.63636363636364,
               ),
               child: Text(
                 "Enter Reject Reason",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: widget._width / 19.63636363636364,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
+              padding: EdgeInsets.symmetric(
+                vertical: widget._height / 40.14545454545455,
+                horizontal: widget._width / 19.63636363636364,
+              ),
               child: TextFormField(
                 validator: (value) {
                   return _validateRejectReason(value!);
@@ -187,7 +192,7 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
                 controller: _rejectReasonController,
                 keyboardType: TextInputType.multiline,
                 maxLines: 10,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Type reject reason here",
                 ),
@@ -196,27 +201,31 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: widget._width / 49.09090909090909,
+                  ),
                   child: ElevatedButton(
                     onPressed: () {
                       setState(() {
                         _isTappedRejectBtn = false;
                       });
                     },
-                    child: Text("Cancel"),
+                    child: const Text("Cancel"),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: widget._width / 49.09090909090909,
+                  ),
                   child: ElevatedButton(
                     onPressed: () {
-                      if(_formKey.currentState!.validate()){
+                      if (_formKey.currentState!.validate()) {
                         _onTapRejectSubmitBtn(context);
                       }
                     },
-                    child: Text("Submit"),
                     style:
                         ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    child: const Text("Submit"),
                   ),
                 ),
               ],
@@ -325,8 +334,9 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: widget._width / 49.09090909090909375,
-                      vertical: widget._height / 97.9090909090909125),
+                    horizontal: widget._width / 49.09090909090909375,
+                    vertical: widget._height / 97.9090909090909125,
+                  ),
                   child: Container(
                     color: Colors.grey,
                     width: widget._width / _widthDenominator1,
@@ -453,221 +463,5 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
             ),
           ),
         ),
-      );
-
-  //     Scaffold(
-  //   appBar: AppBar(
-  //     title: Text("Delivery Note"),
-  //   ),
-  //   body: Center(
-  //     child: ListView(
-  //     padding: EdgeInsets.all(32),
-  //     children: [
-  //     const SizedBox(height: 24),
-  //     Padding(
-  //     padding: const EdgeInsets.only(bottom: 8),
-  //     child: PONumber(),
-  //     ),
-  //     Padding(
-  //            padding: const EdgeInsets.only(bottom: 8),
-  //     child: ClaimDate(),
-  //          ),
-  //          Padding(
-  //            padding: const EdgeInsets.only(bottom: 8),
-  //            child: Location(),
-  //          ),
-  //          Padding(
-  //            padding: const EdgeInsets.only(bottom: 8),
-  //            child: SiteManagerName(),
-  //          ),
-  //          Padding(
-  //            padding: const EdgeInsets.only(bottom: 8),
-  //            child: Items(),
-  //          ),
-  //          Padding(
-  //            padding: const EdgeInsets.only(bottom: 8.0),
-  //            child: Quantity(),
-  //         ),
-  //          // Padding(
-  //          //   padding: const EdgeInsets.only(bottom: 8.0),
-  //          //   child: supplier(),
-  //          // ),
-  //          // Padding(
-  //          //   padding: const EdgeInsets.only(bottom: 8.0),
-  //          //   child: Total(),
-  //          // ),
-  //          // widget._visible==true ?
-  //          Row(
-  //            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //            children: [
-  //              ElevatedButton(
-  //                child: Text('Confirm'),
-  //                onPressed: () {
-  //                  // _onTapConfirmationBtns(context, "Confirmed");
-  //                },
-  //              ),
-  //              ElevatedButton(
-  //                child: Text('Reject'),
-  //                onPressed: () {
-  //                  // _onTapConfirmationBtns(context, "Rejected");
-  //                },
-  //              ),
-  //            ],
-  //          ) ,
-  //         const SizedBox(height: 24),
-  //          const SizedBox(height: 24),
-  //        ],
-  //      ),
-  //   ),
-  // );
-
-  Widget PONumber() => TextField(
-        decoration: InputDecoration(
-          labelText: 'PO Number',
-          border: OutlineInputBorder(),
-        ),
-        readOnly: true,
-        controller: TextEditingController(text: widget._request["claimNo"]),
-      );
-
-  Widget ClaimDate() {
-    return TextFormField(
-      readOnly: true,
-      decoration: InputDecoration(
-        labelText: 'Claim Date',
-        border: OutlineInputBorder(),
-      ),
-      // controller: TextEditingController(
-      //     text: _purchaseOrder2["date"] == null
-      //         ? ''
-      //         : _purchaseOrder2["date"].toString().substring(0, 10)!),
-    );
-  }
-
-  Widget Location() => TextField(
-        decoration: InputDecoration(
-          labelText: 'Location',
-          border: OutlineInputBorder(),
-        ),
-        readOnly: true,
-        // controller: TextEditingController(text:["empName"]),
-      );
-
-  Widget SiteManagerName() => TextField(
-        decoration: InputDecoration(
-          labelText: 'Site Manager Name',
-          border: OutlineInputBorder(),
-        ),
-        readOnly: true,
-        controller: TextEditingController(text: widget._user.name),
-      );
-
-  Widget Items() => TextField(
-        decoration: InputDecoration(
-          labelText: 'Item',
-          border: OutlineInputBorder(),
-        ),
-        readOnly: true,
-        // controller: TextEditingController(text: widget._deliveryNote["itemName"]),
-      );
-
-  Widget Quantity() => TextField(
-      decoration: InputDecoration(
-        labelText: 'Quantity',
-        border: OutlineInputBorder(),
-      ),
-      readOnly: true,
-      controller: null
-      // TextEditingController(text: widget._deliveryNote["qty"].toString()),
-      );
-
-  Widget buildEmail() => TextField(
-        // controller: emailController,
-        //   decoration: InputDecoration(
-        //     hintText: 'name@gmail.com',
-        //  prefixIcon: Icon(Icons.mail),
-        //   suffixIcon: emailController.text.isEmpty
-        //       ? Container(width: 0)
-        //       : IconButton(
-        //     icon: Icon(Icons.close),
-        //     onPressed: () => emailController.clear(),
-        //   ),
-        //   border: OutlineInputBorder(),
-        // ),
-        keyboardType: TextInputType.emailAddress,
-        textInputAction: TextInputAction.next,
-
-        // Widget displaySupplier() => DataTable(
-        //   columns: const <DataColumn>[
-        //     DataColumn(
-        //       label: Expanded(
-        //         child: Text(
-        //           'Name',
-        //          style: TextStyle(fontStyle: FontStyle.italic),
-        //         ),
-        //       ),
-        //     ),
-        //    DataColumn(
-        //       label: Expanded(
-        //         child: Text(
-        //           'Age',
-        //           style: TextStyle(fontStyle: FontStyle.italic),
-        //         ),
-        //       ),
-        //    ),
-        //     DataColumn(
-        //       label: Expanded(
-        //         child: Text(
-        //         'Role',
-        //           style: TextStyle(fontStyle: FontStyle.italic),
-        //          ),
-        //        ),
-        //      ),
-        //    ],
-        //    rows: const <DataRow>[
-        //      DataRow(
-        //        cells: <DataCell>[
-        //          DataCell(Text('Sarah')),
-        //          DataCell(Text('19')),
-        //          DataCell(Text('Student')),
-        //        ],
-        //      ),
-        //      DataRow(
-        //        cells: <DataCell>[
-        //          DataCell(Text('Janine')),
-        //          DataCell(Text('43')),
-        //          DataCell(Text('Professor')),
-        //        ],
-        //      ),
-        //      DataRow(
-        //        cells: <DataCell>[
-        //          DataCell(Text('William')),
-        //          DataCell(Text('27')),
-        //          DataCell(Text('Associate Professor')),
-        //        ],
-        //      ),
-        //    ],
-        //  );
-
-        // Widget supplier() => TextField(
-        //     decoration: InputDecoration(
-        //       labelText: 'Supplier',
-        //       border: OutlineInputBorder(),
-        //     ),
-        //     readOnly: true,
-        //     controller: TextEditingController(
-        //       text: widget._deliveryNote["supplierId"],
-        //     ));
-        //
-        // Widget Total() => TextField(
-        //   decoration: InputDecoration(
-        //     labelText: 'Total',
-        //     border: OutlineInputBorder(),
-        //   ),
-        //   readOnly: true,
-        //   controller: TextEditingController(
-        //       text: (widget._deliveryNote["qty"] *
-        //           widget._deliveryNote["unitPrice"])
-        //           .toString()),
       );
 }
