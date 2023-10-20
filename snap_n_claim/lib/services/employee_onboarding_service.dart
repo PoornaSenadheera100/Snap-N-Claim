@@ -83,7 +83,7 @@ class EmployeeOnboardingService {
     return response;
   }
   static Stream <QuerySnapshot> getAllEmployees(){
-    return employeeCollectionReference.snapshots();
+    return employeeCollectionReference.orderBy("emp_no").snapshots();
   }
 
   //METHOD 1 - COUNT OF LOGGED IN USERS
