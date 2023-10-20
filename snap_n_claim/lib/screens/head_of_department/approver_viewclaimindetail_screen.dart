@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snap_n_claim/services/expense_approval_process_and_sla_calculation_service.dart';
 import '../../models/employee.dart';
 import '../../models/response.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
+
 
 class ViewClaimInDetail extends StatefulWidget {
   const ViewClaimInDetail(this._width, this._height, this._user, this._request,

@@ -7,6 +7,8 @@ import 'package:snap_n_claim/models/employee.dart';
 import 'package:snap_n_claim/screens/common/login_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_home_screen.dart';
 
+import 'approver_approvalhistory_screen.dart';
+
 class ApproverMenuDrawer extends StatelessWidget {
   const ApproverMenuDrawer(
       this._width, this._height, this.currentPage, this.user,
@@ -36,16 +38,16 @@ class ApproverMenuDrawer extends StatelessWidget {
   void _onTapViewReportsBtn(BuildContext context) {
     Navigator.of(context).pop();
     if (currentPage != "View Reports") {
-      // Navigator.pushReplacement(
-      //   context,
-      //   PageTransition(
-      //     child: FinanceAdminReportsSelectionScreen(_width, _height, user),
-      //     type: PageTransitionType.rightToLeft,
-      //     alignment: Alignment.center,
-      //     isIos: true,
-      //     duration: const Duration(seconds: 1),
-      //   ),
-      // );
+      Navigator.pushReplacement(
+        context,
+        PageTransition(
+          child: approvalHistory(_width, _height, user),
+          type: PageTransitionType.rightToLeft,
+          alignment: Alignment.center,
+          isIos: true,
+          duration: const Duration(seconds: 1),
+        ),
+      );
     }
   }
 
