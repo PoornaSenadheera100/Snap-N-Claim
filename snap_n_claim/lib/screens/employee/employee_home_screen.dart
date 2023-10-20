@@ -33,6 +33,9 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
 
   late List<Map<String, dynamic>> request1;
 
+  final double deviceWidth = 392.72727272727275;
+  final double deviceHeight = 783.2727272727273;
+
   void initState() {
     super.initState();
     _collectionReferenceAll =
@@ -141,12 +144,12 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
           );
         } else if (snapshot.data!.docs.length > 0) {
           return Padding(
-            padding: const EdgeInsets.only(top: 10),
+            padding: EdgeInsets.only(top: widget._height / (deviceHeight / 10)),
             child: ListView(
               children: snapshot.data!.docs
                   .map((e) => Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 3),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: widget._width / (deviceWidth / 10), vertical: widget._height / (deviceHeight / 3)),
                         child: Card(
                           elevation: 5,
                           shadowColor: Colors.black,
@@ -158,10 +161,10 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                                       ? Colors.red
                                       : Colors.grey,
                           child: SizedBox(
-                            width: 400,
-                            height: 90,
+                            width: widget._width / (deviceWidth / 400),
+                            height: widget._height / (deviceHeight / 90),
                             child: Padding(
-                              padding: const EdgeInsets.all(20),
+                              padding:  EdgeInsets.symmetric(vertical: widget._height / (deviceHeight / 20), horizontal: widget._width / (deviceWidth / 20),),
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
