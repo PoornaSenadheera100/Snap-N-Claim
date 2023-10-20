@@ -54,12 +54,29 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
             widget._user.department);
   }
 
-  void filter(String option) {
+  void _filter(String option) {
     /*setState(() {
     purchaseorders2 = purchaseorders1
         .where((element) => element["status"] == option)
         .toList();
   });*/
+    if (option == options[0]) {
+      PendingClaims =
+          ExpenseApprovalProcessAndSlaCalculationService.getPendingClaims(
+              widget._user.department);
+    } else if (option == options[1]) {
+      PendingClaims =
+          ExpenseApprovalProcessAndSlaCalculationService.getRejectedClaims(
+              widget._user.department);
+    } else if (option == options[2]) {
+      PendingClaims =
+          ExpenseApprovalProcessAndSlaCalculationService.getApprovedClaims(
+              widget._user.department);
+    } else {
+      PendingClaims =
+          ExpenseApprovalProcessAndSlaCalculationService.getCompletedClaims(
+              widget._user.department);
+    }
   }
 
   Widget radioButtonGroup() {
@@ -75,9 +92,9 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                 groupValue: currentOption,
                 onChanged: (value) {
                   setState(() {
-                  currentOption = value.toString();
-                });
-                  filter(value!);
+                    currentOption = value.toString();
+                  });
+                  _filter(value!);
                 },
               ),
               Text(
@@ -99,7 +116,7 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
           return CircularProgressIndicator.adaptive();
         } else if (snapShot.data!.docs.length > 0) {
           return Container(
-            height: widget._height /1.247012987012987,
+            height: widget._height / 1.247012987012987,
             child: ListView(
                 children: snapShot.data!.docs
                     .map((e) => GestureDetector(
@@ -108,7 +125,10 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => ViewClaimInDetail(
-                                    widget._width, widget._height, widget._user, e),
+                                    widget._width,
+                                    widget._height,
+                                    widget._user,
+                                    e),
                               ),
                             );
                           },
@@ -118,9 +138,13 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                             shadowColor: Colors.black,
                             color: e["status"] == "Rejected"
                                 ? Color(0xFFDA8383)
-                                : e["status"] == "Completed"
-                                    ? Color(0xFF66DE87)
-                                    : Color(0xFFC8E7F2),
+                                : (e["status"] == "Approved" &&
+                                        e["paymentStatus"] == "Pending")
+                                    ? Color(0xFF948BB4)
+                                    : (e["status"] == "Approved" &&
+                                            e["paymentStatus"] == "Paid")
+                                        ? Color(0xFF66DE87)
+                                        : Color(0xFFD6D156),
                             child: SizedBox(
                               width: 400,
                               height: 160,
@@ -132,8 +156,7 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                                       height: 10,
                                     ),
                                     Text(
-                                      'Date : ${e["date"].toDate().toString().substring(0,10)
-                                      }',
+                                      'Date : ${e["date"].toDate().toString().substring(0, 10)}',
                                       style: TextStyle(
                                         fontSize: 15,
                                         color: Colors.black,
@@ -203,7 +226,7 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset('assets/no_pending_items.png'),
-                Text('You have no pending items'),
+                Text('You have no ${currentOption.toLowerCase()} items'),
               ],
             ),
           );
