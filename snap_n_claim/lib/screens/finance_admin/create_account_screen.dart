@@ -1,11 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snap_n_claim/models/response.dart';
 import 'package:snap_n_claim/services/employee_onboarding_service.dart';
 
 import '../../models/employee.dart';
-import 'finance_admin_menu_drawer.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen(this._width, this._height, this._user, {super.key});
@@ -146,12 +144,14 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
       appBar: AppBar(
         title: const Text("Create Account"),
       ),
-
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.symmetric(
+              vertical: widget._height / 100.3636363636364,
+              horizontal: widget._width / 49.09090909090909,
+            ),
             child: Column(
               children: [
                 TextFormField(
@@ -163,7 +163,8 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
                   },
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  padding: EdgeInsets.symmetric(
+                      vertical: widget._height / 40.14545454545455),
                   child: TextFormField(
                     controller: _employeeNameController,
                     decoration: const InputDecoration(
@@ -175,7 +176,8 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  padding: EdgeInsets.symmetric(
+                      vertical: widget._height / 40.14545454545455),
                   child: TextFormField(
                     controller: _employeeEmailController,
                     decoration: const InputDecoration(
@@ -187,7 +189,8 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  padding: EdgeInsets.symmetric(
+                      vertical: widget._height / 40.14545454545455),
                   child: TextFormField(
                     obscureText: true,
                     controller: _employeeInitialPasswordController,
@@ -279,7 +282,8 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
                       }),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  padding: EdgeInsets.symmetric(
+                      vertical: widget._height / 40.14545454545455),
                   child: TextFormField(
                     controller: _employeePhoneNoController,
                     decoration: const InputDecoration(
