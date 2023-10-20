@@ -43,22 +43,24 @@ class _FinanceAdminHomeScreenState extends State<FinanceAdminHomeScreen> {
         stream: _pendingClaimsReference,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(
+            return SizedBox(
               width: widget._width,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator.adaptive(),
+                  const CircularProgressIndicator.adaptive(),
                   Padding(
-                    padding: EdgeInsets.only(top: 20.0),
-                    child: Text("Loading..."),
+                    padding: EdgeInsets.only(
+                        top: widget._height / 40.14545454545455),
+                    child: const Text("Loading..."),
                   ),
                 ],
               ),
             );
-          } else if (snapshot.data!.docs.length > 0) {
+          } else if (snapshot.data!.docs.isNotEmpty) {
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              padding: EdgeInsets.symmetric(
+                  vertical: widget._height / 100.3636363636364),
               child: SingleChildScrollView(
                 child: SizedBox(
                   width: widget._width,
@@ -72,18 +74,24 @@ class _FinanceAdminHomeScreenState extends State<FinanceAdminHomeScreen> {
                                         FinanceAdminClaimsPaymentScreen(
                                             widget._width,
                                             widget._height,
-                                            widget.user, e)));
+                                            widget.user,
+                                            e)));
                               },
                               key: UniqueKey(),
                               child: Card(
                                 elevation: 5,
                                 shadowColor: Colors.black,
-                                color: Color(0x81A2C5FF),
+                                color: const Color(0x81A2C5FF),
                                 child: SizedBox(
-                                  width: 350,
-                                  height: 105,
+                                  width: widget._width / 1.122077922077922,
+                                  height: widget._height / 7.646753246753247,
                                   child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
+                                    padding: EdgeInsets.symmetric(
+                                      vertical:
+                                          widget._height / 40.14545454545455,
+                                      horizontal:
+                                          widget._width / 19.63636363636364,
+                                    ),
                                     child: Column(
                                       children: [
                                         Row(
@@ -97,14 +105,16 @@ class _FinanceAdminHomeScreenState extends State<FinanceAdminHomeScreen> {
                                                   .toString()
                                                   .substring(0, 10),
                                               style: TextStyle(
-                                                fontSize: 15,
+                                                fontSize: widget._width /
+                                                    26.18181818181818,
                                                 color: Colors.black,
                                               ),
                                             ),
                                             Text(
                                               'Rs.${e["total"].toStringAsFixed(2)}',
                                               style: TextStyle(
-                                                fontSize: 15,
+                                                fontSize: widget._width /
+                                                    26.18181818181818,
                                                 color: Colors.black,
                                               ),
                                             )
@@ -117,14 +127,16 @@ class _FinanceAdminHomeScreenState extends State<FinanceAdminHomeScreen> {
                                             Text(
                                               e["claimNo"],
                                               style: TextStyle(
-                                                fontSize: 15,
+                                                fontSize: widget._width /
+                                                    26.18181818181818,
                                                 color: Colors.black,
                                               ),
                                             ),
                                             Text(
                                               'Status : ${e["status"]}',
                                               style: TextStyle(
-                                                fontSize: 15,
+                                                fontSize: widget._width /
+                                                    26.18181818181818,
                                                 color: Colors.black,
                                               ),
                                             ),
@@ -137,14 +149,16 @@ class _FinanceAdminHomeScreenState extends State<FinanceAdminHomeScreen> {
                                             Text(
                                               '${e["category"]}',
                                               style: TextStyle(
-                                                fontSize: 15,
+                                                fontSize: widget._width /
+                                                    26.18181818181818,
                                                 color: Colors.black,
                                               ),
                                             ),
                                             Text(
                                               e["empName"],
                                               style: TextStyle(
-                                                fontSize: 15,
+                                                fontSize: widget._width /
+                                                    26.18181818181818,
                                                 color: Colors.black,
                                               ),
                                             ),
@@ -168,10 +182,10 @@ class _FinanceAdminHomeScreenState extends State<FinanceAdminHomeScreen> {
               children: [
                 Icon(
                   Icons.tag_faces_rounded,
-                  size: 100,
+                  size: widget._width / 3.927272727272727,
                   color: Colors.green,
                 ),
-                Text("No Pending Claims"),
+                const Text("No Pending Claims"),
               ],
             ));
           }
