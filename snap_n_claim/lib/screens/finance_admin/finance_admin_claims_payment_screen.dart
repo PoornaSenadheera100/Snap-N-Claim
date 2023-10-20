@@ -107,6 +107,15 @@ class _FinanceAdminClaimsPaymentScreenState
     }
   }
 
+  Future<void> _loadImg(BuildContext context, String url) async {
+    var dialogRes = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+              content:
+                  Container(height: 200, width: 200, child: Image.network(url)),
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -261,8 +270,11 @@ class _FinanceAdminClaimsPaymentScreenState
                                     child: Row(
                                       children: [
                                         IconButton(
-                                          onPressed: () {},
-                                          icon: const Icon(Icons.attach_file),
+                                          onPressed: () {
+                                            _loadImg(
+                                                context, e["invoiceImage"]);
+                                          },
+                                          icon: const Icon(Icons.image_rounded),
                                         ),
                                       ],
                                     ),
