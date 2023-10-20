@@ -19,12 +19,22 @@ class LoginStatusScreen extends StatefulWidget {
 
 class _LoginStatusScreenState extends State<LoginStatusScreen> {
   late Stream<QuerySnapshot> employeeCollectionReference;
+  Map<String, dynamic> _accLoginInfo = {"total": 0, "loggedInCount": 0};
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     employeeCollectionReference = EmployeeOnboardingService.getAllEmployees();
+    _getAccountLoginInfo();
+  }
+
+  Future<void> _getAccountLoginInfo() async {
+    Map<String, dynamic> res =
+        await EmployeeOnboardingService.getAccountLoginInfo();
+    setState(() {
+      _accLoginInfo = res;
+    });
   }
 
   Widget getStatusIndicator(bool isFirstLogin) {
@@ -46,6 +56,8 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget._width);
+    print(widget._height);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Account Creation and Management"),
@@ -81,43 +93,47 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("No of Accounts Created", textAlign: TextAlign.center),
-                    Text("5"),
+                    Text(_accLoginInfo["total"].toString()),
                   ],
                 )),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                Container(
-                    width: 180,
-                    height: widget._height / 6.176223776223776,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.purple,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Successfully Logged In Users",
-                            textAlign: TextAlign.center),
-                        Text("5"),
-                      ],
-                    )),
-                Container(
-                    width: 180,
-                    height: widget._height / 6.176223776223776,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.red,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Users to be Logged In",
-                            textAlign: TextAlign.center),
-                        Text("5"),
-                      ],
-                    )),
-              ]),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                        width: 180,
+                        height: widget._height / 6.176223776223776,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.purple,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Successfully Logged In Users",
+                                textAlign: TextAlign.center),
+                            Text(_accLoginInfo["loggedInCount"].toString()),
+                          ],
+                        )),
+                    Container(
+                        width: 180,
+                        height: widget._height / 6.176223776223776,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.red,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Users to be Logged In",
+                                textAlign: TextAlign.center),
+                            Text((_accLoginInfo["total"] -
+                                    _accLoginInfo["loggedInCount"])
+                                .toString()),
+                          ],
+                        )),
+                  ]),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
@@ -157,23 +173,22 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
                                 child: Center(child: Text("Status")),
                               ))
                             ],
-                            rows: snapshot.data!.docs
-                                .map((e) => DataRow(
-                                        cells: [
-                                          DataCell(Text(e["emp_no"])),
-                                          DataCell(Text(e["name"])),
-                                          DataCell(
-                                              Center(child: Text(e["email"]))),
-                                          // DataCell(Text(e["firstLogin"].toString()))
-                                          DataCell(Center(
-                                              child: getStatusIndicator(
-                                                  e["first_login"]))),
-                                        ],
-                                        // color: MaterialStateProperty.resolveWith(
-                                        //         (states) => Color(0x98A2C5FF)),
-                                        color: MaterialStateProperty.resolveWith(
-                                            (states) => Color(0x98A2C5FF))))
-                                .toList(),
+                            rows: snapshot.data!.docs.map((e) {
+                              return DataRow(
+                                  cells: [
+                                    DataCell(Text(e["emp_no"])),
+                                    DataCell(Text(e["name"])),
+                                    DataCell(Center(child: Text(e["email"]))),
+                                    // DataCell(Text(e["firstLogin"].toString()))
+                                    DataCell(Center(
+                                        child: getStatusIndicator(
+                                            e["first_login"]))),
+                                  ],
+                                  // color: MaterialStateProperty.resolveWith(
+                                  //         (states) => Color(0x98A2C5FF)),
+                                  color: MaterialStateProperty.resolveWith(
+                                      (states) => Color(0x98A2C5FF)));
+                            }).toList(),
                           ),
                         ),
                       );
