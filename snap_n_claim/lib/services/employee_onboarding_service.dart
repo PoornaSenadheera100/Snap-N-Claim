@@ -58,7 +58,14 @@ class EmployeeOnboardingService {
   }
 
   static Future<Response> addAccount(
-      String empNo, String name, String department, String empGrade, String password, String email,String phone,String empType) async {
+      String empNo,
+      String name,
+      String department,
+      String empGrade,
+      String password,
+      String email,
+      String phone,
+      String empType) async {
     Response response = Response();
     Map<String, dynamic> data = <String, dynamic>{
       "emp_no": empNo,
@@ -68,7 +75,7 @@ class EmployeeOnboardingService {
       "password": password,
       "email": email,
       "phone": phone,
-      "first_login":true,
+      "first_login": true,
       "emp_type": empType
     };
 
@@ -82,45 +89,26 @@ class EmployeeOnboardingService {
 
     return response;
   }
-  static Stream <QuerySnapshot> getAllEmployees(){
+
+  static Stream<QuerySnapshot> getAllEmployees() {
     return employeeCollectionReference.orderBy("emp_no").snapshots();
   }
 
-  //METHOD 1 - COUNT OF LOGGED IN USERS
-  // static Stream <QuerySnapshot> getAllLoggedInUsersCount(bool firstLogin){
-  //   // return employeeCollectionReference.count().
-  //   return employeeCollectionReference
-  //       .where("firstLogin", isEqualTo: true)
-  //       .snapshots();
-  // }
+  static Future<Map<String, dynamic>> getAccountLoginInfo() async {
+    final Map<String, dynamic> result = {"total": 0, "loggedInCount": 0};
+    try {
+      final QuerySnapshot querySnapshot =
+          await employeeCollectionReference.get();
 
-
-  //METHOD 2 COUNT OF LOGGED IN USERS.
-  // static Future<int> countEmployeesWithFirstLogin() async {
-  // try {
-  // final querySnapshot = await employeeCollectionReference
-  //     .where("first_login", isEqualTo: true)
-  //     .get();
-  //
-  // return querySnapshot.docs.length;
-  // } catch (e) {
-  // // print("Error counting employees with first login: $e");
-  // return 0;
-  // }
-  // }
-
-//METHOD 1 COUNT OF TO BE LOGGED IN USERS
-// static Future<int> countEmployeesWithoutFirstLogin() async {
-// try {
-// final querySnapshot = await employeeCollectionReference
-//     .where("first_login", isEqualTo: false)
-//     .get();
-//
-// return querySnapshot.docs.length;
-// } catch (e) {
-// // print("Error counting employees with first login: $e");
-// return 0;
-// }
-// }
-
+      for (final QueryDocumentSnapshot document in querySnapshot.docs) {
+        result["total"] = result["total"] + 1;
+        if (document["first_login"] == false) {
+          result["loggedInCount"] = result["loggedInCount"] + 1;
+        }
+      }
+      return result;
+    } catch (e) {
+      return result;
+    }
+  }
 }
