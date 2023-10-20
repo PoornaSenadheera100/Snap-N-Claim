@@ -21,8 +21,21 @@ class ViewClaimInDetail extends StatefulWidget {
 class _ViewClaimInDetail extends State<ViewClaimInDetail> {
   final double _widthDenominator1 = 1.05;
   bool _isTappedRejectBtn = false;
+  late bool _isPending;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _rejectReasonController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      if (widget._request["status"] == "Pending") {
+        _isPending = true;
+      } else {
+        _isPending = false;
+      }
+    });
+  }
 
   String? _validateRejectReason(String value) {
     if (value == '') {
@@ -236,6 +249,18 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
     );
   }
 
+  Future<void> _loadImg(BuildContext context, String url) async {
+    var dialogRes = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+              content: SizedBox(
+                height: widget._height / 2.676363636363636,
+                width: widget._width / 1.309090909090909,
+                child: Image.network(url),
+              ),
+            ));
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
@@ -397,9 +422,12 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
                                             child: Row(
                                               children: [
                                                 IconButton(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    _loadImg(context,
+                                                        e["invoiceImage"]);
+                                                  },
                                                   icon: const Icon(
-                                                      Icons.attach_file),
+                                                      Icons.image_rounded),
                                                 ),
                                               ],
                                             ),
@@ -416,47 +444,49 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
                   padding: EdgeInsets.symmetric(
                     horizontal: widget._width / 49.09090909090909,
                   ),
-                  child: _isTappedRejectBtn == false
-                      ? Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal:
-                                      widget._width / 49.09090909090909375,
-                                  vertical:
-                                      widget._height / 97.9090909090909125),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  _onTapCancelBtn(context);
-                                },
-                                child: const Text('Cancel'),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                _onTapApproveBtn(context);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green),
-                              child: const Text('Approve'),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal:
-                                      widget._width / 49.09090909090909375,
-                                  vertical:
-                                      widget._height / 97.9090909090909125),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  _onTapRejectBtn(context);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red),
-                                child: const Text('Reject'),
-                              ),
-                            ),
-                          ],
-                        )
+                  child: _isPending == true
+                      ? _isTappedRejectBtn == false
+                          ? Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          widget._width / 49.09090909090909375,
+                                      vertical:
+                                          widget._height / 97.9090909090909125),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      _onTapCancelBtn(context);
+                                    },
+                                    child: const Text('Cancel'),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    _onTapApproveBtn(context);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green),
+                                  child: const Text('Approve'),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          widget._width / 49.09090909090909375,
+                                      vertical:
+                                          widget._height / 97.9090909090909125),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      _onTapRejectBtn(context);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.red),
+                                    child: const Text('Reject'),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : null
                       : null,
                 )
               ],
