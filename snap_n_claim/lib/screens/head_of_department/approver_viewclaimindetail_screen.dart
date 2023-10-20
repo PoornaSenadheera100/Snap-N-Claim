@@ -20,8 +20,80 @@ class ViewClaimInDetail extends StatefulWidget {
 
 class _ViewClaimInDetail extends State<ViewClaimInDetail> {
   final double _widthDenominator1 = 1.05;
+  bool _isTappedRejectBtn = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _rejectReasonController = TextEditingController();
 
-  Future<void> _onTapRejectBtn(BuildContext context) async {}
+  String? _validateRejectReason(String value) {
+    if (value == '') {
+      return "This field is required!";
+    }
+    return null;
+  }
+
+  Future<void> _onTapRejectSubmitBtn(BuildContext context) async {
+    var dialogRes = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Are you sure?'),
+        content: const Text('Do you want to reject this request?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    );
+    if (dialogRes == true) {
+      Map<String, dynamic> updatedClaim = {
+        "category": widget._request["category"],
+        "claimNo": widget._request["claimNo"],
+        "date": widget._request["date"],
+        "department": widget._request["department"],
+        "empName": widget._request["empName"],
+        "empNo": widget._request["empNo"],
+        "lineItems": widget._request["lineItems"],
+        "paymentStatus": widget._request["status"],
+        "rejectReason": _rejectReasonController.text,
+        "status": "Rejected",
+        "total": widget._request["total"]
+      };
+
+      Response response = await ExpenseApprovalProcessAndSlaCalculationService
+          .updateRequestApprovalStatus(updatedClaim);
+      if (response.code == 200) {
+        Fluttertoast.showToast(
+            msg: "Request Rejected!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        Navigator.of(context).pop();
+      } else {
+        Fluttertoast.showToast(
+            msg: "Something went wrong!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    }
+  }
+
+  Future<void> _onTapRejectBtn(BuildContext context) async {
+    setState(() {
+      _isTappedRejectBtn = true;
+    });
+  }
 
   Future<void> _onTapApproveBtn(BuildContext context) async {
     var dialogRes = await showDialog<bool>(
@@ -56,9 +128,8 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
         "total": widget._request["total"]
       };
 
-      Response response =
-      await ExpenseApprovalProcessAndSlaCalculationService.updateRequestApprovalStatus(
-          updatedClaim);
+      Response response = await ExpenseApprovalProcessAndSlaCalculationService
+          .updateRequestApprovalStatus(updatedClaim);
       if (response.code == 200) {
         Fluttertoast.showToast(
             msg: "Request Approved!",
@@ -79,12 +150,81 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
             textColor: Colors.white,
             fontSize: 16.0);
       }
-
     }
   }
 
   void _onTapCancelBtn(BuildContext context) {
     Navigator.of(context).pop();
+  }
+
+  Widget _rejectReasonBox() {
+    return Form(
+      key: _formKey,
+      child: Container(
+        width: 370,
+        height: 30,
+        color: Color(0xD7D7D7FF),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 20.0,
+                horizontal: 20,
+              ),
+              child: Text(
+                "Enter Reject Reason",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
+              child: TextFormField(
+                validator: (value) {
+                  return _validateRejectReason(value!);
+                },
+                controller: _rejectReasonController,
+                keyboardType: TextInputType.multiline,
+                maxLines: 10,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: "Type reject reason here",
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _isTappedRejectBtn = false;
+                      });
+                    },
+                    child: Text("Cancel"),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if(_formKey.currentState!.validate()){
+                        _onTapRejectSubmitBtn(context);
+                      }
+                    },
+                    child: Text("Submit"),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -195,106 +335,119 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
                 ),
                 SizedBox(
                   height: widget._height / 1.574331550802139,
-                  child: ListView(
-                    children: widget._request["lineItems"]
-                        .map<Widget>((e) => Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: widget._height / 100.3636363636364,
-                                horizontal: widget._width / 39.27272727272727,
-                              ),
-                              child: Container(
-                                height: widget._height / 8.029090909090909,
-                                color: const Color(0x9A5987EF),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          left: widget._width /
-                                              49.09090909090909),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Text(e["invoiceDate"]
-                                              .toDate()
-                                              .toString()
-                                              .substring(0, 10)),
-                                          Text(widget._request["category"])
-                                        ],
-                                      ),
+                  child: _isTappedRejectBtn == false
+                      ? ListView(
+                          children: widget._request["lineItems"]
+                              .map<Widget>((e) => Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical:
+                                          widget._height / 100.3636363636364,
+                                      horizontal:
+                                          widget._width / 39.27272727272727,
                                     ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(e["invoiceNo"]),
-                                        Text(
-                                            'Rs.${e["invoiceAmount"].toStringAsFixed(2)}'),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        right:
-                                            widget._width / 19.63636363636364,
-                                      ),
+                                    child: Container(
+                                      height:
+                                          widget._height / 8.029090909090909,
+                                      color: const Color(0x9A5987EF),
                                       child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          IconButton(
-                                            onPressed: () {},
-                                            icon: const Icon(Icons.attach_file),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left: widget._width /
+                                                    49.09090909090909),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Text(e["invoiceDate"]
+                                                    .toDate()
+                                                    .toString()
+                                                    .substring(0, 10)),
+                                                Text(
+                                                    widget._request["category"])
+                                              ],
+                                            ),
                                           ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Text(e["invoiceNo"]),
+                                              Text(
+                                                  'Rs.${e["invoiceAmount"].toStringAsFixed(2)}'),
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              right: widget._width /
+                                                  19.63636363636364,
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                IconButton(
+                                                  onPressed: () {},
+                                                  icon: const Icon(
+                                                      Icons.attach_file),
+                                                ),
+                                              ],
+                                            ),
+                                          )
                                         ],
                                       ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ))
-                        .toList(),
-                  ),
+                                    ),
+                                  ))
+                              .toList(),
+                        )
+                      : _rejectReasonBox(),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: widget._width / 49.09090909090909,
                   ),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: widget._width / 49.09090909090909375,
-                            vertical: widget._height / 97.9090909090909125),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            _onTapCancelBtn(context);
-                          },
-                          child: const Text('Cancel'),
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          _onTapApproveBtn(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green),
-                        child: const Text('Approve'),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: widget._width / 49.09090909090909375,
-                            vertical: widget._height / 97.9090909090909125),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            _onTapRejectBtn(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red),
-                          child: const Text('Reject'),
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: _isTappedRejectBtn == false
+                      ? Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal:
+                                      widget._width / 49.09090909090909375,
+                                  vertical:
+                                      widget._height / 97.9090909090909125),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  _onTapCancelBtn(context);
+                                },
+                                child: const Text('Cancel'),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                _onTapApproveBtn(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green),
+                              child: const Text('Approve'),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal:
+                                      widget._width / 49.09090909090909375,
+                                  vertical:
+                                      widget._height / 97.9090909090909125),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  _onTapRejectBtn(context);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red),
+                                child: const Text('Reject'),
+                              ),
+                            ),
+                          ],
+                        )
+                      : null,
                 )
               ],
             ),
