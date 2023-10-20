@@ -105,11 +105,10 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                     .map((e) => GestureDetector(
                           onTap: () {
                             // Navigate to the my claims page when the item is tapped
-                            Navigator.of(context).pop(); // Close the drawer
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => ViewClaimInDetail(
-                                    widget._width, widget._height, widget._user,PendingClaims as QueryDocumentSnapshot<Object?>),
+                                    widget._width, widget._height, widget._user, e),
                               ),
                             );
                           },
