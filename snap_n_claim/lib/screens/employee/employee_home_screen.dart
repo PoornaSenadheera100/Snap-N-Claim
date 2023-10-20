@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:snap_n_claim/screens/employee/employee_menu_drawer.dart';
+import 'package:snap_n_claim/screens/employee/employee_view_claim_indetail_screen.dart';
 
 import '../../models/employee.dart';
 import '../../services/expense_submission_and_viewing_claim_state_service.dart';
@@ -39,16 +40,21 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
   void initState() {
     super.initState();
     _collectionReferenceAll =
-        ExpenseSubmissionAndViewingClaimStateService.getAllRequestsByempNo(widget._user.empNo);
+        ExpenseSubmissionAndViewingClaimStateService.getAllRequestsByempNo(
+            widget._user.empNo);
     _collectionReferenceDisplaying = _collectionReferenceAll;
     _collectionReferenceApproved =
-        ExpenseSubmissionAndViewingClaimStateService.getApprovedRequests(widget._user.empNo);
+        ExpenseSubmissionAndViewingClaimStateService.getApprovedRequests(
+            widget._user.empNo);
     _collectionReferenceRejected =
-        ExpenseSubmissionAndViewingClaimStateService.getRejectedRequests(widget._user.empNo);
+        ExpenseSubmissionAndViewingClaimStateService.getRejectedRequests(
+            widget._user.empNo);
     _collectionReferenceDraft =
-        ExpenseSubmissionAndViewingClaimStateService.getDraftRequests(widget._user.empNo);
+        ExpenseSubmissionAndViewingClaimStateService.getDraftRequests(
+            widget._user.empNo);
     _collectionReferencePending =
-        ExpenseSubmissionAndViewingClaimStateService.getPendingRequests(widget._user.empNo);
+        ExpenseSubmissionAndViewingClaimStateService.getPendingRequests(
+            widget._user.empNo);
   }
 
   Future<void> getRequests() async {
@@ -149,60 +155,78 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
               children: snapshot.data!.docs
                   .map((e) => Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: widget._width / (deviceWidth / 10), vertical: widget._height / (deviceHeight / 3)),
-                        child: Card(
-                          elevation: 5,
-                          shadowColor: Colors.black,
-                          color: e['status'] == 'Pending'
-                              ? Colors.yellow
-                              : e['status'] == 'Approved'
-                                  ? Colors.green
-                                  : e['status'] == 'Rejected'
-                                      ? Colors.red
-                                      : Colors.grey,
-                          child: SizedBox(
-                            width: widget._width / (deviceWidth / 400),
-                            height: widget._height / (deviceHeight / 90),
-                            child: Padding(
-                              padding:  EdgeInsets.symmetric(vertical: widget._height / (deviceHeight / 20), horizontal: widget._width / (deviceWidth / 20),),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "${e['date'].toDate().day}/${e['date'].toDate().month}/${e['date'].toDate().year}",
-                                      ),
-                                      Text(
-                                        "Rs. ${e['total'].toStringAsFixed(2)}",
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "${e['category']}",
-                                      ),
-                                      Text(
-                                        "Status : ${e['status']}",
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "${e['claimNo']}",
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                            horizontal: widget._width / (deviceWidth / 10),
+                            vertical: widget._height / (deviceHeight / 3)),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    EmployeeViewClaimIndetailScreen(
+                                        widget._width,
+                                        widget._height,
+                                        widget._user,
+                                        e)));
+                          },
+                          child: Card(
+                            elevation: 5,
+                            shadowColor: Colors.black,
+                            color: e['status'] == 'Pending'
+                                ? Colors.yellow
+                                : e['status'] == 'Approved'
+                                    ? Colors.green
+                                    : e['status'] == 'Rejected'
+                                        ? Colors.red
+                                        : Colors.grey,
+                            child: SizedBox(
+                              width: widget._width / (deviceWidth / 400),
+                              height: widget._height / (deviceHeight / 90),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical:
+                                      widget._height / (deviceHeight / 20),
+                                  horizontal:
+                                      widget._width / (deviceWidth / 20),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "${e['date'].toDate().day}/${e['date'].toDate().month}/${e['date'].toDate().year}",
+                                        ),
+                                        Text(
+                                          "Rs. ${e['total'].toStringAsFixed(2)}",
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "${e['category']}",
+                                        ),
+                                        Text(
+                                          "Status : ${e['status']}",
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "${e['claimNo']}",
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
