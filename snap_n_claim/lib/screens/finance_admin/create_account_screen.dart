@@ -113,6 +113,7 @@ class _CreateAccountScreen extends State<CreateAccountScreen> {
           backgroundColor: Colors.green,
           textColor: Colors.white,
           fontSize: 16.0);
+      Navigator.of(context).pop();
     } else {
       Fluttertoast.showToast(
           msg: "Something went wrong! Please try again.☹️",
