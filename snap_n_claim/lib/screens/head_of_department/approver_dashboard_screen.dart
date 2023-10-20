@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:snap_n_claim/screens/head_of_department/approver_menu_drawer.dart';
 
 import '../../models/employee.dart';
 import '../../services/expense_approval_process_and_sla_calculation_service.dart';
-import 'approver_navbar_widget.dart';
 import 'approver_viewclaimindetail_screen.dart';
 
 class ApproverDashboardScreen extends StatefulWidget {
@@ -30,7 +30,8 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(centerTitle: true, title: Text("Approver Screen")),
-        drawer: ApproverNavBar(widget._user),
+        // drawer: ApproverNavBar(widget._user),
+        drawer: ApproverMenuDrawer(widget._width, widget._height, "Approver Dashboard", widget._user),
         body: Column(
           children: [
             radioButtonGroup(),
