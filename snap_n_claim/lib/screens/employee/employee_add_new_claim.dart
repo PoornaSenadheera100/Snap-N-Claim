@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:snap_n_claim/models/request.dart';
@@ -58,8 +59,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
   late Stream<QuerySnapshot> _collectionReferenceExpenses =
       const Stream.empty();
 
-  double balance = 10000;
-  double transActionLimit = 1000;
+  double balance = 10000.0;
+  double transActionLimit = 1000.0;
 
   late final Request request;
 
@@ -76,6 +77,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
   @override
   void initState() {
     super.initState();
+
+    // _invoiceAmountController.text = '0.00';
 
     _collectionReference =
         ExpenseSubmissionAndViewingClaimStateService.getLatestClaimNo();
@@ -527,89 +530,104 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                     horizontal: widget._width / 49.09090909090909375,
                     vertical: widget._height / 97.9090909090909125),
                 child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        children: [
-                          const Text('Invoice Date'),
-                          SizedBox(
-                            width: widget._width / (deviceWidth / 116),
-                            height: widget._height / (deviceHeight / 40),
-                            child: TextFormField(
-                                onTap: () async {
-                                  final selectedDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(2022),
-                                    lastDate: DateTime(2101),
-                                  );
-                                  if (selectedDate != null) {
-                                    setState(() {
-                                      _invoiceDateController.text = selectedDate
-                                          .toString()
-                                          .substring(0, 10);
-                                    });
-                                  }
-                                },
-                                style: const TextStyle(fontSize: 12),
-                                textAlign: TextAlign.center,
-                                controller: _invoiceDateController,
-                                readOnly: true,
-                                decoration: const InputDecoration(
-                                    hintText: 'YYYY-MM-DD',
-                                    border: OutlineInputBorder())),
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        const Text('Invoice Date'),
+                        SizedBox(
+                          width: widget._width / (deviceWidth / 116),
+                          height: widget._height / (deviceHeight / 40),
+                          child: TextFormField(
+                              onTap: () async {
+                                final selectedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(2022),
+                                  lastDate: DateTime(2101),
+                                );
+                                if (selectedDate != null) {
+                                  setState(() {
+                                    _invoiceDateController.text = selectedDate
+                                        .toString()
+                                        .substring(0, 10);
+                                  });
+                                }
+                              },
+                              style: const TextStyle(fontSize: 12),
+                              textAlign: TextAlign.center,
+                              controller: _invoiceDateController,
+                              readOnly: true,
+                              decoration: const InputDecoration(
+                                  hintText: 'YYYY-MM-DD',
+                                  border: OutlineInputBorder())),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const Text('Invoice No.'),
+                        SizedBox(
+                          width: widget._width / (deviceWidth / 116),
+                          height: widget._height / (deviceHeight / 40),
+                          child: TextFormField(
+                              style: const TextStyle(fontSize: 12),
+                              textAlign: TextAlign.center,
+                              controller: _invoiceNoController,
+                              decoration: const InputDecoration(
+                                  hintText: 'CXXX',
+                                  hintStyle: TextStyle(fontSize: 12),
+                                  border: OutlineInputBorder())),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const Text('Invoice Amount (Rs.)'),
+                        SizedBox(
+                          width: widget._width / (deviceWidth / 116),
+                          height: widget._height / (deviceHeight / 40),
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d+\.?\d{0,2}'),
+                              ),
+                            ],
+                            style: const TextStyle(fontSize: 12),
+                            textAlign: TextAlign.center,
+                            controller: _invoiceAmountController,
+                            onEditingComplete: () {
+                              String value = _invoiceAmountController.text;
+                              if (value.isNotEmpty) {
+                                _invoiceAmountController.text =
+                                    double.parse(value).toStringAsFixed(2);
+                              }
+                            },
+                            decoration: const InputDecoration(
+                              hintText: '0.00',
+                              border: OutlineInputBorder(),
+                            ),
                           ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          const Text('Invoice No.'),
-                          SizedBox(
-                            width: widget._width / (deviceWidth / 116),
-                            height: widget._height / (deviceHeight / 40),
-                            child: TextFormField(
-                                style: const TextStyle(fontSize: 12),
-                                textAlign: TextAlign.center,
-                                controller: _invoiceNoController,
-                                decoration: const InputDecoration(
-                                    hintText: 'CXXX',
-                                    hintStyle: TextStyle(fontSize: 12),
-                                    border: OutlineInputBorder())),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          const Text('Invoice Amount (Rs.)'),
-                          SizedBox(
-                            width: widget._width / (deviceWidth / 116),
-                            height: widget._height / (deviceHeight / 40),
-                            child: TextFormField(
-                                keyboardType: TextInputType.number,
-                                style: const TextStyle(fontSize: 12),
-                                textAlign: TextAlign.center,
-                                controller: _invoiceAmountController,
-                                decoration: const InputDecoration(
-                                    hintText: '0.00',
-                                    border: OutlineInputBorder())),
-                          ),
-                        ],
-                      ),
-                    ]),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: widget._width / 49.09090909090909375,
                     vertical: widget._height / 97.9090909090909125),
                 child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('\nClaim Expense'),
-                          DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('\nClaim Expense'),
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
                             hint: const Text('Pick Category'),
                             items: _claimExpenseList
                                 .map<DropdownMenuItem<String>>((String value) {
@@ -622,82 +640,87 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                               );
                             }).toList(),
                             onChanged: (String? newValue) {
-                              setState(() {
-                                _claimExpenseValue = newValue!;
-                              });
+                              setState(
+                                () {
+                                  _claimExpenseValue = newValue!;
+                                },
+                              );
                             },
                             value: _claimExpenseValue.isNotEmpty
                                 ? _claimExpenseValue
                                 : null,
-                          )),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          const Text(
-                            'Remaining\nBalance (Rs.)',
-                            textAlign: TextAlign.center,
                           ),
-                          SizedBox(
-                            width: widget._width / (deviceWidth / 80),
-                            height: widget._height / (deviceHeight / 40),
-                            child: TextField(
-                                style: const TextStyle(fontSize: 12),
-                                textAlign: TextAlign.center,
-                                controller: _remainingBalanceController,
-                                readOnly: true,
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder())),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          const Text(
-                            'Transaction\nLimit (Rs.)',
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(
-                            width: widget._width / (deviceWidth / 80),
-                            height: widget._height / (deviceHeight / 40),
-                            child: TextField(
-                                style: const TextStyle(fontSize: 12),
-                                textAlign: TextAlign.center,
-                                controller: _transactionLimitController,
-                                readOnly: true,
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder())),
-                          ),
-                        ],
-                      ),
-                    ]),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const Text(
+                          'Remaining\nBalance (Rs.)',
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          width: widget._width / (deviceWidth / 80),
+                          height: widget._height / (deviceHeight / 40),
+                          child: TextField(
+                              style: const TextStyle(fontSize: 12),
+                              textAlign: TextAlign.center,
+                              controller: _remainingBalanceController,
+                              readOnly: true,
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder())),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const Text(
+                          'Transaction\nLimit (Rs.)',
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          width: widget._width / (deviceWidth / 80),
+                          height: widget._height / (deviceHeight / 40),
+                          child: TextField(
+                              style: const TextStyle(fontSize: 12),
+                              textAlign: TextAlign.center,
+                              controller: _transactionLimitController,
+                              readOnly: true,
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder())),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: widget._width / 49.09090909090909375,
                     vertical: widget._height / 97.9090909090909125),
                 child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: widget._width / (deviceWidth / 50),
-                      ),
-                      IconButton(
-                          onPressed: () async {
-                            await addImage();
-                          },
-                          icon: const Icon(Icons.add_a_photo)),
-                      ElevatedButton(
-                          onPressed: shouldAddButtonBeDisabled
-                              ? null
-                              : () {
-                                  validateForm();
-                                },
-                          //     () {
-                          //   validateForm();
-                          // }
-                          child: const Text('Add'))
-                    ]),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: widget._width / (deviceWidth / 50),
+                    ),
+                    IconButton(
+                        onPressed: () async {
+                          await addImage();
+                        },
+                        icon: const Icon(Icons.add_a_photo)),
+                    ElevatedButton(
+                        onPressed: shouldAddButtonBeDisabled
+                            ? null
+                            : () {
+                                validateForm();
+                              },
+                        //     () {
+                        //   validateForm();
+                        // }
+                        child: const Text('Add'))
+                  ],
+                ),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
