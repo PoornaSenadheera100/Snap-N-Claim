@@ -204,7 +204,7 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          'Rs.${e["total"]}.00',
+                                          'Rs.${e["total"].toStringAsFixed(2)}',
                                           style: TextStyle(
                                             fontSize: widget._width /
                                                 26.18181818181818,
