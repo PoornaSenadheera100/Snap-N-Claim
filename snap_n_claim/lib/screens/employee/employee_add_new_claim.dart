@@ -59,8 +59,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
   late Stream<QuerySnapshot> _collectionReferenceExpenses =
       const Stream.empty();
 
-  double balance = 10000.0;
-  double transActionLimit = 1000.0;
+  double mainBalance = 10000.0;
+  double mainTransactionLimit = 1000.0;
 
   late final Request request;
 
@@ -83,18 +83,18 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
     _collectionReference =
         ExpenseSubmissionAndViewingClaimStateService.getLatestClaimNo();
 
-    _collectionReference.then((value) {
-      _claimNoController.text = value.docs[0].get('claimNo');
-      int newClaimNo = int.parse(_claimNoController.text.substring(1)) + 1;
+      _collectionReference.then((value) {
+          _claimNoController.text = value.docs[0].get('claimNo');
+          int newClaimNo = int.parse(_claimNoController.text.substring(1)) + 1;
 
-      setState(() {
-        _claimNoController.text = 'R${newClaimNo.toString().padLeft(3, '0')}';
+          setState(() {
+            _claimNoController.text = 'R${newClaimNo.toString().padLeft(3, '0')}';
 
-        _collectionReferenceExpenses =
-            ExpenseSubmissionAndViewingClaimStateService.getExpensesByClaimNo(
-                _claimNoController.text);
+            _collectionReferenceExpenses =
+                ExpenseSubmissionAndViewingClaimStateService.getExpensesByClaimNo(
+                    _claimNoController.text);
+          });
       });
-    });
 
     //set current date
     setState(() {
@@ -103,9 +103,9 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
 
     _totalAmountController.text = '0.0';
 
-    _remainingBalanceController.text = balance.toString();
+    _remainingBalanceController.text = mainBalance.toString();
 
-    _transactionLimitController.text = transActionLimit.toString();
+    _transactionLimitController.text = mainTransactionLimit.toString();
   }
 
   void callToast(String msg) {
@@ -124,7 +124,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
     String transactionLimitString = _transactionLimitController.text;
 
     double invoiceAmount = 0.0;
-    double transactionLimit = transActionLimit;
+    double transactionLimit = mainTransactionLimit;
 
     if (invoiceAmountString != '') {
       invoiceAmount = double.parse(invoiceAmountString);
@@ -214,10 +214,10 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
   }
 
   void updateBalance(String total) {
-    balance -= double.parse(total);
+    mainBalance -= double.parse(total);
 
     setState(() {
-      _remainingBalanceController.text = balance.toString();
+      _remainingBalanceController.text = mainBalance.toString();
     });
   }
 
@@ -241,17 +241,17 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
     }
 
     Map<String, dynamic> req = <String, dynamic>{
-      "category": _claimExpenseValue,
       "claimNo": _claimNoController.text,
       "date": DateTime.parse(_claimDateController.text),
-      "department": widget.user.department,
-      "empName": widget.user.name,
+      "category": _claimExpenseValue,
       "empNo": widget.user.empNo,
-      "lineItems": lineItems,
-      "paymentStatus": "Pending",
-      "rejectReason": "",
-      "status": "Draft",
+      "empName": widget.user.name,
+      "department": widget.user.department,
       "total": totalAmount,
+      "status": "Draft",
+      "rejectReason": "",
+      "paymentStatus": "Pending",
+      "lineItems": lineItems,
     };
 
     Response response = Response();
@@ -439,8 +439,13 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<TooltipState> tooltipkey = GlobalKey<TooltipState>();
+
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(onPressed: (){
+          deleteClaim(context, _claimNoController.text);
+        }, icon: Icon(Icons.arrow_back)),
         title: const Text("Add New Claim"),
       ),
       body: SingleChildScrollView(
@@ -455,6 +460,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                 child: Container(
                   color: Colors.grey,
                   width: widget._width / _widthDenominator1,
+                  height: widget._height / (deviceHeight / 30),
                   child: const Center(child: Text('Claim header Information')),
                 ),
               ),
@@ -523,6 +529,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                 child: Container(
                     color: Colors.grey,
                     width: widget._width / _widthDenominator1,
+                    height: widget._height / (deviceHeight / 30),
                     child: const Center(child: Text('Line Item Information'))),
               ),
               Padding(
@@ -715,9 +722,6 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                             : () {
                                 validateForm();
                               },
-                        //     () {
-                        //   validateForm();
-                        // }
                         child: const Text('Add'))
                   ],
                 ),
@@ -729,6 +733,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                 child: Container(
                   color: Colors.grey,
                   width: widget._width / _widthDenominator1,
+
+                  height: widget._height / (deviceHeight / 30),
                   child: const Center(child: Text('Added Expenses')),
                 ),
               ),
@@ -744,10 +750,10 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                       setDataStatus(false);
 
                       return SizedBox(
-                        height: widget._height / (deviceHeight / 240),
+                        height: widget._height / (deviceHeight / 200),
                         child: Center(
                           child: SizedBox(
-                            width: widget._width / (deviceWidth / 100),
+                            width: widget._width / (deviceWidth / 123),
                             child: const Text('No expenses added'),
                           ),
                         ),
@@ -758,8 +764,13 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                       return Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: widget._width / (deviceWidth / 8)),
-                        child: SizedBox(
-                          height: widget._height / (deviceHeight / 240),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(color: Colors.grey,
+                            width: 2.0),
+                          ),
+                          height: widget._height / (deviceHeight / 200),
                           child: ListView(
                             children: snapshot.data!.docs.map((e) {
                               List<dynamic> lineItems = e['lineItems'];
@@ -845,11 +856,11 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                       setDataStatus(false);
 
                       return SizedBox(
-                        height: widget._height / (deviceHeight / 240),
+                        height: widget._height / (deviceHeight / 200),
                         child: Center(
                           child: SizedBox(
-                            width: widget._width / (deviceWidth / 100),
-                            child: const Text('No data found'),
+                            width: widget._width / (deviceWidth / 123),
+                            child: const Text('No expenses added'),
                           ),
                         ),
                       );
@@ -873,7 +884,50 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                         child: const Text('Cancel'),
                       ),
                     ),
-                    ElevatedButton(
+                    Padding(
+                      padding: EdgeInsets.only(
+                        bottom: widget._height / 97.9090909090909125,
+                          right: widget._width / 49.09090909090909375,
+                          top: widget._height / 97.9090909090909125),
+                      child: Tooltip(
+                        key: tooltipkey,
+                        triggerMode: TooltipTriggerMode.tap,
+                        showDuration: const Duration(seconds: 3),
+                        message: 'Add atleast one expense to save as a draft',
+                        child: ElevatedButton(
+                          onPressed: globalLineItems.isEmpty ? null : () async {
+                            var dialogRes = await showDialog<bool>(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  actionsAlignment: MainAxisAlignment.spaceBetween,
+                                  title: const Text('This claim will be saved as a draft'),
+                                  content:
+                                  const Text('Are you sure you want to save this for later?'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context, false),
+                                      child: const Text('No'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        return Navigator.pop(context, true);
+                                      },
+                                      child: const Text('Yes'),
+                                    ),
+                                  ],
+                                ));
+
+                            if(dialogRes == true){
+                              Navigator.of(context).pop();
+                              callToast('Claim saved as a draft');
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue),
+                          child: const Text('Draft'),
+                        ),
+                      ),
+                    ), ElevatedButton(
                       onPressed: () {
                         updateClaimStatus(context, _claimNoController.text);
                       },
