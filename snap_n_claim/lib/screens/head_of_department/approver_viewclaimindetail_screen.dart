@@ -286,7 +286,6 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
         ),
         body: SingleChildScrollView(
           child: Form(
-            key : _formKey,
             child: Column(
               children: [
                 Padding(

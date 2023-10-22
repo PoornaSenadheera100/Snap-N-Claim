@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:snap_n_claim/screens/head_of_department/approver_viewclaimindetail_screen.dart';
 
 import '../../models/employee.dart';
 import '../../services/expense_approval_process_and_sla_calculation_service.dart';
@@ -48,21 +49,36 @@ class _approvalHistoryState extends State<approvalHistory> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator.adaptive();
           } else if (snapshot.data!.docs.length > 0) {
-            return SingleChildScrollView(child: DataTable(
+            return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
               columns: [
+                DataColumn(label: Text('Claim No')),
                 DataColumn(label: Text('Emp No')),
                 DataColumn(label: Text('Emp Name')),
                 DataColumn(label: Text('Expense Name')),
                 DataColumn(label: Text('Amount')),
                 DataColumn(label: Text('Date')),
-                DataColumn(label: Text('SLA Status')),
                 DataColumn(label: Text('Claim Status')),
+                DataColumn(label: Text('SLA Status')),
               ],
               rows: snapshot.data!.docs.map<DataRow>((e) {
                 bool isBreached = sla(e['date'].toDate());
                 return DataRow(
-                  selected: isBreached, // Select the row if breached.
+                  selected: isBreached,
+                  color: sla(e['date'].toDate()) ?
+                  MaterialStateProperty.resolveWith((states) =>  Color(
+                      0xFFFD8681)):// Select the row if breached.
+                  MaterialStateProperty.resolveWith((states) => Color(
+                      0x3010101)),// Select the row if breached.
+                    onLongPress: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ViewClaimInDetail(widget._width, widget._height, widget._user, e)),
+                      );
+                    },
                   cells: [
+                    DataCell(Text(e['claimNo'])),
                     DataCell(Text(e['empNo'])),
                     DataCell(Text(e['empName'])),
                     DataCell(Text(e['category'])),
