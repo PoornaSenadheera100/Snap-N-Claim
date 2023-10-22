@@ -1,6 +1,6 @@
 class Request {
-  String category;
   String claimNo;
+  String category;
   String date;
   String department;
   String empName;

@@ -29,29 +29,30 @@ class ExpenseSubmissionAndViewingClaimStateService {
 
   static Stream<QuerySnapshot> getPendingRequests(String empNo) {
     return requestCollectionReference
-        .where("status", isEqualTo: "Pending")
         .where('empNo', isEqualTo: empNo)
+        .where("status", isEqualTo: "Pending")
         .snapshots();
   }
 
   static Stream<QuerySnapshot> getApprovedRequests(String empNo) {
     return requestCollectionReference
-        .where("status", isEqualTo: "Approved")
         .where('empNo', isEqualTo: empNo)
+        .where("status", isEqualTo: "Approved")
+        .where("paymentStatus", isEqualTo: "Paid")
         .snapshots();
   }
 
   static Stream<QuerySnapshot> getRejectedRequests(String empNo) {
     return requestCollectionReference
-        .where("status", isEqualTo: "Rejected")
         .where('empNo', isEqualTo: empNo)
+        .where("status", isEqualTo: "Rejected")
         .snapshots();
   }
 
   static Stream<QuerySnapshot> getDraftRequests(String empNo) {
     return requestCollectionReference
-        .where("status", isEqualTo: "Draft")
         .where('empNo', isEqualTo: empNo)
+        .where("status", isEqualTo: "Draft")
         .snapshots();
   }
 
@@ -131,17 +132,17 @@ class ExpenseSubmissionAndViewingClaimStateService {
         l.removeWhere((element) => element["invoiceNo"] == invoiceNo);
 
         Map<String, dynamic> newData = {
-          "category": document["category"],
           "claimNo": document["claimNo"],
           "date": document["date"],
-          "department": document["department"],
-          "empName": document["empName"],
+          "category": document["category"],
           "empNo": document["empNo"],
-          "lineItems": l,
-          "paymentStatus": document["paymentStatus"],
-          "rejectReason": document["rejectReason"],
-          "status": document["status"],
+          "empName": document["empName"],
+          "department": document["department"],
           "total": total,
+          "status": document["status"],
+          "rejectReason": document["rejectReason"],
+          "paymentStatus": document["paymentStatus"],
+          "lineItems": l,
         };
 
         await requestCollectionReference.doc(document.id).update(newData);
@@ -200,17 +201,17 @@ class ExpenseSubmissionAndViewingClaimStateService {
         QueryDocumentSnapshot document = querySnapshot.docs[0];
 
         Map<String, dynamic> newData = {
-          "category": document["category"],
           "claimNo": document["claimNo"],
           "date": document["date"],
-          "department": document["department"],
-          "empName": document["empName"],
+          "category": document["category"],
           "empNo": document["empNo"],
-          "lineItems": document["lineItems"],
-          "paymentStatus": document["paymentStatus"],
-          "rejectReason": document["rejectReason"],
-          "status": "Pending",
+          "empName": document["empName"],
+          "department": document["department"],
           "total": document["total"],
+          "status": "Pending",
+          "rejectReason": document["rejectReason"],
+          "paymentStatus": document["paymentStatus"],
+          "lineItems": document["lineItems"],
         };
 
         await requestCollectionReference.doc(document.id).update(newData);
