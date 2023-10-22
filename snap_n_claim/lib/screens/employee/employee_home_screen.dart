@@ -40,7 +40,7 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
   void initState() {
     super.initState();
     _collectionReferenceAll =
-        ExpenseSubmissionAndViewingClaimStateService.getAllRequestsByempNo(
+        ExpenseSubmissionAndViewingClaimStateService.getAllRequestsByEmpNo(
             widget._user.empNo);
     _collectionReferenceDisplaying = _collectionReferenceAll;
     _collectionReferenceApproved =
@@ -96,7 +96,7 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("All Claims"),
+        title: Text(currentPage),
       ),
       drawer: EmployeeMenuDrawer(
           widget._width, widget._height, currentPage, widget._user),
@@ -171,12 +171,12 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
                             elevation: 5,
                             shadowColor: Colors.black,
                             color: e['status'] == 'Pending'
-                                ? Colors.yellow
+                                ? Color(0xFFD2D060)
                                 : e['status'] == 'Approved'
-                                    ? Colors.green
+                                    ? Color(0xFF94B698)
                                     : e['status'] == 'Rejected'
-                                        ? Colors.red
-                                        : Colors.grey,
+                                        ? Color(0xFFBD7171)
+                                        : Color(0xFF98B4F2),
                             child: SizedBox(
                               width: widget._width / (deviceWidth / 400),
                               height: widget._height / (deviceHeight / 90),

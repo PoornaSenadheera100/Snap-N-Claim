@@ -150,12 +150,12 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: widget._request["status"] == "Pending"
-                            ? Colors.yellow
+                            ? Color(0xFFD2D060)
                             : widget._request["status"] == "Rejected"
-                                ? Colors.red
+                                ? Color(0xFFBD7171)
                                 : widget._request["status"] == "Approved"
-                                    ? Colors.green
-                                    : Colors.blueAccent,
+                                    ? Color(0xFF94B698)
+                                    : Color(0xFF98B4F2),
                       ),
                       width: widget._width / 3.272727272727273,
                       height: widget._height / 26.76363636363636,
