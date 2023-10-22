@@ -342,4 +342,51 @@ class BudgetAllocationAndReportingService {
 
     return response;
   }
+
+  static Future<Map<String, dynamic>> getLimitInfo(String glName) async {
+    try {
+      QuerySnapshot querySnapshot = await expenseCollectionReference
+          .where("gl_name", isEqualTo: glName)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        QueryDocumentSnapshot document = querySnapshot.docs[0];
+        Map<String, dynamic> result = {
+          "gl_code": document["gl_code"],
+          "gl_name": document["gl_name"],
+          "monthly_limit": document["monthly_limit"],
+          "transaction_limit": document["transaction_limit"]
+        };
+        return result;
+      } else {
+        return {};
+      }
+    } catch (e) {
+      print(e.toString());
+      return {};
+    }
+  }
+
+  static Future<double> getCurrentCostInMonth(String department, String category) async {
+    String currentDate = DateTime.now().toString().substring(0, 10);
+    int year = int.parse(currentDate.substring(0, 4));
+    int month = int.parse(currentDate.substring(5, 7));
+    double cost = 0;
+    try {
+      QuerySnapshot querySnapshot = await requestCollectionReference
+          .where("department", isEqualTo: department)
+          .where("category", isEqualTo: category)
+          .where('date', isGreaterThanOrEqualTo: DateTime(year, month, 1))
+          .where('date', isLessThanOrEqualTo: DateTime(year, month, 31))
+          .get();
+
+      for (final QueryDocumentSnapshot document in querySnapshot.docs) {
+        cost = cost + document["total"].toDouble();
+      }
+      return cost;
+    } catch (e) {
+      print(e.toString());
+      return cost;
+    }
+  }
 }
