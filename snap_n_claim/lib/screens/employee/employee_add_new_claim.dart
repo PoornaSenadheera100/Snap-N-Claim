@@ -363,37 +363,44 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
   }
 
   void deleteClaim(BuildContext context, String claimNo) async {
-    var dialogRes = await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-              actionsAlignment: MainAxisAlignment.spaceBetween,
-              title: const Text('You will lose your progress!'),
-              content: const Text('Are you sure you want to leave?'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: const Text('No'),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    return Navigator.pop(context, true);
-                  },
-                  child: const Text('Yes'),
-                ),
-              ],
-            ));
+    // if(globalLineItems.isEmpty){
+    //   Navigator.of(context).pop();
+    // } else {
+      var dialogRes = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            actionsAlignment: MainAxisAlignment.spaceBetween,
+            title: const Text('You will lose your progress!'),
+            content: const Text('Are you sure you want to leave?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  return Navigator.pop(context, true);
+                },
+                child: const Text('Yes'),
+              ),
+            ],
+          ));
 
-    if (dialogRes == true) {
-      Response response =
-          await ExpenseSubmissionAndViewingClaimStateService.deleteClaim(
-              claimNo);
+      if (dialogRes == true) {
+        Response response =
+        await ExpenseSubmissionAndViewingClaimStateService.deleteClaim(
+            claimNo);
 
-      if (response.code == 200) {
-        Navigator.of(context).pop();
+        if (response.code == 200) {
+          Navigator.of(context).pop();
+          callToast(response.message);
+        } else if(response.code == 404){
+          Navigator.of(context).pop();
+        } else {
+          callToast(response.message);
+        }
       }
-
-      callToast(response.message);
-    }
+    // }
   }
 
   void updateClaimStatus(BuildContext context, String claimNo) async {
@@ -426,7 +433,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
         if (response.code == 200) {
           Navigator.of(context).pop();
           callToast('Claim added successfully');
-        } else {
+        } else if (response.code == 500){
           callToast('Claim could not be saved, please try again');
         }
       }
