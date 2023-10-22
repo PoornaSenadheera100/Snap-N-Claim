@@ -13,7 +13,6 @@ final CollectionReference employeeCollectionReference =
     _firestore.collection("Employee");
 
 class ExpenseSubmissionAndViewingClaimStateService {
-
   static Stream<QuerySnapshot> getAllRequestsByEmpNo(String empNo) {
     return requestCollectionReference
         .where('empNo', isEqualTo: empNo)
@@ -77,8 +76,8 @@ class ExpenseSubmissionAndViewingClaimStateService {
     return response;
   }
 
-  static Future<Response> updateRequest(Map<String, dynamic> request,
-      String claimNo) async {
+  static Future<Response> updateRequest(
+      Map<String, dynamic> request, String claimNo) async {
     Response response = Response();
 
     try {
@@ -95,7 +94,7 @@ class ExpenseSubmissionAndViewingClaimStateService {
       } else {
         response.code = 404;
         response.message =
-        "Claim request not found with the specified claim number";
+            "Claim request not found with the specified claim number";
       }
     } catch (e) {
       response.code = 500;
@@ -105,8 +104,8 @@ class ExpenseSubmissionAndViewingClaimStateService {
     return response;
   }
 
-  static Future<Response> deleteLineItem(String claimNo,
-      String invoiceNo) async {
+  static Future<Response> deleteLineItem(
+      String claimNo, String invoiceNo) async {
     Response response = Response();
     double invoiceAmount = 0.0;
     double initialTotal = 0.0;
@@ -123,7 +122,8 @@ class ExpenseSubmissionAndViewingClaimStateService {
         List l = document["lineItems"];
 
         //find the lineitem that matches the invoice number
-        Iterable lItem = l.where((element) => element["invoiceNo"] == invoiceNo);
+        Iterable lItem =
+            l.where((element) => element["invoiceNo"] == invoiceNo);
 
         invoiceAmount = double.parse((lItem.first["invoiceAmount"]).toString());
         initialTotal = double.parse((document['total']).toString());
@@ -151,7 +151,7 @@ class ExpenseSubmissionAndViewingClaimStateService {
       } else {
         response.code = 404;
         response.message =
-        "Claim request not found with the specified claim number";
+            "Claim request not found with the specified claim number";
       }
     } catch (e) {
       response.code = 500;
@@ -178,8 +178,7 @@ class ExpenseSubmissionAndViewingClaimStateService {
         response.message = "Claim deleted";
       } else {
         response.code = 404;
-        response.message =
-        "Claim request could not be deleted";
+        response.message = "Claim request could not be deleted";
       }
     } catch (e) {
       response.code = 500;
@@ -189,10 +188,10 @@ class ExpenseSubmissionAndViewingClaimStateService {
     return response;
   }
 
-  static Future<Response> updateClaimStatus(String claimNo) async{
+  static Future<Response> updateClaimStatus(String claimNo) async {
     Response response = Response();
 
-    try{
+    try {
       QuerySnapshot querySnapshot = await requestCollectionReference
           .where("claimNo", isEqualTo: claimNo)
           .get();
@@ -220,7 +219,7 @@ class ExpenseSubmissionAndViewingClaimStateService {
       } else {
         response.code = 404;
         response.message =
-        "Claim request not found with the specified claim number";
+            "Claim request not found with the specified claim number";
       }
     } catch (e) {
       response.code = 500;
@@ -228,5 +227,54 @@ class ExpenseSubmissionAndViewingClaimStateService {
     }
 
     return response;
+  }
+
+  static Future<Map<String, dynamic>> getLimitInfo(String glName) async {
+    try {
+      QuerySnapshot querySnapshot = await expenseCollectionReference
+          .where("gl_name", isEqualTo: glName)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        QueryDocumentSnapshot document = querySnapshot.docs[0];
+        Map<String, dynamic> result = {
+          "gl_code": document["gl_code"],
+          "gl_name": document["gl_name"],
+          "monthly_limit": document["monthly_limit"],
+          "transaction_limit": document["transaction_limit"]
+        };
+        return result;
+      } else {
+        return {};
+      }
+    } catch (e) {
+      print(e.toString());
+      return {};
+    }
+  }
+
+  static Future<double> getCurrentCostInMonth(
+      String department, String category) async {
+    String currentDate = DateTime.now().toString().substring(0, 10);
+    int year = int.parse(currentDate.substring(0, 4));
+    int month = int.parse(currentDate.substring(5, 7));
+    double cost = 0;
+    try {
+      QuerySnapshot querySnapshot = await requestCollectionReference
+          .where("department", isEqualTo: department)
+          .where("category", isEqualTo: category)
+          .where("status", whereIn: ["Approved", "Pending", "Draft"])
+          .where('date', isGreaterThanOrEqualTo: DateTime(year, month, 1))
+          .where('date', isLessThanOrEqualTo: DateTime(year, month, 31))
+          .get();
+
+      for (final QueryDocumentSnapshot document in querySnapshot.docs) {
+        cost = cost + document["total"].toDouble();
+      }
+      return cost;
+    } catch (e) {
+      print(e.toString());
+      return cost;
+    }
   }
 }
