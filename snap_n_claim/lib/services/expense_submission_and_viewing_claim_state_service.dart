@@ -14,7 +14,7 @@ final CollectionReference employeeCollectionReference =
 
 class ExpenseSubmissionAndViewingClaimStateService {
 
-  static Stream<QuerySnapshot> getAllRequestsByempNo(String empNo) {
+  static Stream<QuerySnapshot> getAllRequestsByEmpNo(String empNo) {
     return requestCollectionReference
         .where('empNo', isEqualTo: empNo)
         .snapshots();
@@ -107,6 +107,9 @@ class ExpenseSubmissionAndViewingClaimStateService {
   static Future<Response> deleteLineItem(String claimNo,
       String invoiceNo) async {
     Response response = Response();
+    double invoiceAmount = 0.0;
+    double initialTotal = 0.0;
+    double total = 0.0;
 
     try {
       QuerySnapshot querySnapshot = await requestCollectionReference
@@ -117,6 +120,13 @@ class ExpenseSubmissionAndViewingClaimStateService {
         QueryDocumentSnapshot document = querySnapshot.docs[0];
 
         List l = document["lineItems"];
+
+        //find the lineitem that matches the invoice number
+        Iterable lItem = l.where((element) => element["invoiceNo"] == invoiceNo);
+
+        invoiceAmount = double.parse((lItem.first["invoiceAmount"]).toString());
+        initialTotal = double.parse((document['total']).toString());
+        total = initialTotal - invoiceAmount;
 
         l.removeWhere((element) => element["invoiceNo"] == invoiceNo);
 
@@ -131,7 +141,7 @@ class ExpenseSubmissionAndViewingClaimStateService {
           "paymentStatus": document["paymentStatus"],
           "rejectReason": document["rejectReason"],
           "status": document["status"],
-          "total": document["total"],
+          "total": total,
         };
 
         await requestCollectionReference.doc(document.id).update(newData);
@@ -165,6 +175,10 @@ class ExpenseSubmissionAndViewingClaimStateService {
 
         response.code = 200;
         response.message = "Claim deleted";
+      } else {
+        response.code = 404;
+        response.message =
+        "Claim request could not be deleted";
       }
     } catch (e) {
       response.code = 500;
