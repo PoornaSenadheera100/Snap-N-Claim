@@ -445,7 +445,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
       appBar: AppBar(
         leading: IconButton(onPressed: (){
           deleteClaim(context, _claimNoController.text);
-        }, icon: Icon(Icons.arrow_back)),
+        }, icon: const Icon(Icons.arrow_back)),
         title: const Text("Add New Claim"),
       ),
       body: SingleChildScrollView(
