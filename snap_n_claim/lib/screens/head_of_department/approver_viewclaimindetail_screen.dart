@@ -107,6 +107,7 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
+        EmailService.mailReject(widget._request['claimNo']);
         Navigator.of(context).pop();
       } else {
         Fluttertoast.showToast(
@@ -124,6 +125,7 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
   Future<void> _onTapRejectBtn(BuildContext context) async {
     setState(() {
       _isTappedRejectBtn = true;
+
     });
   }
 
@@ -171,7 +173,7 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
-        EmailService.sendEmail();
+        EmailService.mailApprove(widget._request['claimNo']);
         Navigator.of(context).pop();
       } else {
         Fluttertoast.showToast(
