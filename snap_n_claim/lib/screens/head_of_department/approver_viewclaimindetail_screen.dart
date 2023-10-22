@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:snap_n_claim/services/email_service.dart';
 import 'package:snap_n_claim/services/expense_approval_process_and_sla_calculation_service.dart';
 import '../../models/employee.dart';
 import '../../models/response.dart';
@@ -170,6 +171,7 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
+        EmailService.sendEmail();
         Navigator.of(context).pop();
       } else {
         Fluttertoast.showToast(
