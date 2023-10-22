@@ -78,8 +78,6 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
   void initState() {
     super.initState();
 
-    // _invoiceAmountController.text = '0.00';
-
     _collectionReference =
         ExpenseSubmissionAndViewingClaimStateService.getLatestClaimNo();
 
