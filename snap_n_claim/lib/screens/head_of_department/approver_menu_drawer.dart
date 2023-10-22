@@ -38,7 +38,7 @@ class ApproverMenuDrawer extends StatelessWidget {
   void _onTapViewReportsBtn(BuildContext context) {
     Navigator.of(context).pop();
     if (currentPage != "View Reports") {
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
         PageTransition(
           child: approvalHistory(_width, _height, user),
@@ -103,6 +103,7 @@ class ApproverMenuDrawer extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () {
               _onTapViewReportsBtn(context);
+
             },
             child: const Text("View Reports"),
           ),
