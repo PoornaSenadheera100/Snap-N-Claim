@@ -93,7 +93,7 @@ class EmployeeMenuDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String userType = 'Employee';
-    String userEmail = 'e008@spsh.lk';
+    String userEmail = user.email;
     double widthDenominator = 19.63636363636364;
 
     return Drawer(
