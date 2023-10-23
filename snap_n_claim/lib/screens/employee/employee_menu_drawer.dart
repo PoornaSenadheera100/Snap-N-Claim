@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:snap_n_claim/screens/employee/employee_reporting_screen.dart';
 
 import '../../models/employee.dart';
 import '../common/login_screen.dart';
-import '../finance_admin/finance_admin_reports_selection_screen.dart';
 import 'employee_add_modify_claim_screen.dart';
 import 'employee_home_screen.dart';
 
@@ -70,7 +70,7 @@ class EmployeeMenuDrawer extends StatelessWidget {
       Navigator.pushReplacement(
         context,
         PageTransition(
-          child: FinanceAdminReportsSelectionScreen(_width, _height, user),
+          child: EmployeeReportingScreen(_width, _height, user),
           type: PageTransitionType.rightToLeft,
           alignment: Alignment.center,
           isIos: true,

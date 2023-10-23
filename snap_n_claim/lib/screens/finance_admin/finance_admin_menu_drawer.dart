@@ -9,6 +9,9 @@ import 'package:snap_n_claim/screens/finance_admin/finance_admin_budget_allocati
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_home_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_reports_selection_screen.dart';
 
+import '../employee/employee_add_modify_claim_screen.dart';
+import '../employee/employee_home_screen.dart';
+
 class FinanceAdminMenuDrawer extends StatelessWidget {
   const FinanceAdminMenuDrawer(
       this._width, this._height, this.currentPage, this.user,
@@ -70,7 +73,39 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
 
   void _onTapUserConfigBtn(BuildContext context) {}
 
-  void _onTapMyClaimsBtn(BuildContext context) {}
+  void _onTapMyClaimsBtn(BuildContext context) {
+    Navigator.of(context).pop();
+
+    if (currentPage != 'All Claims') {
+      Navigator.pushReplacement(
+        context,
+        PageTransition(
+          child: EmployeeHomeScreen(_width, _height, user),
+          type: PageTransitionType.rightToLeft,
+          alignment: Alignment.center,
+          isIos: true,
+          duration: const Duration(seconds: 1),
+        ),
+      );
+    }
+  }
+
+  _onTapAddNewClaimBtn(BuildContext context){
+    Navigator.of(context).pop();
+
+    if (currentPage != 'Add New Claim') {
+      Navigator.push(
+        context,
+        PageTransition(
+          child: EmployeeAddNewClaim(_width, _height, user),
+          type: PageTransitionType.rightToLeft,
+          alignment: Alignment.center,
+          isIos: true,
+          duration: Duration(seconds: 1),
+        ),
+      );
+    }
+  }
 
   Future<void> _onTapSignOutBtn(BuildContext context) async {
     var dialogRes = await showDialog<bool>(
@@ -179,12 +214,17 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
             },
             child: const Text("My Claims"),
           ),
+        ),Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: _width / 19.63636363636364,
+          ), // 20
+          child: ElevatedButton(
+            onPressed: () {
+              _onTapAddNewClaimBtn(context);
+            },
+            child: const Text("Add new claim"),
+          ),
         ),
-        // const Divider(
-        //   thickness: 5,
-        //   indent: 20,
-        //   endIndent: 20,
-        // ),
         Padding(
           padding: EdgeInsets.symmetric(
             horizontal: _width / 19.63636363636364,

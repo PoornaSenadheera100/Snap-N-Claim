@@ -4,6 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snap_n_claim/models/employee.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
+import 'employee_menu_drawer.dart';
+
 class EmployeeReportingScreen extends StatefulWidget {
   const EmployeeReportingScreen(this._width, this._height, this.user,
       {super.key});
@@ -20,6 +22,7 @@ class EmployeeReportingScreen extends StatefulWidget {
 class _EmployeeReportingScreenState extends State<EmployeeReportingScreen> {
   late String _yearDropdownValue;
   final List<String> _years = ["2023", "2024"];
+  final String currentPage = 'Reports';
 
   Map<String, dynamic> _empReportData = {
     "JAN": 0,
@@ -322,6 +325,7 @@ class _EmployeeReportingScreenState extends State<EmployeeReportingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        drawer: EmployeeMenuDrawer(widget._width, widget._height, currentPage, widget.user),
       appBar: AppBar(
         title: const Text("Employee Report"),
       ),

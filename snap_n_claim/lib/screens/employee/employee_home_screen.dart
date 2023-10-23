@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:snap_n_claim/screens/employee/employee_menu_drawer.dart';
 import 'package:snap_n_claim/screens/employee/employee_view_claim_indetail_screen.dart';
+import 'package:snap_n_claim/screens/finance_admin/finance_admin_menu_drawer.dart';
+import 'package:snap_n_claim/screens/head_of_department/approver_navbar_widget.dart';
 
 import '../../models/employee.dart';
 import '../../services/expense_submission_and_viewing_claim_state_service.dart';
@@ -98,8 +100,8 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
       appBar: AppBar(
         title: Text(currentPage),
       ),
-      drawer: EmployeeMenuDrawer(
-          widget._width, widget._height, currentPage, widget._user),
+      drawer: widget._user.empType == 'emp' ? EmployeeMenuDrawer(
+          widget._width, widget._height, currentPage, widget._user) : widget._user.empType == 'hod' ? ApproverNavBar(widget._user) : FinanceAdminMenuDrawer(widget._width, widget._height, currentPage, widget._user),
       body: Column(
         children: [
           radioButtonGroup(),

@@ -806,7 +806,7 @@ class _FinanceAdminReportingScreenState
                 _deptReportData["Marketing Department"] == 0 &&
                 _deptReportData["Safety and Security Department"] == 0)
             ? Container(
-                height: widget._height / 1.665786495662014,
+                height: widget._height / 1.7,
                 alignment: Alignment.center,
                 child: const Text("No Data"),
               )
