@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snap_n_claim/models/employee.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
-import '../../utils/pie_chart_indicator.dart';
+import 'approver_menu_drawer.dart';
 
 class HodReportingScreen extends StatefulWidget {
   const HodReportingScreen(this._width, this._height, this.user, {super.key});
@@ -23,6 +23,7 @@ class _HodReportingScreenState extends State<HodReportingScreen> {
   late String _yearDropdownValue;
   late String _monthDropdownValue;
   final List<String> _years = ["2023", "2024"];
+  final String currentPage = 'Department Reports';
   final List<String> _months = [
     "JAN",
     "FEB",
@@ -52,15 +53,6 @@ class _HodReportingScreenState extends State<HodReportingScreen> {
     "NOV": 0,
     "DEC": 0,
     "MAX": 0
-  };
-
-  Map<String, dynamic> _deptReportData = {
-    "Production Department": 0,
-    "IT Department": 0,
-    "Finance Department": 0,
-    "HR Department": 0,
-    "Marketing Department": 0,
-    "Safety and Security Department": 0
   };
 
   Map<String, dynamic> _expenseReportData = {
@@ -834,6 +826,8 @@ class _HodReportingScreenState extends State<HodReportingScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        drawer: ApproverMenuDrawer(
+            widget._width, widget._height, currentPage, widget.user),
         appBar: AppBar(
           title: const Text("Reporting and Analytics"),
           bottom: const TabBar(tabs: [

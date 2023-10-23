@@ -155,7 +155,7 @@ class _LoginStatusScreenState extends State<LoginStatusScreen> {
                               DataColumn(
                                   label: Expanded(
                                 child: Text(
-                                  "EPF No",
+                                  "EPF\nNo",
                                 ),
                               )),
                               DataColumn(

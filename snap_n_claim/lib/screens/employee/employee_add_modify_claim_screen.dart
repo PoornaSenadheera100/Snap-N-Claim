@@ -628,6 +628,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                           width: widget._width / (deviceWidth / 116),
                           height: widget._height / (deviceHeight / 40),
                           child: TextFormField(
+                              autofocus: false,
                               onTap: () async {
                                 final selectedDate = await showDatePicker(
                                   context: context,
@@ -660,6 +661,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                           width: widget._width / (deviceWidth / 116),
                           height: widget._height / (deviceHeight / 40),
                           child: TextFormField(
+                              autofocus: false,
                               style: const TextStyle(fontSize: 12),
                               textAlign: TextAlign.center,
                               controller: _invoiceNoController,
@@ -677,6 +679,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                           width: widget._width / (deviceWidth / 116),
                           height: widget._height / (deviceHeight / 40),
                           child: TextFormField(
+                            autofocus: false,
                             keyboardType: TextInputType.number,
                             inputFormatters: <TextInputFormatter>[
                               FilteringTextInputFormatter.allow(
@@ -1033,7 +1036,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                                 }
                               },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0x9A5987EF),
+                          backgroundColor: const Color(0x9A5987EF),
                         ),
                         child: const Text('Draft'),
                       ),
@@ -1044,7 +1047,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                       updateClaimStatus(context, _claimNoController.text);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0x995DC523),
+                      backgroundColor: const Color(0x995DC523),
                     ),
                     child: const Text('Submit'),
                   ),
