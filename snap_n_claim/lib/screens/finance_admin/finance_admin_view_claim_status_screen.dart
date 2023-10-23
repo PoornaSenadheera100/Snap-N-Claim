@@ -56,25 +56,28 @@ class _FinanceAdminViewClaimStatusScreenState
 
   @override
   Widget build(BuildContext context) {
-    print(widget._width);
-    print(widget._height);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Claim Report"),
+        title: const Text("Claim Report"),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.symmetric(
+                vertical: widget._height / 100.3636363636364,
+                horizontal: widget._width / 49.09090909090909,
+              ),
               child: Container(
-                height: 70,
-                color: Color(0xFFD7D7D7),
+                height: widget._height / 11.47012987012987,
+                color: const Color(0xFFD7D7D7),
                 child: Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: Text("Search"),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: widget._width / 98.18181818181818,
+                      ),
+                      child: const Text("Search"),
                     ),
                     Expanded(
                         child: SizedBox(
@@ -83,14 +86,16 @@ class _FinanceAdminViewClaimStatusScreenState
                       onChanged: (value) {
                         _filterClaims(value);
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Emp No",
                       ),
                     ))),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: Text("Filter"),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: widget._width / 98.18181818181818,
+                      ),
+                      child: const Text("Filter"),
                     ),
                     DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
@@ -105,8 +110,8 @@ class _FinanceAdminViewClaimStatusScreenState
                               child: Text(
                                 value,
                                 style: TextStyle(
-                                    fontSize:
-                                        widget._width / 26.18181818181818),
+                                  fontSize: widget._width / 26.18181818181818,
+                                ),
                               ),
                             );
                           }).toList(),
@@ -122,11 +127,13 @@ class _FinanceAdminViewClaimStatusScreenState
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              padding: EdgeInsets.symmetric(
+                horizontal: widget._width / 49.09090909090909,
+              ),
               child: Container(
-                  height: 600,
-                  width: 390,
-                  color: Color(0xFFD7D7D7),
+                  height: widget._height / 1.338181818181818,
+                  width: widget._width / 1.006993006993007,
+                  color: const Color(0xFFD7D7D7),
                   child: StreamBuilder(
                     stream: _requestsCollectionReference,
                     builder: (BuildContext context,
@@ -135,14 +142,16 @@ class _FinanceAdminViewClaimStatusScreenState
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CircularProgressIndicator.adaptive(),
+                            const CircularProgressIndicator.adaptive(),
                             Padding(
-                              padding: EdgeInsets.only(top: 20.0),
-                              child: Text("Loading..."),
+                              padding: EdgeInsets.only(
+                                top: widget._height / 40.14545454545455,
+                              ),
+                              child: const Text("Loading..."),
                             ),
                           ],
                         );
-                      } else if (snapshot.data!.docs.length > 0) {
+                      } else if (snapshot.data!.docs.isNotEmpty) {
                         return SingleChildScrollView(
                           child: DataTable(
                             dividerThickness: 3,
@@ -150,7 +159,7 @@ class _FinanceAdminViewClaimStatusScreenState
                             border: TableBorder.all(color: Colors.grey),
                             showBottomBorder: true,
                             columnSpacing: 6,
-                            columns: [
+                            columns: const [
                               DataColumn(
                                   label: Expanded(
                                 child: Text(
@@ -175,19 +184,25 @@ class _FinanceAdminViewClaimStatusScreenState
                                         cells: [
                                           DataCell(Text(e["empNo"])),
                                           DataCell(Text(e["empName"])),
-                                          DataCell(Center(
-                                              child: Text(e["category"]))),
-                                          DataCell(Text("Rs." +
-                                              e["total"].toStringAsFixed(2)))
+                                          DataCell(
+                                            Center(
+                                              child: Text(e["category"]),
+                                            ),
+                                          ),
+                                          DataCell(
+                                            Text("Rs." +
+                                                e["total"].toStringAsFixed(2)),
+                                          )
                                         ],
                                         color:
                                             MaterialStateProperty.resolveWith(
-                                                (states) => Color(0x98A2C5FF))))
+                                                (states) =>
+                                                    const Color(0x98A2C5FF))))
                                 .toList(),
                           ),
                         );
                       } else {
-                        return Center(child: Text("No Data"));
+                        return const Center(child: Text("No Data"));
                       }
                     },
                   )),

@@ -124,14 +124,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(widget._width / 49.09090909090909),
           child: Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 20.0),
+               Padding(
+                padding: EdgeInsets.symmetric(vertical: widget._height / 40.14545454545455),
                 child: Text(
                   "Please change your password from the initial password.",
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: widget._width / 26.18181818181818),
                 ),
               ),
               TextFormField(
@@ -144,7 +144,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 },
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                padding: EdgeInsets.symmetric(vertical: widget._height / 40.14545454545455),
                 child: TextFormField(
                   obscureText: true,
                   controller: _retypePasswordController,

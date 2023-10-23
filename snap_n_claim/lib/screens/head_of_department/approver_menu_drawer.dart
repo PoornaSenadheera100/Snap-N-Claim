@@ -5,19 +5,15 @@ import 'package:page_transition/page_transition.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:snap_n_claim/models/employee.dart';
 import 'package:snap_n_claim/screens/common/login_screen.dart';
-import 'package:snap_n_claim/screens/finance_admin/finance_admin_budget_allocation_selection_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_home_screen.dart';
-import 'package:snap_n_claim/screens/finance_admin/finance_admin_reports_selection_screen.dart';
-import 'package:snap_n_claim/screens/finance_admin/login_status.dart';
-
-import 'create_account_screen.dart';
-
+import 'package:snap_n_claim/screens/head_of_department/hod_reporting_screen.dart';
 
 import '../employee/employee_add_modify_claim_screen.dart';
 import '../employee/employee_home_screen.dart';
+import 'approver_approvalhistory_screen.dart';
 
-class FinanceAdminMenuDrawer extends StatelessWidget {
-  const FinanceAdminMenuDrawer(
+class ApproverMenuDrawer extends StatelessWidget {
+  const ApproverMenuDrawer(
       this._width, this._height, this.currentPage, this.user,
       {super.key});
 
@@ -28,7 +24,7 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
 
   void _onTapPendingClaimsBtn(BuildContext context) {
     Navigator.of(context).pop();
-    if (currentPage != "Finance Pending Claims") {
+    if (currentPage != "Approver Dashboard") {
       Navigator.pushReplacement(
         context,
         PageTransition(
@@ -42,47 +38,13 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
     }
   }
 
-  void _onTapReportsBtn(BuildContext context) {
+  void _onTapViewReportsBtn(BuildContext context) {
     Navigator.of(context).pop();
-    if (currentPage != "Reports") {
-      Navigator.pushReplacement(
+    if (currentPage != "View Reports") {
+      Navigator.push(
         context,
         PageTransition(
-          child: FinanceAdminReportsSelectionScreen(_width, _height, user),
-          type: PageTransitionType.rightToLeft,
-          alignment: Alignment.center,
-          isIos: true,
-          duration: const Duration(seconds: 1),
-        ),
-      );
-    }
-  }
-
-  void _onTapBudgetAllocationBtn(BuildContext context) {
-    Navigator.of(context).pop();
-    if (currentPage != "Budget Allocation Menu") {
-      Navigator.pushReplacement(
-        context,
-        PageTransition(
-          child: FinanceAdminBudgetAllocationSelectionScreen(
-              _width, _height, user),
-          type: PageTransitionType.rightToLeft,
-          alignment: Alignment.center,
-          isIos: true,
-          duration: const Duration(seconds: 1),
-        ),
-      );
-    }
-  }
-
-  void _onTapUserConfigBtn(BuildContext context) {
-    Navigator.of(context).pop();
-    if (currentPage != "User Configuration Screen") {
-      Navigator.pushReplacement(
-        context,
-        PageTransition(
-          child: LoginStatusScreen(
-              _width, _height, user),
+          child: approvalHistory(_width, _height, user),
           type: PageTransitionType.rightToLeft,
           alignment: Alignment.center,
           isIos: true,
@@ -103,7 +65,7 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
           type: PageTransitionType.rightToLeft,
           alignment: Alignment.center,
           isIos: true,
-          duration: const Duration(seconds: 1),
+          duration: Duration(seconds: 1),
         ),
       );
     }
@@ -121,6 +83,22 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
           alignment: Alignment.center,
           isIos: true,
           duration: Duration(seconds: 1),
+        ),
+      );
+    }
+  }
+
+  void _onTapDeptReportsBtn(BuildContext context){
+    Navigator.of(context).pop();
+    if (currentPage != "Department Reports") {
+      Navigator.pushReplacement(
+        context,
+        PageTransition(
+          child: HodReportingScreen(_width, _height, user),
+          type: PageTransitionType.rightToLeft,
+          alignment: Alignment.center,
+          isIos: true,
+          duration: const Duration(seconds: 1),
         ),
       );
     }
@@ -145,7 +123,6 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
                 ),
               ],
             ));
-
     if (dialogRes == true) {
       final directory = await getApplicationDocumentsDirectory();
       final path = directory.path;
@@ -164,8 +141,8 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
         child: ListView(
       children: [
         UserAccountsDrawerHeader(
-          accountName: const Text('Finance Administrator'),
-          accountEmail: const Text('finadmin@spsh.lk'),
+          accountName: const Text('Head of Department'),
+          accountEmail: Text(user.email),
           currentAccountPicture: CircleAvatar(
             child: ClipOval(
               child: Image.asset('assets/avatarpic.jpg'),
@@ -196,31 +173,9 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
           ), // 20
           child: ElevatedButton(
             onPressed: () {
-              _onTapReportsBtn(context);
+              _onTapViewReportsBtn(context);
             },
-            child: const Text("Reports"),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: _width / 19.63636363636364,
-          ), // 20
-          child: ElevatedButton(
-            onPressed: () {
-              _onTapBudgetAllocationBtn(context);
-            },
-            child: const Text("Budget Allocation"),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: _width / 19.63636363636364,
-          ), // 20
-          child: ElevatedButton(
-            onPressed: () {
-              _onTapUserConfigBtn(context);
-            },
-            child: const Text("User Configurations"),
+            child: const Text("SLA Report"),
           ),
         ),
         Padding(
@@ -241,7 +196,17 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
             onPressed: () {
               _onTapAddNewClaimBtn(context);
             },
-            child: const Text("Add new claim"),
+            child: const Text("Add New Claim"),
+          ),
+        ),Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: _width / 19.63636363636364,
+          ), // 20
+          child: ElevatedButton(
+            onPressed: () {
+              _onTapDeptReportsBtn(context);
+            },
+            child: const Text("Department Report"),
           ),
         ),
         Padding(

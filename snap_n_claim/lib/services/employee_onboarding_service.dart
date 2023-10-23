@@ -56,4 +56,59 @@ class EmployeeOnboardingService {
 
     return response;
   }
+
+  static Future<Response> addAccount(
+      String empNo,
+      String name,
+      String department,
+      String empGrade,
+      String password,
+      String email,
+      String phone,
+      String empType) async {
+    Response response = Response();
+    Map<String, dynamic> data = <String, dynamic>{
+      "emp_no": empNo,
+      "name": name,
+      "department": department,
+      "emp_grade": empGrade,
+      "password": password,
+      "email": email,
+      "phone": phone,
+      "first_login": true,
+      "emp_type": empType
+    };
+
+    await employeeCollectionReference.doc().set(data).whenComplete(() {
+      response.code = 200;
+      response.message = "Account Created";
+    }).catchError((e) {
+      response.code = 500;
+      response.message = e;
+    });
+
+    return response;
+  }
+
+  static Stream<QuerySnapshot> getAllEmployees() {
+    return employeeCollectionReference.orderBy("emp_no").snapshots();
+  }
+
+  static Future<Map<String, dynamic>> getAccountLoginInfo() async {
+    final Map<String, dynamic> result = {"total": 0, "loggedInCount": 0};
+    try {
+      final QuerySnapshot querySnapshot =
+          await employeeCollectionReference.get();
+
+      for (final QueryDocumentSnapshot document in querySnapshot.docs) {
+        result["total"] = result["total"] + 1;
+        if (document["first_login"] == false) {
+          result["loggedInCount"] = result["loggedInCount"] + 1;
+        }
+      }
+      return result;
+    } catch (e) {
+      return result;
+    }
+  }
 }

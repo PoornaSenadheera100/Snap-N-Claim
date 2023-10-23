@@ -230,6 +230,41 @@ class BudgetAllocationAndReportingService {
     }
   }
 
+  static Future<Map<String, dynamic>> getExpenseReportDataToHod(
+      int year, int month, String department) async {
+    final Map<String, dynamic> result = {
+      "Transportation": 0,
+      "Meals and Food": 0,
+      "Accommodation": 0,
+      "Equipment and Supplies": 0,
+      "Communication": 0,
+      "Health and Safety": 0,
+      "MAX": 0,
+    };
+    try {
+      final QuerySnapshot querySnapshot = await requestCollectionReference
+          .where('paymentStatus', isEqualTo: "Paid")
+          .where("department", isEqualTo: department)
+          .where('date', isGreaterThanOrEqualTo: DateTime(year, month, 1))
+          .where('date', isLessThanOrEqualTo: DateTime(year, month, 31))
+          .get();
+
+      for (final QueryDocumentSnapshot document in querySnapshot.docs) {
+        final category = document['category'];
+        final double total = document['total'].toDouble();
+        if (result.containsKey(category)) {
+          result[category] += total;
+          if (result["MAX"] < result[category]) {
+            result["MAX"] = result[category];
+          }
+        }
+      }
+      return result;
+    } catch (e) {
+      return result;
+    }
+  }
+
   static Stream<QuerySnapshot<Object?>> getApprovedClaims() {
     return requestCollectionReference
         .where("status", isEqualTo: "Approved")
@@ -262,5 +297,96 @@ class BudgetAllocationAndReportingService {
         .where("status", isEqualTo: "Rejected")
         .orderBy("empNo")
         .startAt([empNo]).endAt(['$empNo\uf8ff']).snapshots();
+  }
+
+  static Stream<QuerySnapshot<Object?>> getFinancePendingClaims() {
+    return requestCollectionReference
+        .where("status", isEqualTo: "Approved")
+        .where("paymentStatus", isEqualTo: "Pending")
+        .orderBy("date")
+        .snapshots();
+  }
+
+  static Future<QuerySnapshot<Object?>> verifyUserWithDept(
+      String empNo, String department) async {
+    return await employeeCollectionReference
+        .where("emp_no", isEqualTo: empNo)
+        .where("department", isEqualTo: department)
+        .get();
+  }
+
+  static Future<Response> updateRequestPaymentStatus(
+      Map<String, dynamic> request) async {
+    Response response = Response();
+
+    try {
+      QuerySnapshot querySnapshot = await requestCollectionReference
+          .where("claimNo", isEqualTo: request["claimNo"])
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        QueryDocumentSnapshot document = querySnapshot.docs[0];
+
+        await document.reference.update(request); // Update the document
+        response.code = 200;
+        response.message = "Claim request updated!";
+      } else {
+        response.code = 404;
+        response.message =
+            "Claim request not found with the specified claim number";
+      }
+    } catch (e) {
+      response.code = 500;
+      response.message = e.toString();
+    }
+
+    return response;
+  }
+
+  static Future<Map<String, dynamic>> getLimitInfo(String glName) async {
+    try {
+      QuerySnapshot querySnapshot = await expenseCollectionReference
+          .where("gl_name", isEqualTo: glName)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        QueryDocumentSnapshot document = querySnapshot.docs[0];
+        Map<String, dynamic> result = {
+          "gl_code": document["gl_code"],
+          "gl_name": document["gl_name"],
+          "monthly_limit": document["monthly_limit"],
+          "transaction_limit": document["transaction_limit"]
+        };
+        return result;
+      } else {
+        return {};
+      }
+    } catch (e) {
+      print(e.toString());
+      return {};
+    }
+  }
+
+  static Future<double> getCurrentCostInMonth(String department, String category) async {
+    String currentDate = DateTime.now().toString().substring(0, 10);
+    int year = int.parse(currentDate.substring(0, 4));
+    int month = int.parse(currentDate.substring(5, 7));
+    double cost = 0;
+    try {
+      QuerySnapshot querySnapshot = await requestCollectionReference
+          .where("department", isEqualTo: department)
+          .where("category", isEqualTo: category)
+          .where('date', isGreaterThanOrEqualTo: DateTime(year, month, 1))
+          .where('date', isLessThanOrEqualTo: DateTime(year, month, 31))
+          .get();
+
+      for (final QueryDocumentSnapshot document in querySnapshot.docs) {
+        cost = cost + document["total"].toDouble();
+      }
+      return cost;
+    } catch (e) {
+      print(e.toString());
+      return cost;
+    }
   }
 }

@@ -1,30 +1,29 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snap_n_claim/models/employee.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
-import '../../utils/pie_chart_indicator.dart';
+import 'approver_menu_drawer.dart';
 
-class FinanceAdminReportingScreen extends StatefulWidget {
-  const FinanceAdminReportingScreen(this._width, this._height, this.user,
-      {super.key});
+class HodReportingScreen extends StatefulWidget {
+  const HodReportingScreen(this._width, this._height, this.user, {super.key});
 
   final double _width;
   final double _height;
   final Employee user;
 
   @override
-  State<FinanceAdminReportingScreen> createState() =>
-      _FinanceAdminReportingScreenState();
+  State<HodReportingScreen> createState() => _HodReportingScreenState();
 }
 
-class _FinanceAdminReportingScreenState
-    extends State<FinanceAdminReportingScreen> {
+class _HodReportingScreenState extends State<HodReportingScreen> {
   final TextEditingController _empNoController = TextEditingController();
   late String _yearDropdownValue;
   late String _monthDropdownValue;
   final List<String> _years = ["2023", "2024"];
+  final String currentPage = 'Department Reports';
   final List<String> _months = [
     "JAN",
     "FEB",
@@ -56,15 +55,6 @@ class _FinanceAdminReportingScreenState
     "MAX": 0
   };
 
-  Map<String, dynamic> _deptReportData = {
-    "Production Department": 0,
-    "IT Department": 0,
-    "Finance Department": 0,
-    "HR Department": 0,
-    "Marketing Department": 0,
-    "Safety and Security Department": 0
-  };
-
   Map<String, dynamic> _expenseReportData = {
     "Transportation": 0,
     "Meals and Food": 0,
@@ -75,7 +65,7 @@ class _FinanceAdminReportingScreenState
     "MAX": 0,
   };
 
-  List<Color> gradientColors = [
+  final List<Color> _gradientColors = [
     const Color(0xFF50E4FF),
     const Color(0xFF2196F3),
   ];
@@ -87,7 +77,7 @@ class _FinanceAdminReportingScreenState
     _monthDropdownValue = "";
   }
 
-  void _onTapEmpReportViewBtn() {
+  Future<void> _onTapEmpReportViewBtn() async {
     if (_empNoController.text == '') {
       Fluttertoast.showToast(
           msg: "Enter an employee number!",
@@ -107,7 +97,38 @@ class _FinanceAdminReportingScreenState
           textColor: Colors.white,
           fontSize: widget._width / 24.54545454545454);
     } else {
-      _getEmpReportData();
+      QuerySnapshot snapshot =
+          await BudgetAllocationAndReportingService.verifyUserWithDept(
+              _empNoController.text.toUpperCase(), widget.user.department);
+      if (snapshot.docs.isEmpty) {
+        Fluttertoast.showToast(
+            msg: "No Employee found in your department!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        setState(() {
+          _empReportData = {
+            "JAN": 0,
+            "FEB": 0,
+            "MAR": 0,
+            "APR": 0,
+            "MAY": 0,
+            "JUN": 0,
+            "JUL": 0,
+            "AUG": 0,
+            "SEP": 0,
+            "OCT": 0,
+            "NOV": 0,
+            "DEC": 0,
+            "MAX": 0
+          };
+        });
+      } else {
+        _getEmpReportData();
+      }
     }
   }
 
@@ -117,39 +138,6 @@ class _FinanceAdminReportingScreenState
             _empNoController.text.toUpperCase(), int.parse(_yearDropdownValue));
     setState(() {
       _empReportData = res;
-    });
-  }
-
-  void _onTapDeptReportViewBtn() {
-    if (_yearDropdownValue == '') {
-      Fluttertoast.showToast(
-          msg: "Select an year!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: widget._width / 24.54545454545454);
-    } else if (_monthDropdownValue == '') {
-      Fluttertoast.showToast(
-          msg: "Select a month!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: widget._width / 24.54545454545454);
-    } else {
-      _getDeptReportData();
-    }
-  }
-
-  Future<void> _getDeptReportData() async {
-    Map<String, dynamic> res =
-        await BudgetAllocationAndReportingService.getDeptReportData(
-            int.parse(_yearDropdownValue), getMonthNumber(_monthDropdownValue));
-    setState(() {
-      _deptReportData = res;
     });
   }
 
@@ -179,14 +167,16 @@ class _FinanceAdminReportingScreenState
 
   Future<void> _getExpenseReportData() async {
     Map<String, dynamic> res =
-        await BudgetAllocationAndReportingService.getExpenseReportData(
-            int.parse(_yearDropdownValue), getMonthNumber(_monthDropdownValue));
+        await BudgetAllocationAndReportingService.getExpenseReportDataToHod(
+            int.parse(_yearDropdownValue),
+            _getMonthNumber(_monthDropdownValue),
+            widget.user.department);
     setState(() {
       _expenseReportData = res;
     });
   }
 
-  int getMonthNumber(String month) {
+  int _getMonthNumber(String month) {
     switch (month) {
       case "JAN":
         return 1;
@@ -217,7 +207,7 @@ class _FinanceAdminReportingScreenState
     }
   }
 
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+  Widget _bottomTitleWidgets(double value, TitleMeta meta) {
     var style = TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: widget._width / 24.54545454545454,
@@ -244,7 +234,7 @@ class _FinanceAdminReportingScreenState
     );
   }
 
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
+  Widget _leftTitleWidgets(double value, TitleMeta meta) {
     var style = TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: widget._width / 26.18181818181818,
@@ -276,105 +266,7 @@ class _FinanceAdminReportingScreenState
     return Text(text, style: style, textAlign: TextAlign.left);
   }
 
-  List<PieChartSectionData> showingSections() {
-    return List.generate(6, (i) {
-      var fontSize = widget._width / 24.54545454545454;
-      var radius = widget._width / 2.181818181818182;
-      const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
-      switch (i) {
-        case 0:
-          return PieChartSectionData(
-            color: const Color(0xFF2196F3),
-            value: double.parse(
-                _deptReportData["Production Department"].toStringAsFixed(2)),
-            title: 'Rs.${_deptReportData["Production Department"]}',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        case 1:
-          return PieChartSectionData(
-            color: const Color(0xFFFFC300),
-            value: double.parse(
-                _deptReportData["IT Department"].toStringAsFixed(2)),
-            title: 'Rs.${_deptReportData["IT Department"]}',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-
-        case 2:
-          return PieChartSectionData(
-            color: const Color(0xFF3BFF49),
-            value: double.parse(
-                _deptReportData["Finance Department"].toStringAsFixed(2)),
-            title: 'Rs.${_deptReportData["Finance Department"]}',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        case 3:
-          return PieChartSectionData(
-            color: const Color(0xFF91C922),
-            value: double.parse(
-                _deptReportData["HR Department"].toStringAsFixed(2)),
-            title: 'Rs.${_deptReportData["HR Department"]}',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        case 4:
-          return PieChartSectionData(
-            color: Colors.deepOrangeAccent,
-            value: double.parse(
-                _deptReportData["Marketing Department"].toStringAsFixed(2)),
-            title: "Rs.${_deptReportData["Marketing Department"]}",
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        case 5:
-          return PieChartSectionData(
-            color: const Color(0xFF6E1BFF),
-            value: double.parse(
-                _deptReportData["Safety and Security Department"]
-                    .toStringAsFixed(2)),
-            title: 'Rs.${_deptReportData["Safety and Security Department"]}',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        default:
-          throw Error();
-      }
-    });
-  }
-
-  BarTouchData get barTouchData => BarTouchData(
+  BarTouchData get _barTouchData => BarTouchData(
         enabled: false,
         touchTooltipData: BarTouchTooltipData(
           tooltipBgColor: Colors.transparent,
@@ -397,7 +289,7 @@ class _FinanceAdminReportingScreenState
         ),
       );
 
-  Widget getTitles(double value, TitleMeta meta) {
+  Widget _getTitles(double value, TitleMeta meta) {
     var style = TextStyle(
       color: const Color(0xFF2196F3),
       fontWeight: FontWeight.bold,
@@ -435,13 +327,13 @@ class _FinanceAdminReportingScreenState
     );
   }
 
-  FlTitlesData get titlesData => FlTitlesData(
+  FlTitlesData get _titlesData => FlTitlesData(
         show: true,
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: widget._height / 26.76363636363636,
-            getTitlesWidget: getTitles,
+            getTitlesWidget: _getTitles,
           ),
         ),
         leftTitles: const AxisTitles(
@@ -455,7 +347,7 @@ class _FinanceAdminReportingScreenState
         ),
       );
 
-  FlBorderData get borderData => FlBorderData(
+  FlBorderData get _borderData => FlBorderData(
         show: false,
       );
 
@@ -468,7 +360,7 @@ class _FinanceAdminReportingScreenState
         end: Alignment.topCenter,
       );
 
-  List<BarChartGroupData> get barGroups => [
+  List<BarChartGroupData> get _barGroups => [
         BarChartGroupData(
           x: 0,
           barRods: [
@@ -632,14 +524,14 @@ class _FinanceAdminReportingScreenState
                       showTitles: true,
                       reservedSize: widget._height / 26.76363636363636,
                       interval: 1,
-                      getTitlesWidget: bottomTitleWidgets,
+                      getTitlesWidget: _bottomTitleWidgets,
                     ),
                   ),
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
                       interval: 1,
-                      getTitlesWidget: leftTitleWidgets,
+                      getTitlesWidget: _leftTitleWidgets,
                       reservedSize: widget._width / 9.35064935064935,
                     ),
                   ),
@@ -707,7 +599,7 @@ class _FinanceAdminReportingScreenState
                     ],
                     isCurved: true,
                     gradient: LinearGradient(
-                      colors: gradientColors,
+                      colors: _gradientColors,
                     ),
                     barWidth: 3,
                     isStrokeCapRound: true,
@@ -717,7 +609,7 @@ class _FinanceAdminReportingScreenState
                     belowBarData: BarAreaData(
                       show: true,
                       gradient: LinearGradient(
-                        colors: gradientColors
+                        colors: _gradientColors
                             .map((color) => color.withOpacity(0.3))
                             .toList(),
                       ),
@@ -729,144 +621,6 @@ class _FinanceAdminReportingScreenState
           ),
         ],
       ),
-    );
-  }
-
-  Widget _departmentsReportTab() {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: widget._width / 19.63636363636364,
-            vertical: widget._height / 160.5818181818182,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                    value: _yearDropdownValue.isNotEmpty
-                        ? _yearDropdownValue
-                        : null,
-                    hint: const Text("Year"),
-                    items: _years.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(
-                              fontSize: widget._width / 26.18181818181818),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _yearDropdownValue = newValue!;
-                      });
-                    }),
-              ),
-              DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                    value: _monthDropdownValue.isNotEmpty
-                        ? _monthDropdownValue
-                        : null,
-                    hint: const Text("Month"),
-                    items:
-                        _months.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(
-                              fontSize: widget._width / 26.18181818181818),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _monthDropdownValue = newValue!;
-                      });
-                    }),
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    _onTapDeptReportViewBtn();
-                  },
-                  child: const Text("View"))
-            ],
-          ),
-        ),
-        SizedBox(
-          width: widget._width / 14.02597402597403,
-        ),
-        (_deptReportData["Production Department"] == 0 &&
-                _deptReportData["IT Department"] == 0 &&
-                _deptReportData["Finance Department"] == 0 &&
-                _deptReportData["HR Department"] == 0 &&
-                _deptReportData["Marketing Department"] == 0 &&
-                _deptReportData["Safety and Security Department"] == 0)
-            ? Container(
-                height: widget._height / 1.7,
-                alignment: Alignment.center,
-                child: const Text("No Data"),
-              )
-            : Expanded(
-                child: PieChart(PieChartData(
-                  borderData: FlBorderData(
-                    show: false,
-                  ),
-                  sectionsSpace: 0,
-                  centerSpaceRadius: 0,
-                  sections: showingSections(),
-                )),
-              ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: widget._width / 19.63636363636364),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const PieChartIndicator(
-                color: Color(0xFF2196F3),
-                text: 'Production Department',
-                isSquare: true,
-              ),
-              const PieChartIndicator(
-                color: Color(0xFFFFC300),
-                text: 'IT Department',
-                isSquare: true,
-              ),
-              const PieChartIndicator(
-                color: Color(0xFF3BFF49),
-                text: 'Finance Department',
-                isSquare: true,
-              ),
-              const PieChartIndicator(
-                color: Color(0xFF91C922),
-                text: 'HR Department',
-                isSquare: true,
-              ),
-              const PieChartIndicator(
-                color: Colors.deepOrangeAccent,
-                text: 'Marketing Department',
-                isSquare: true,
-              ),
-              const PieChartIndicator(
-                color: Color(0xFF6E1BFF),
-                text: 'Safety and Security Department',
-                isSquare: true,
-              ),
-              SizedBox(
-                height: widget._height / 44.60606060606061,
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          width: widget._width / 14.02597402597403,
-        ),
-      ],
     );
   }
 
@@ -938,10 +692,10 @@ class _FinanceAdminReportingScreenState
           aspectRatio: 1.0,
           child: BarChart(
             BarChartData(
-              barTouchData: barTouchData,
-              titlesData: titlesData,
-              borderData: borderData,
-              barGroups: barGroups,
+              barTouchData: _barTouchData,
+              titlesData: _titlesData,
+              borderData: _borderData,
+              barGroups: _barGroups,
               gridData: const FlGridData(show: false),
               alignment: BarChartAlignment.spaceAround,
               maxY: (_expenseReportData["MAX"] + 1000).toDouble(),
@@ -1070,8 +824,10 @@ class _FinanceAdminReportingScreenState
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
+        drawer: ApproverMenuDrawer(
+            widget._width, widget._height, currentPage, widget.user),
         appBar: AppBar(
           title: const Text("Reporting and Analytics"),
           bottom: const TabBar(tabs: [
@@ -1080,18 +836,13 @@ class _FinanceAdminReportingScreenState
               textAlign: TextAlign.center,
             ),
             Text(
-              "Departments\nReport",
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              "Expense Report",
+              "Expense\nReport",
               textAlign: TextAlign.center,
             ),
           ]),
         ),
         body: TabBarView(children: [
           _employeeReportTab(),
-          _departmentsReportTab(),
           _expenseReportTab(),
         ]),
       ),
