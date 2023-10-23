@@ -159,14 +159,15 @@ class FinanceAdminMenuDrawer extends StatelessWidget {
             child: const Text("My Claims"),
           ),
         ),
-        const Divider(
-          thickness: 5,
-          indent: 20,
-          endIndent: 20,
-        ),
+        // const Divider(
+        //   thickness: 5,
+        //   indent: 20,
+        //   endIndent: 20,
+        // ),
         Padding(
           padding: EdgeInsets.symmetric(
             horizontal: _width / 19.63636363636364,
+            vertical: 50,
           ), // 20
           child: ElevatedButton(
             onPressed: () {
