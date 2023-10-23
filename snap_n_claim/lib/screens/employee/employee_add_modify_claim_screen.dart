@@ -13,12 +13,8 @@ import '../../models/response.dart';
 import '../../services/expense_submission_and_viewing_claim_state_service.dart';
 
 class EmployeeAddNewClaim extends StatefulWidget {
-  const EmployeeAddNewClaim(
-      this._width,
-      this._height,
-      this.user,
-      {this.requestClaimNo = '', super.key}
-      );
+  const EmployeeAddNewClaim(this._width, this._height, this.user,
+      {this.requestClaimNo = '', super.key});
 
   final double _width;
   final double _height;
@@ -102,7 +98,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
       setState(() {
         _claimNoController.text = 'R${newClaimNo.toString().padLeft(3, '0')}';
 
-        if(widget.requestClaimNo != ''){
+        if (widget.requestClaimNo != '') {
           //set title
           title = 'Edit Claim';
 
@@ -150,7 +146,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
 
   void callToast(String msg) {
     Toast duration = Toast.LENGTH_LONG;
-    if(msg == 'Processing image...'){
+    if (msg == 'Processing image...') {
       duration = Toast.LENGTH_SHORT;
     }
 
@@ -405,7 +401,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
         invoiceAmount = '-$invoiceAmount';
         updateTotal(invoiceAmount);
 
-        if(globalLineItems.isEmpty){
+        if (globalLineItems.isEmpty) {
           shouldDropDownBeDisabled = false;
         }
       }
@@ -441,13 +437,13 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
               claimNo);
 
       if (response.code == 200) {
-        if(widget.requestClaimNo != ''){
+        if (widget.requestClaimNo != '') {
           Navigator.of(context).pop();
         }
         Navigator.of(context).pop();
         callToast(response.message);
       } else if (response.code == 404) {
-        if(widget.requestClaimNo != ''){
+        if (widget.requestClaimNo != '') {
           Navigator.of(context).pop();
         }
         Navigator.of(context).pop();
@@ -485,7 +481,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
             .updateClaimStatus(claimNo);
 
         if (response.code == 200) {
-          if(widget.requestClaimNo != ''){
+          if (widget.requestClaimNo != '') {
             Navigator.of(context).pop();
           }
 
@@ -501,15 +497,26 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
   }
 
   Future<void> _checkEligibility(String category) async {
-    _expenseLimitInfo = await ExpenseSubmissionAndViewingClaimStateService.getLimitInfo(category);
-    double currentCostInMonth = await ExpenseSubmissionAndViewingClaimStateService.getCurrentCostInMonth(widget.user.department, category);
+    _expenseLimitInfo =
+        await ExpenseSubmissionAndViewingClaimStateService.getLimitInfo(
+            category);
+    double currentCostInMonth =
+        await ExpenseSubmissionAndViewingClaimStateService
+            .getCurrentCostInMonth(widget.user.department, category);
     setState(() {
       mainTransactionLimit = _expenseLimitInfo["transaction_limit"].toDouble();
-      mainBalance = _expenseLimitInfo["monthly_limit"].toDouble() - currentCostInMonth;
+      mainBalance =
+          _expenseLimitInfo["monthly_limit"].toDouble() - currentCostInMonth;
     });
-    _transactionLimitController.text = _expenseLimitInfo["transaction_limit"].toStringAsFixed(2);
-    _remainingBalanceController.text = (_expenseLimitInfo["monthly_limit"].toDouble() - currentCostInMonth).toStringAsFixed(2);
-    _isEligible = await BudgetAllocationAndReportingService.hasAllocation(_expenseLimitInfo["gl_code"], widget.user.empGrade, widget.user.department);
+    _transactionLimitController.text =
+        _expenseLimitInfo["transaction_limit"].toStringAsFixed(2);
+    _remainingBalanceController.text =
+        (_expenseLimitInfo["monthly_limit"].toDouble() - currentCostInMonth)
+            .toStringAsFixed(2);
+    _isEligible = await BudgetAllocationAndReportingService.hasAllocation(
+        _expenseLimitInfo["gl_code"],
+        widget.user.empGrade,
+        widget.user.department);
   }
 
   @override
@@ -724,15 +731,15 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                               );
                             }).toList(),
                             onChanged: shouldDropDownBeDisabled
-                              ? null
-                              : (String? newValue) async {
-                              setState(
-                                () {
-                                  _claimExpenseValue = newValue!;
-                                },
-                              );
-                              _checkEligibility(newValue!);
-                            },
+                                ? null
+                                : (String? newValue) async {
+                                    setState(
+                                      () {
+                                        _claimExpenseValue = newValue!;
+                                      },
+                                    );
+                                    _checkEligibility(newValue!);
+                                  },
                             value: _claimExpenseValue.isNotEmpty
                                 ? _claimExpenseValue
                                 : null,
@@ -800,14 +807,13 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                         onPressed: shouldAddButtonBeDisabled
                             ? null
                             : () {
-                          if(_isEligible == false && _claimExpenseValue != ''){
-                            callToast("Not eligible for this category!");
-
-                          }else{
-                            validateForm();
-                            shouldDropDownBeDisabled = true;
-                          }
-
+                                if (_isEligible == false &&
+                                    _claimExpenseValue != '') {
+                                  callToast("Not eligible for this category!");
+                                } else {
+                                  validateForm();
+                                  shouldDropDownBeDisabled = true;
+                                }
                               },
                         child: const Text('Add'))
                   ],
@@ -836,7 +842,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                       setDataStatus(false);
 
                       return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: (widget._width / (deviceWidth / 8))),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: (widget._width / (deviceWidth / 8))),
                         child: Container(
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey, width: 2.0),
@@ -947,7 +954,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                       setDataStatus(false);
 
                       return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: (widget._width / (deviceWidth / 8))),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: (widget._width / (deviceWidth / 8))),
                         child: Container(
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey, width: 2.0),
@@ -1003,8 +1011,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                                               'Are you sure you want to save this for later?'),
                                           actions: <Widget>[
                                             TextButton(
-                                              onPressed: () => Navigator.pop(
-                                                  context, false),
+                                              onPressed: () =>
+                                                  Navigator.pop(context, false),
                                               child: const Text('No'),
                                             ),
                                             TextButton(
@@ -1018,7 +1026,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                                         ));
 
                                 if (dialogRes == true) {
-                                  if(widget.requestClaimNo != ''){
+                                  if (widget.requestClaimNo != '') {
                                     Navigator.of(context).pop();
                                   }
 
@@ -1027,8 +1035,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                                 }
                               },
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0x9A5987EF),
-                      ),
+                          backgroundColor: Color(0x9A5987EF),
+                        ),
                         child: const Text('Draft'),
                       ),
                     ),
@@ -1038,7 +1046,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                       updateClaimStatus(context, _claimNoController.text);
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0x995DC523),
+                      backgroundColor: Color(0x995DC523),
                     ),
                     child: const Text('Submit'),
                   ),
