@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:snap_n_claim/screens/employee/employee_add_modify_claim_screen.dart';
 import '../../models/employee.dart';
 
 class EmployeeViewClaimIndetailScreen extends StatefulWidget {
@@ -17,14 +18,23 @@ class EmployeeViewClaimIndetailScreen extends StatefulWidget {
 }
 
 class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
-  final double _widthDenominator1 = 1.05;
+  final double deviceWidth = 392.72727272727275;
+  final double deviceHeight = 783.2727272727273;
 
   @override
   void initState() {
     super.initState();
   }
 
-  void _onTapEditBtn(BuildContext context) {}
+  void _onTapEditBtn(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) => EmployeeAddNewClaim(
+            widget._width, widget._height, widget._user,
+            requestClaimNo: widget._request["claimNo"]),
+      ),
+    );
+  }
 
   void _onTapBackBtn(BuildContext context) {
     Navigator.of(context).pop();
@@ -35,8 +45,8 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
         context: context,
         builder: (context) => AlertDialog(
               content: SizedBox(
-                height: widget._height / 2.676363636363636,
-                width: widget._width / 1.309090909090909,
+                height: widget._height / 2.67,
+                width: widget._width / 1.309,
                 child: Image.network(url),
               ),
             ));
@@ -54,19 +64,20 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: widget._width / 49.09090909090909375,
-                  vertical: widget._height / 97.9090909090909125,
+                  horizontal: widget._width / 49.09,
+                  vertical: widget._height / 97.909,
                 ),
                 child: Container(
                   color: Colors.grey,
-                  width: widget._width / _widthDenominator1,
+                  width: widget._width / 1.05,
+                  height: widget._height / (deviceHeight / 30),
                   child: const Center(child: Text('Claim header Information')),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: widget._width / 49.09090909090909375,
-                  vertical: widget._height / 97.9090909090909125,
+                  horizontal: widget._width / 49.09,
+                  vertical: widget._height / 97.909,
                 ),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -75,11 +86,11 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
                         children: [
                           const Text('Claim No'),
                           SizedBox(
-                            width: widget._width / 3.385579937304075,
-                            height: widget._height / 20.07272727272727,
+                            width: widget._width / 3.38,
+                            height: widget._height / 20.07,
                             child: TextField(
                               style: TextStyle(
-                                fontSize: widget._width / 32.72727272727273,
+                                fontSize: widget._width / 32.727,
                               ),
                               textAlign: TextAlign.center,
                               controller: TextEditingController(
@@ -97,11 +108,11 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
                         children: [
                           const Text('Claim Date'),
                           SizedBox(
-                            width: widget._width / 3.385579937304075,
-                            height: widget._height / 20.07272727272727,
+                            width: widget._width / 3.38,
+                            height: widget._height / 20.07,
                             child: TextField(
                               style: TextStyle(
-                                  fontSize: widget._width / 32.72727272727273),
+                                  fontSize: widget._width / 32.727),
                               textAlign: TextAlign.center,
                               controller: TextEditingController(
                                   text: widget._request["date"]
@@ -119,12 +130,12 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
                         children: [
                           const Text('Total Amount'),
                           SizedBox(
-                            width: widget._width / 3.385579937304075,
-                            height: widget._height / 20.07272727272727,
+                            width: widget._width / 3.38,
+                            height: widget._height / 20.07,
                             child: TextField(
                                 style: TextStyle(
                                     fontSize:
-                                        widget._width / 32.72727272727273),
+                                        widget._width / 32.727),
                                 textAlign: TextAlign.center,
                                 controller: TextEditingController(
                                     text:
@@ -139,8 +150,8 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: widget._width / 25.09090909090909375,
-                  vertical: widget._height / 97.9090909090909125,
+                  horizontal: widget._width / 25.09,
+                  vertical: widget._height / 97.909,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -150,15 +161,15 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: widget._request["status"] == "Pending"
-                            ? Color(0xFFD2D060)
+                            ? const Color(0xFFD2D060)
                             : widget._request["status"] == "Rejected"
-                                ? Color(0xFFBD7171)
+                                ? const Color(0xFFBD7171)
                                 : widget._request["status"] == "Approved"
-                                    ? Color(0xFF94B698)
-                                    : Color(0xFF98B4F2),
+                                    ? const Color(0xFF94B698)
+                                    : const Color(0xFF98B4F2),
                       ),
-                      width: widget._width / 3.272727272727273,
-                      height: widget._height / 26.76363636363636,
+                      width: widget._width / 3.27,
+                      height: widget._height / 26.76,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -167,7 +178,7 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
                       ),
                     ),
                     SizedBox(
-                      width: widget._width / 7.854545454545454,
+                      width: widget._width / 7.85,
                     )
                   ],
                 ),
@@ -175,116 +186,145 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
               widget._request["status"] == "Rejected"
                   ? Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal: widget._width / 25.09090909090909375,
-                        vertical: widget._height / 97.9090909090909125,
+                        horizontal: widget._width / 25.09,
+                        vertical: widget._height / 97.909,
                       ),
                       child: Row(
                         children: [
                           const Text("Reject Reason : "),
                           Expanded(
-                              child: SizedBox(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.red, width: widget._width / (deviceWidth / 2.0)),
+                              ),
+                              height: widget._height / (deviceHeight / 60),
+                              child: SingleChildScrollView(
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: widget._width / (deviceWidth / 2.0)),
                                   child: TextField(
-                            readOnly: true,
-                            controller: TextEditingController(
-                                text: widget._request["rejectReason"]),
-                            minLines: 1,
-                            maxLines: 20,
-                            style: const TextStyle(color: Colors.red),
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
+                                    readOnly: true,
+                                    controller: TextEditingController(
+                                        text: widget._request["rejectReason"]),
+                                    minLines: 1,
+                                    maxLines: 20,
+                                    decoration: const InputDecoration(
+                                      border: InputBorder.none,
+                                    ),
+                                    style: const TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ),
                             ),
-                          )))
+                          ),
                         ],
                       ),
                     )
                   : Container(),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: widget._width / 49.09090909090909375,
-                  vertical: widget._height / 97.9090909090909125,
+                  horizontal: widget._width / 49.09,
+                  vertical: widget._height / 97.909,
                 ),
                 child: Container(
                   color: Colors.grey,
-                  width: widget._width / _widthDenominator1,
+                  width: widget._width / 1.05,
+                  height: widget._height / (deviceHeight / 30),
                   child: const Center(child: Text('Added Expenses')),
                 ),
               ),
-              SizedBox(
-                height: widget._request["status"] != "Rejected"
-                    ? widget._height / 1.674331550802139
-                    : widget._height / 2.007272727272727,
-                child: ListView(
-                  children: widget._request["lineItems"]
-                      .map<Widget>((e) => Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: widget._height / 100.3636363636364,
-                              horizontal: widget._width / 39.27272727272727,
-                            ),
-                            child: Container(
-                              height: widget._height / 8.029090909090909,
-                              color: const Color(0x9A5987EF),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        left:
-                                            widget._width / 49.09090909090909),
-                                    child: Column(
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: widget._width / (deviceWidth / 8.0), vertical: widget._height / (deviceHeight / 8.0)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  height: widget._request["status"] != "Rejected"
+                      ? widget._height / 1.9
+                      : widget._height / 2.3,
+                  child: ListView(
+                    children: widget._request["lineItems"]
+                        .map<Widget>((e) => Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: widget._height / 100.36,
+                                horizontal: widget._width / 39.27,
+                              ),
+                              child: Container(
+                                height: widget._height / 8.029,
+                                color: const Color(0x9A5987EF),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: widget._width /
+                                              49.09),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(e["invoiceDate"]
+                                              .toDate()
+                                              .toString()
+                                              .substring(0, 10)),
+                                          Text(widget._request["category"])
+                                        ],
+                                      ),
+                                    ),
+                                    Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text(e["invoiceDate"]
-                                            .toDate()
-                                            .toString()
-                                            .substring(0, 10)),
-                                        Text(widget._request["category"])
+                                        Text(e["invoiceNo"]),
+                                        Text(
+                                            'Rs.${e["invoiceAmount"].toStringAsFixed(2)}'),
                                       ],
                                     ),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(e["invoiceNo"]),
-                                      Text(
-                                          'Rs.${e["invoiceAmount"].toStringAsFixed(2)}'),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      right: widget._width / 19.63636363636364,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {
-                                            _loadImg(
-                                                context, e["invoiceImage"]);
-                                          },
-                                          icon: const Icon(Icons.image_rounded),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        right:
+                                            widget._width / 19.636,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          IconButton(
+                                            onPressed: () {
+                                              _loadImg(
+                                                  context, e["invoiceImage"]);
+                                            },
+                                            icon:
+                                                const Icon(Icons.image_rounded),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          ))
-                      .toList(),
+                            ))
+                        .toList(),
+                  ),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: widget._width / 49.09090909090909,
+                  horizontal: widget._width / 49.09,
                 ),
                 child: Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: widget._width / 49.09090909090909375,
-                          vertical: widget._height / 97.9090909090909125),
+                      padding: EdgeInsets.only(
+                          right: widget._width / 49.09,
+                          top: widget._height / 97.909,
+                          bottom: widget._height / 97.909),
                       child: ElevatedButton(
                         onPressed: () {
                           _onTapBackBtn(context);
