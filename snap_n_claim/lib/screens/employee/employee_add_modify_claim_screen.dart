@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:snap_n_claim/models/request.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
 
 import '../../models/employee.dart';
@@ -15,17 +13,24 @@ import '../../models/response.dart';
 import '../../services/expense_submission_and_viewing_claim_state_service.dart';
 
 class EmployeeAddNewClaim extends StatefulWidget {
-  const EmployeeAddNewClaim(this._width, this._height, this.user, {super.key});
+  const EmployeeAddNewClaim(
+      this._width,
+      this._height,
+      this.user,
+      {this.requestClaimNo = '', super.key}
+      );
 
   final double _width;
   final double _height;
   final Employee user;
+  final String? requestClaimNo;
 
   @override
   State<EmployeeAddNewClaim> createState() => _EmployeeAddNewClaimState();
 }
 
 class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
+  String title = 'Add New Claim';
   final double _widthDenominator1 = 1.05;
 
   final double deviceWidth = 392.72727272727275;
@@ -53,7 +58,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
     "Communication"
   ];
 
-  late Future<QuerySnapshot<Object?>> _collectionReference;
+  late Future<QuerySnapshot<Object?>> _collectionReferenceClaimNo;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -62,8 +67,6 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
 
   double mainBalance = 0.0;
   double mainTransactionLimit = 0.0;
-
-  late final Request request;
 
   String imageUrl = '';
 
@@ -74,6 +77,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
   double claimTotal = 0;
 
   bool shouldAddButtonBeDisabled = false;
+  bool shouldDropDownBeDisabled = false;
 
   Map<String, dynamic> _expenseLimitInfo = {
     "gl_code": "",
@@ -88,15 +92,43 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
   void initState() {
     super.initState();
 
-    _collectionReference =
+    _collectionReferenceClaimNo =
         ExpenseSubmissionAndViewingClaimStateService.getLatestClaimNo();
 
-    _collectionReference.then((value) {
+    _collectionReferenceClaimNo.then((value) {
       _claimNoController.text = value.docs[0].get('claimNo');
       int newClaimNo = int.parse(_claimNoController.text.substring(1)) + 1;
 
       setState(() {
         _claimNoController.text = 'R${newClaimNo.toString().padLeft(3, '0')}';
+
+        if(widget.requestClaimNo != ''){
+          //set title
+          title = 'Edit Claim';
+
+          //init claimNo
+          _claimNoController.text = widget.requestClaimNo!;
+
+          //init claimDate
+          _totalAmountController.text = value.docs[0].get('total').toString();
+
+          //init category
+          _claimExpenseValue = value.docs[0].get('category');
+          _checkEligibility(_claimExpenseValue);
+          shouldDropDownBeDisabled = true;
+
+          //init lineItems
+          List<dynamic> fetchedLineItems = value.docs[0].get('lineItems');
+
+          for (int i = 0; i < fetchedLineItems.length; i++) {
+            globalLineItems.add({
+              "invoiceAmount": fetchedLineItems[i]["invoiceAmount"],
+              "invoiceDate": fetchedLineItems[i]["invoiceDate"],
+              "invoiceImage": fetchedLineItems[i]["invoiceImage"],
+              "invoiceNo": fetchedLineItems[i]["invoiceNo"],
+            });
+          }
+        }
 
         _collectionReferenceExpenses =
             ExpenseSubmissionAndViewingClaimStateService.getExpensesByClaimNo(
@@ -117,9 +149,14 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
   }
 
   void callToast(String msg) {
+    Toast duration = Toast.LENGTH_LONG;
+    if(msg == 'Processing image...'){
+      duration = Toast.LENGTH_SHORT;
+    }
+
     Fluttertoast.showToast(
         msg: msg,
-        toastLength: Toast.LENGTH_SHORT,
+        toastLength: duration,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 3,
         backgroundColor: Colors.redAccent,
@@ -233,7 +270,6 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
     _invoiceDateController.text = '';
     _invoiceNoController.text = '';
     _invoiceAmountController.text = '';
-    _claimExpenseValue = '';
     imageUrl = '';
   }
 
@@ -295,8 +331,10 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
         shouldAddButtonBeDisabled = false;
       });
 
+      callToast('Image not taken');
       return;
     }
+    callToast('Processing image...');
 
     String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
 
@@ -366,6 +404,10 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
             .removeWhere((element) => element["invoiceNo"] == invoiceNo);
         invoiceAmount = '-$invoiceAmount';
         updateTotal(invoiceAmount);
+
+        if(globalLineItems.isEmpty){
+          shouldDropDownBeDisabled = false;
+        }
       }
 
       callToast(response.message);
@@ -373,9 +415,6 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
   }
 
   void deleteClaim(BuildContext context, String claimNo) async {
-    // if(globalLineItems.isEmpty){
-    //   Navigator.of(context).pop();
-    // } else {
     var dialogRes = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
@@ -402,15 +441,20 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
               claimNo);
 
       if (response.code == 200) {
+        if(widget.requestClaimNo != ''){
+          Navigator.of(context).pop();
+        }
         Navigator.of(context).pop();
         callToast(response.message);
       } else if (response.code == 404) {
+        if(widget.requestClaimNo != ''){
+          Navigator.of(context).pop();
+        }
         Navigator.of(context).pop();
       } else {
         callToast(response.message);
       }
     }
-    // }
   }
 
   void updateClaimStatus(BuildContext context, String claimNo) async {
@@ -441,6 +485,10 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
             .updateClaimStatus(claimNo);
 
         if (response.code == 200) {
+          if(widget.requestClaimNo != ''){
+            Navigator.of(context).pop();
+          }
+
           Navigator.of(context).pop();
           callToast('Claim added successfully');
         } else if (response.code == 500) {
@@ -475,7 +523,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
               deleteClaim(context, _claimNoController.text);
             },
             icon: const Icon(Icons.arrow_back)),
-        title: const Text("Add New Claim"),
+        title: Text(title),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -675,7 +723,9 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                                             (deviceWidth / 12))),
                               );
                             }).toList(),
-                            onChanged: (String? newValue) async {
+                            onChanged: shouldDropDownBeDisabled
+                              ? null
+                              : (String? newValue) async {
                               setState(
                                 () {
                                   _claimExpenseValue = newValue!;
@@ -755,6 +805,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
 
                           }else{
                             validateForm();
+                            shouldDropDownBeDisabled = true;
                           }
 
                               },
@@ -784,12 +835,18 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                     } else if (!snapshot.hasData) {
                       setDataStatus(false);
 
-                      return SizedBox(
-                        height: widget._height / (deviceHeight / 200),
-                        child: Center(
-                          child: SizedBox(
-                            width: widget._width / (deviceWidth / 123),
-                            child: const Text('No expenses added'),
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: (widget._width / (deviceWidth / 8))),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 2.0),
+                          ),
+                          height: widget._height / (deviceHeight / 200),
+                          child: Center(
+                            child: SizedBox(
+                              width: widget._width / (deviceWidth / 123),
+                              child: const Text('No expenses added'),
+                            ),
                           ),
                         ),
                       );
@@ -801,7 +858,6 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                             horizontal: widget._width / (deviceWidth / 8)),
                         child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
                             border: Border.all(color: Colors.grey, width: 2.0),
                           ),
                           height: widget._height / (deviceHeight / 200),
@@ -812,7 +868,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                               List<Widget> lineItemWidgets =
                                   lineItems.map((lineItem) {
                                 return Card(
-                                  color: Colors.blueAccent,
+                                  shape: const ContinuousRectangleBorder(),
+                                  color: const Color(0x9A5987EF),
                                   child: SizedBox(
                                     width: widget._width / (deviceWidth / 400),
                                     height:
@@ -889,95 +946,103 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                     } else {
                       setDataStatus(false);
 
-                      return SizedBox(
-                        height: widget._height / (deviceHeight / 200),
-                        child: Center(
-                          child: SizedBox(
-                            width: widget._width / (deviceWidth / 123),
-                            child: const Text('No expenses added'),
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: (widget._width / (deviceWidth / 8))),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 2.0),
+                          ),
+                          height: widget._height / (deviceHeight / 200),
+                          child: Center(
+                            child: SizedBox(
+                              width: widget._width / (deviceWidth / 123),
+                              child: const Text('No expenses added'),
+                            ),
                           ),
                         ),
                       );
                     }
                   }),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / (deviceWidth / 8)),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: widget._width / 49.09090909090909375,
-                          vertical: widget._height / 97.9090909090909125),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          deleteClaim(context, _claimNoController.text);
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red),
-                        child: const Text('Cancel'),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          bottom: widget._height / 97.9090909090909125,
-                          right: widget._width / 49.09090909090909375,
-                          top: widget._height / 97.9090909090909125),
-                      child: Tooltip(
-                        key: tooltipkey,
-                        triggerMode: TooltipTriggerMode.tap,
-                        showDuration: const Duration(seconds: 3),
-                        message: 'Add atleast one expense to save as a draft',
-                        child: ElevatedButton(
-                          onPressed: globalLineItems.isEmpty
-                              ? null
-                              : () async {
-                                  var dialogRes = await showDialog<bool>(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                            actionsAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            title: const Text(
-                                                'This claim will be saved as a draft'),
-                                            content: const Text(
-                                                'Are you sure you want to save this for later?'),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(
-                                                    context, false),
-                                                child: const Text('No'),
-                                              ),
-                                              TextButton(
-                                                onPressed: () async {
-                                                  return Navigator.pop(
-                                                      context, true);
-                                                },
-                                                child: const Text('Yes'),
-                                              ),
-                                            ],
-                                          ));
-
-                                  if (dialogRes == true) {
-                                    Navigator.of(context).pop();
-                                    callToast('Claim saved as a draft');
-                                  }
-                                },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue),
-                          child: const Text('Draft'),
-                        ),
-                      ),
-                    ),
-                    ElevatedButton(
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: widget._width / 49.09090909090909375,
+                        vertical: widget._height / 97.9090909090909125),
+                    child: ElevatedButton(
                       onPressed: () {
-                        updateClaimStatus(context, _claimNoController.text);
+                        deleteClaim(context, _claimNoController.text);
                       },
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green),
-                      child: const Text('Submit'),
+                          backgroundColor: Color(0xC5D3400B)),
+                      child: const Text('Cancel'),
                     ),
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        bottom: widget._height / 97.9090909090909125,
+                        right: widget._width / 49.09090909090909375,
+                        top: widget._height / 97.9090909090909125),
+                    child: Tooltip(
+                      key: tooltipkey,
+                      triggerMode: TooltipTriggerMode.tap,
+                      showDuration: const Duration(seconds: 3),
+                      message: 'Add atleast one expense to save as a draft',
+                      child: ElevatedButton(
+                        onPressed: globalLineItems.isEmpty
+                            ? null
+                            : () async {
+                                var dialogRes = await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                          actionsAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          title: const Text(
+                                              'This claim will be saved as a draft'),
+                                          content: const Text(
+                                              'Are you sure you want to save this for later?'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(
+                                                  context, false),
+                                              child: const Text('No'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () async {
+                                                return Navigator.pop(
+                                                    context, true);
+                                              },
+                                              child: const Text('Yes'),
+                                            ),
+                                          ],
+                                        ));
+
+                                if (dialogRes == true) {
+                                  if(widget.requestClaimNo != ''){
+                                    Navigator.of(context).pop();
+                                  }
+
+                                  Navigator.of(context).pop();
+                                  callToast('Claim saved as a draft');
+                                }
+                              },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0x9A5987EF),
+                      ),
+                        child: const Text('Draft'),
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      updateClaimStatus(context, _claimNoController.text);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0x995DC523),
+                    ),
+                    child: const Text('Submit'),
+                  ),
+                ],
               )
             ],
           ),
