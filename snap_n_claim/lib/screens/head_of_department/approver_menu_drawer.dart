@@ -54,14 +54,34 @@ class ApproverMenuDrawer extends StatelessWidget {
   void _onTapMyClaimsBtn(BuildContext context) {}
 
   Future<void> _onTapSignOutBtn(BuildContext context) async {
-    final directory = await getApplicationDocumentsDirectory();
-    final path = directory.path;
-    File file = File('$path/userdata.txt');
-    await file.delete();
+    var dialogRes = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+              actionsAlignment: MainAxisAlignment.spaceBetween,
+              content: const Text('Are you sure you want to signout?'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('No'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    return Navigator.pop(context, true);
+                  },
+                  child: const Text('Yes'),
+                ),
+              ],
+            ));
+    if (dialogRes == true) {
+      final directory = await getApplicationDocumentsDirectory();
+      final path = directory.path;
+      File file = File('$path/userdata.txt');
+      await file.delete();
 
-    Navigator.of(context).pop();
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (BuildContext context) => LoginScreen(_width, _height)));
+      Navigator.of(context).pop();
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (BuildContext context) => LoginScreen(_width, _height)));
+    }
   }
 
   @override
@@ -103,7 +123,6 @@ class ApproverMenuDrawer extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () {
               _onTapViewReportsBtn(context);
-
             },
             child: const Text("View Reports"),
           ),
@@ -119,14 +138,15 @@ class ApproverMenuDrawer extends StatelessWidget {
             child: const Text("My Claims"),
           ),
         ),
-        const Divider(
-          thickness: 5,
-          indent: 20,
-          endIndent: 20,
-        ),
+        // const Divider(
+        //   thickness: 5,
+        //   indent: 20,
+        //   endIndent: 20,
+        // ),
         Padding(
           padding: EdgeInsets.symmetric(
             horizontal: _width / 19.63636363636364,
+            vertical: _height / 16.05818181818182,
           ), // 20
           child: ElevatedButton(
             onPressed: () {
@@ -142,5 +162,4 @@ class ApproverMenuDrawer extends StatelessWidget {
       ],
     ));
   }
-
 }
