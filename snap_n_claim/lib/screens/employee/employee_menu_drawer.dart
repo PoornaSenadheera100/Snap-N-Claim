@@ -20,6 +20,8 @@ class EmployeeMenuDrawer extends StatelessWidget {
   final double _height;
   final String currentPage;
   final Employee user;
+  final double deviceWidth = 392.72727272727275;
+  final double deviceHeight = 783.2727272727273;
 
   final int transitionDuration = 1;
 
@@ -116,7 +118,6 @@ class EmployeeMenuDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     String userType = 'Employee';
     String userEmail = user.email;
-    double widthDenominator = 19.63636363636364;
 
     return Drawer(
       child: ListView(
@@ -137,7 +138,7 @@ class EmployeeMenuDrawer extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: _width / widthDenominator,
+              horizontal: _width / 19.636,
             ),
             child: ElevatedButton(
               onPressed: () {
@@ -147,7 +148,7 @@ class EmployeeMenuDrawer extends StatelessWidget {
             ),
           ),Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: _width / widthDenominator,
+              horizontal: _width / 19.636,
             ),
             child: ElevatedButton(
               onPressed: () {
@@ -158,7 +159,7 @@ class EmployeeMenuDrawer extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: _width / widthDenominator,
+              horizontal: _width / 19.636,
             ),
             child: ElevatedButton(
               onPressed: () {
@@ -171,10 +172,10 @@ class EmployeeMenuDrawer extends StatelessWidget {
 
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: _width / 19.63636363636364,
+              horizontal: _width / 19.636,
             ), // 20
             child: Container(
-              margin: EdgeInsets.only(top: 50),
+              margin: EdgeInsets.only(top: _height / (deviceHeight / 50)),
               child: ElevatedButton(
                 onPressed: () {
                   _onTapSignOutBtn(context);

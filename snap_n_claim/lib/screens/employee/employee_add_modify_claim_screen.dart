@@ -27,8 +27,6 @@ class EmployeeAddNewClaim extends StatefulWidget {
 
 class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
   String title = 'Add New Claim';
-  final double _widthDenominator1 = 1.05;
-
   final double deviceWidth = 392.72727272727275;
   final double deviceHeight = 783.2727272727273;
 
@@ -360,8 +358,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
         context: context,
         builder: (context) => AlertDialog(
               content: SizedBox(
-                  height: widget._height / 2.676363636363636,
-                  width: widget._width / 1.309090909090909,
+                  height: widget._height / 2.676,
+                  width: widget._width / 1.309,
                   child: Image.network(url)),
             ));
   }
@@ -539,19 +537,19 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 49.09090909090909375,
-                    vertical: widget._height / 97.9090909090909125),
+                    horizontal: widget._width / 49.09,
+                    vertical: widget._height / 97.909),
                 child: Container(
                   color: Colors.grey,
-                  width: widget._width / _widthDenominator1,
+                  width: widget._width / 1.05,
                   height: widget._height / (deviceHeight / 30),
                   child: const Center(child: Text('Claim header Information')),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 49.09090909090909375,
-                    vertical: widget._height / 97.9090909090909125),
+                    horizontal: widget._width / 49.09,
+                    vertical: widget._height / 97.909),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -608,18 +606,18 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 49.09090909090909375,
-                    vertical: widget._height / 97.9090909090909125),
+                    horizontal: widget._width / 49.09,
+                    vertical: widget._height / 97.909),
                 child: Container(
                     color: Colors.grey,
-                    width: widget._width / _widthDenominator1,
+                    width: widget._width / 1.05,
                     height: widget._height / (deviceHeight / 30),
                     child: const Center(child: Text('Line Item Information'))),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 49.09090909090909375,
-                    vertical: widget._height / 97.9090909090909125),
+                    horizontal: widget._width / 49.09,
+                    vertical: widget._height / 97.909),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -708,8 +706,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 49.09090909090909375,
-                    vertical: widget._height / 97.9090909090909125),
+                    horizontal: widget._width / 49.09,
+                    vertical: widget._height / 97.909),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -790,8 +788,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 49.09090909090909375,
-                    vertical: widget._height / 97.9090909090909125),
+                    horizontal: widget._width / 49.09,
+                    vertical: widget._height / 97.909),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -821,11 +819,11 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 49.09090909090909375,
-                    vertical: widget._height / 97.9090909090909125),
+                    horizontal: widget._width / 49.09,
+                    vertical: widget._height / 97.909),
                 child: Container(
                   color: Colors.grey,
-                  width: widget._width / _widthDenominator1,
+                  width: widget._width / 1.05,
                   height: widget._height / (deviceHeight / 30),
                   child: const Center(child: Text('Added Expenses')),
                 ),
@@ -846,7 +844,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                             horizontal: (widget._width / (deviceWidth / 8))),
                         child: Container(
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 2.0),
+                            border: Border.all(color: Colors.grey, width: widget._width / (deviceWidth / 2.0)),
                           ),
                           height: widget._height / (deviceHeight / 200),
                           child: Center(
@@ -975,8 +973,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                 children: [
                   Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: widget._width / 49.09090909090909375,
-                        vertical: widget._height / 97.9090909090909125),
+                        horizontal: widget._width / 49.09,
+                        vertical: widget._height / 97.909),
                     child: ElevatedButton(
                       onPressed: () {
                         deleteClaim(context, _claimNoController.text);
@@ -988,9 +986,9 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(
-                        bottom: widget._height / 97.9090909090909125,
-                        right: widget._width / 49.09090909090909375,
-                        top: widget._height / 97.9090909090909125),
+                        bottom: widget._height / 97.909,
+                        right: widget._width / 49.09,
+                        top: widget._height / 97.909),
                     child: Tooltip(
                       key: tooltipkey,
                       triggerMode: TooltipTriggerMode.tap,
