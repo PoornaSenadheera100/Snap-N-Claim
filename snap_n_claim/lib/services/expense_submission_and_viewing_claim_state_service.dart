@@ -67,7 +67,7 @@ class ExpenseSubmissionAndViewingClaimStateService {
 
     await requestCollectionReference.doc().set(request).whenComplete(() {
       response.code = 200;
-      response.message = "Line Item added";
+      response.message = "Expense added";
     }).catchError((e) {
       response.code = 500;
       response.message = e;
@@ -90,7 +90,7 @@ class ExpenseSubmissionAndViewingClaimStateService {
 
         await document.reference.update(request);
         response.code = 200;
-        response.message = "Line item added";
+        response.message = "Expense added";
       } else {
         response.code = 404;
         response.message =

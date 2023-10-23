@@ -237,7 +237,7 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
           );
         } else {
           return const Center(
-            child: Text('No data'),
+            child: Text('No claims'),
           );
         }
       },

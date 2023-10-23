@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../models/employee.dart';
 import '../common/login_screen.dart';
 import '../finance_admin/finance_admin_reports_selection_screen.dart';
-import 'employee_add_new_claim.dart';
+import 'employee_add_modify_claim_screen.dart';
 import 'employee_home_screen.dart';
 
 class EmployeeMenuDrawer extends StatelessWidget {
