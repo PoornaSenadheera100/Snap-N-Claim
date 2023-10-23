@@ -186,6 +186,7 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                   EdgeInsets.only(bottom: widget._height / 80.29090909090909),
               child: Container(
                 width: widget._width / 1.05,
+                height: widget._height / 26.76363636363636,
                 color: Colors.grey,
                 child: const Center(child: Text("Expense Info")),
               ),
@@ -269,6 +270,7 @@ class _FinanceAdminExpenseMappingSelectionScreenState
                   vertical: widget._height / 40.14545454545455),
               child: Container(
                 width: widget._width / 1.05,
+                height: widget._height / 26.76363636363636,
                 color: Colors.grey,
                 child: const Center(child: Text("Eligible Employees")),
               ),
