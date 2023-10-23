@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snap_n_claim/models/response.dart';
 import 'package:snap_n_claim/services/budget_allocation_and_reporting_service.dart';
+import 'package:snap_n_claim/services/email_service.dart';
 
 import '../../models/employee.dart';
 
@@ -93,6 +94,8 @@ class _FinanceAdminClaimsPaymentScreenState
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
+        EmailService.mailPayment(
+            widget._request["claimNo"], widget._request["total"]);
         Navigator.of(context).pop();
       } else {
         Fluttertoast.showToast(
