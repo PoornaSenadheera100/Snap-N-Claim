@@ -82,6 +82,9 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
 
   bool _isEligible = false;
 
+  final FocusNode _invoiceAmountfocusNode = FocusNode();
+  final FocusNode _invoiceNofocusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -353,15 +356,35 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
     }
   }
 
-  void showImage(BuildContext context, String url) async {
-    await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
+  void showImage(BuildContext context, String url) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Image.network(
+          url,
+          loadingBuilder: (BuildContext context, Widget child,
+              ImageChunkEvent? loadingProgress) {
+            if (loadingProgress == null) {
+              return AlertDialog(content: child);
+            }
+            return AlertDialog(
               content: SizedBox(
-                  height: widget._height / 2.676,
-                  width: widget._width / 1.309,
-                  child: Image.network(url)),
-            ));
+                height: widget._height / (deviceHeight / 300),
+                width: widget._width / (deviceWidth / 300),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   void setDataStatus(bool status) {
@@ -519,12 +542,15 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<TooltipState> tooltipkey = GlobalKey<TooltipState>();
+    final GlobalKey<TooltipState> draftTooltipKey = GlobalKey<TooltipState>();
+    final GlobalKey<TooltipState> categoryTooltipKey = GlobalKey<TooltipState>();
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
             onPressed: () {
+              _invoiceAmountfocusNode.unfocus();
+              _invoiceNofocusNode.unfocus();
               deleteClaim(context, _claimNoController.text);
             },
             icon: const Icon(Icons.arrow_back)),
@@ -628,7 +654,6 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                           width: widget._width / (deviceWidth / 116),
                           height: widget._height / (deviceHeight / 40),
                           child: TextFormField(
-                              autofocus: false,
                               onTap: () async {
                                 final selectedDate = await showDatePicker(
                                   context: context,
@@ -661,7 +686,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                           width: widget._width / (deviceWidth / 116),
                           height: widget._height / (deviceHeight / 40),
                           child: TextFormField(
-                              autofocus: false,
+                              focusNode: _invoiceNofocusNode,
+                              textInputAction: TextInputAction.next,
                               style: const TextStyle(fontSize: 12),
                               textAlign: TextAlign.center,
                               controller: _invoiceNoController,
@@ -679,7 +705,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                           width: widget._width / (deviceWidth / 116),
                           height: widget._height / (deviceHeight / 40),
                           child: TextFormField(
-                            autofocus: false,
+                            focusNode: _invoiceAmountfocusNode,
                             keyboardType: TextInputType.number,
                             inputFormatters: <TextInputFormatter>[
                               FilteringTextInputFormatter.allow(
@@ -689,8 +715,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                             style: const TextStyle(fontSize: 12),
                             textAlign: TextAlign.center,
                             controller: _invoiceAmountController,
-                            onEditingComplete: () {
-                              String value = _invoiceAmountController.text;
+                            onFieldSubmitted: (a) {
+                              String value = a.toString();
                               if (value.isNotEmpty) {
                                 _invoiceAmountController.text =
                                     double.parse(value).toStringAsFixed(2);
@@ -717,7 +743,13 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('\nClaim Expense'),
+                        Tooltip(
+                          key : categoryTooltipKey,
+                            triggerMode: shouldDropDownBeDisabled ? TooltipTriggerMode.tap : null,
+                            showDuration: const Duration(seconds: 3),
+                            message: 'Only 1 category type can be selected per claim',
+                            child: const Text('\nClaim Expense'),
+                        ),
                         DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
                             hint: const Text('Pick Category'),
@@ -847,7 +879,9 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                             horizontal: (widget._width / (deviceWidth / 8))),
                         child: Container(
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: widget._width / (deviceWidth / 2.0)),
+                            border: Border.all(
+                                color: Colors.grey,
+                                width: widget._width / (deviceWidth / 2.0)),
                           ),
                           height: widget._height / (deviceHeight / 200),
                           child: Center(
@@ -980,6 +1014,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                         vertical: widget._height / 97.909),
                     child: ElevatedButton(
                       onPressed: () {
+                        _invoiceAmountfocusNode.unfocus();
+                        _invoiceNofocusNode.unfocus();
                         deleteClaim(context, _claimNoController.text);
                       },
                       style: ElevatedButton.styleFrom(
@@ -993,7 +1029,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                         right: widget._width / 49.09,
                         top: widget._height / 97.909),
                     child: Tooltip(
-                      key: tooltipkey,
+                      key: draftTooltipKey,
                       triggerMode: TooltipTriggerMode.tap,
                       showDuration: const Duration(seconds: 3),
                       message: 'Add atleast one expense to save as a draft',
@@ -1001,6 +1037,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                         onPressed: globalLineItems.isEmpty
                             ? null
                             : () async {
+                                _invoiceAmountfocusNode.unfocus();
+                                _invoiceNofocusNode.unfocus();
                                 var dialogRes = await showDialog<bool>(
                                     context: context,
                                     builder: (context) => AlertDialog(
@@ -1044,6 +1082,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                   ),
                   ElevatedButton(
                     onPressed: () {
+                      _invoiceAmountfocusNode.unfocus();
+                      _invoiceNofocusNode.unfocus();
                       updateClaimStatus(context, _claimNoController.text);
                     },
                     style: ElevatedButton.styleFrom(

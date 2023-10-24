@@ -111,15 +111,34 @@ class _FinanceAdminClaimsPaymentScreenState
   }
 
   Future<void> _loadImg(BuildContext context, String url) async {
-    var dialogRes = await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return Image.network(
+          url,
+          loadingBuilder: (BuildContext context, Widget child,
+              ImageChunkEvent? loadingProgress) {
+            if (loadingProgress == null) {
+              return AlertDialog(content: child);
+            }
+            return AlertDialog(
               content: SizedBox(
-                height: widget._height / 2.676363636363636,
-                width: widget._width / 1.309090909090909,
-                child: Image.network(url),
+                height: widget._height / (deviceHeight / 300),
+                width: widget._width / (deviceWidth / 300),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                ),
               ),
-            ));
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
