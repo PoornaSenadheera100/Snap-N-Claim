@@ -728,8 +728,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                             style: const TextStyle(fontSize: 12),
                             textAlign: TextAlign.center,
                             controller: _invoiceAmountController,
-                            onEditingComplete: () {
-                              String value = _invoiceAmountController.text;
+                            onFieldSubmitted: (a) {
+                              String value = a.toString();
                               if (value.isNotEmpty) {
                                 _invoiceAmountController.text =
                                     double.parse(value).toStringAsFixed(2);
