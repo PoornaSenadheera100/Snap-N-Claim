@@ -82,6 +82,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
 
   bool _isEligible = false;
 
+  final FocusNode _focusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -358,7 +360,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
       context: context,
       builder: (context) {
         return FutureBuilder(
-          future: loadImage(), // Replace with actual image loading logic
+          future: loadImage(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return AlertDialog(
@@ -560,6 +562,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
       appBar: AppBar(
         leading: IconButton(
             onPressed: () {
+              _focusNode.unfocus();
               deleteClaim(context, _claimNoController.text);
             },
             icon: const Icon(Icons.arrow_back)),
@@ -663,7 +666,6 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                           width: widget._width / (deviceWidth / 116),
                           height: widget._height / (deviceHeight / 40),
                           child: TextFormField(
-                              autofocus: false,
                               onTap: () async {
                                 final selectedDate = await showDatePicker(
                                   context: context,
@@ -696,7 +698,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                           width: widget._width / (deviceWidth / 116),
                           height: widget._height / (deviceHeight / 40),
                           child: TextFormField(
-                              autofocus: false,
+                              focusNode: _focusNode,
                               style: const TextStyle(fontSize: 12),
                               textAlign: TextAlign.center,
                               controller: _invoiceNoController,
@@ -714,7 +716,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                           width: widget._width / (deviceWidth / 116),
                           height: widget._height / (deviceHeight / 40),
                           child: TextFormField(
-                            autofocus: false,
+                            focusNode: _focusNode,
                             keyboardType: TextInputType.number,
                             inputFormatters: <TextInputFormatter>[
                               FilteringTextInputFormatter.allow(
@@ -1017,6 +1019,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                         vertical: widget._height / 97.909),
                     child: ElevatedButton(
                       onPressed: () {
+                        _focusNode.unfocus();
                         deleteClaim(context, _claimNoController.text);
                       },
                       style: ElevatedButton.styleFrom(
@@ -1038,6 +1041,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                         onPressed: globalLineItems.isEmpty
                             ? null
                             : () async {
+                                _focusNode.unfocus();
                                 var dialogRes = await showDialog<bool>(
                                     context: context,
                                     builder: (context) => AlertDialog(
@@ -1081,6 +1085,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                   ),
                   ElevatedButton(
                     onPressed: () {
+                      _focusNode.unfocus();
                       updateClaimStatus(context, _claimNoController.text);
                     },
                     style: ElevatedButton.styleFrom(

@@ -45,7 +45,7 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
       context: context,
       builder: (context) {
         return FutureBuilder(
-          future: _loadImage(), // Replace with actual image loading logic
+          future: _loadImage(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return AlertDialog(

@@ -111,15 +111,49 @@ class _FinanceAdminClaimsPaymentScreenState
   }
 
   Future<void> _loadImg(BuildContext context, String url) async {
-    var dialogRes = await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-              content: SizedBox(
-                height: widget._height / 2.676363636363636,
-                width: widget._width / 1.309090909090909,
-                child: Image.network(url),
-              ),
-            ));
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return FutureBuilder(
+          future: _loadImage(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return AlertDialog(
+                content: SizedBox(
+                  height: widget._height / (deviceHeight / 300),
+                  width: widget._width / (deviceWidth / 300),
+                  child: Image.network(url),
+                ),
+              );
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return AlertDialog(
+                content: SizedBox(
+                  height: widget._height / (deviceHeight / 300),
+                  width: widget._width / (deviceWidth / 300),
+                  child: const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  ),
+                ),
+              );
+            } else {
+              return AlertDialog(
+                content: SizedBox(
+                  height: widget._height / (deviceHeight / 300),
+                  width: widget._width / (deviceWidth / 300),
+                  child: const Center(
+                    child: Text('Failed to load image'),
+                  ),
+                ),
+              );
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _loadImage() async {
+    await Future.delayed(const Duration(seconds: 1));
   }
 
   @override
