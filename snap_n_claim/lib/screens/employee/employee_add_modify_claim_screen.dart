@@ -701,6 +701,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                           height: widget._height / (deviceHeight / 40),
                           child: TextFormField(
                               focusNode: _invoiceNofocusNode,
+                              textInputAction: TextInputAction.next,
                               style: const TextStyle(fontSize: 12),
                               textAlign: TextAlign.center,
                               controller: _invoiceNoController,
