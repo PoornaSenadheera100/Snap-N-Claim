@@ -360,46 +360,31 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
     showDialog(
       context: context,
       builder: (context) {
-        return FutureBuilder(
-          future: loadImage(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return AlertDialog(
-                content: SizedBox(
-                  height: widget._height / (deviceHeight / 300),
-                  width: widget._width / (deviceWidth / 300),
-                  child: Image.network(url),
-                ),
-              );
-            } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return AlertDialog(
-                content: SizedBox(
-                  height: widget._height / (deviceHeight / 300),
-                  width: widget._width / (deviceWidth / 300),
-                  child: const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  ),
-                ),
-              );
-            } else {
-              return AlertDialog(
-                content: SizedBox(
-                  height: widget._height / (deviceHeight / 300),
-                  width: widget._width / (deviceWidth / 300),
-                  child: const Center(
-                    child: Text('Failed to load image'),
-                  ),
-                ),
-              );
+        return Image.network(
+          url,
+          loadingBuilder: (BuildContext context, Widget child,
+              ImageChunkEvent? loadingProgress) {
+            if (loadingProgress == null) {
+              return AlertDialog(content: child);
             }
+            return AlertDialog(
+              content: SizedBox(
+                height: widget._height / (deviceHeight / 300),
+                width: widget._width / (deviceWidth / 300),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                ),
+              ),
+            );
           },
         );
       },
     );
-  }
-
-  Future<void> loadImage() async {
-    await Future.delayed(const Duration(seconds: 1));
   }
 
   void setDataStatus(bool status) {
@@ -557,7 +542,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<TooltipState> tooltipkey = GlobalKey<TooltipState>();
+    final GlobalKey<TooltipState> draftTooltipKey = GlobalKey<TooltipState>();
+    final GlobalKey<TooltipState> categoryTooltipKey = GlobalKey<TooltipState>();
 
     return Scaffold(
       appBar: AppBar(
@@ -757,7 +743,13 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('\nClaim Expense'),
+                        Tooltip(
+                          key : categoryTooltipKey,
+                            triggerMode: shouldDropDownBeDisabled ? TooltipTriggerMode.tap : null,
+                            showDuration: const Duration(seconds: 3),
+                            message: 'Only 1 category type can be selected per claim',
+                            child: const Text('\nClaim Expense'),
+                        ),
                         DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
                             hint: const Text('Pick Category'),
@@ -1037,7 +1029,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                         right: widget._width / 49.09,
                         top: widget._height / 97.909),
                     child: Tooltip(
-                      key: tooltipkey,
+                      key: draftTooltipKey,
                       triggerMode: TooltipTriggerMode.tap,
                       showDuration: const Duration(seconds: 3),
                       message: 'Add atleast one expense to save as a draft',

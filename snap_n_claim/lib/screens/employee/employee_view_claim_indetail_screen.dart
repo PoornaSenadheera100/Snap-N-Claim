@@ -44,46 +44,31 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
     await showDialog(
       context: context,
       builder: (context) {
-        return FutureBuilder(
-          future: _loadImage(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return AlertDialog(
-                content: SizedBox(
-                  height: widget._height / (deviceHeight / 300),
-                  width: widget._width / (deviceWidth / 300),
-                  child: Image.network(url),
-                ),
-              );
-            } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return AlertDialog(
-                content: SizedBox(
-                  height: widget._height / (deviceHeight / 300),
-                  width: widget._width / (deviceWidth / 300),
-                  child: const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  ),
-                ),
-              );
-            } else {
-              return AlertDialog(
-                content: SizedBox(
-                  height: widget._height / (deviceHeight / 300),
-                  width: widget._width / (deviceWidth / 300),
-                  child: const Center(
-                    child: Text('Failed to load image'),
-                  ),
-                ),
-              );
+        return Image.network(
+          url,
+          loadingBuilder: (BuildContext context, Widget child,
+              ImageChunkEvent? loadingProgress) {
+            if (loadingProgress == null) {
+              return AlertDialog(content: child);
             }
+            return AlertDialog(
+              content: SizedBox(
+                height: widget._height / (deviceHeight / 300),
+                width: widget._width / (deviceWidth / 300),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                ),
+              ),
+            );
           },
         );
       },
     );
-  }
-
-  Future<void> _loadImage() async {
-    await Future.delayed(const Duration(seconds: 1));
   }
 
   @override
@@ -145,8 +130,8 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
                             width: widget._width / 3.38,
                             height: widget._height / 20.07,
                             child: TextField(
-                              style: TextStyle(
-                                  fontSize: widget._width / 32.727),
+                              style:
+                                  TextStyle(fontSize: widget._width / 32.727),
                               textAlign: TextAlign.center,
                               controller: TextEditingController(
                                   text: widget._request["date"]
@@ -167,9 +152,8 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
                             width: widget._width / 3.38,
                             height: widget._height / 20.07,
                             child: TextField(
-                                style: TextStyle(
-                                    fontSize:
-                                        widget._width / 32.727),
+                                style:
+                                    TextStyle(fontSize: widget._width / 32.727),
                                 textAlign: TextAlign.center,
                                 controller: TextEditingController(
                                     text:
@@ -229,14 +213,16 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
                           Expanded(
                             child: Container(
                               decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.red, width: widget._width / (deviceWidth / 2.0)),
+                                border: Border.all(
+                                    color: Colors.red,
+                                    width: widget._width / (deviceWidth / 2.0)),
                               ),
                               height: widget._height / (deviceHeight / 60),
                               child: SingleChildScrollView(
                                 child: Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: widget._width / (deviceWidth / 2.0)),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          widget._width / (deviceWidth / 2.0)),
                                   child: TextField(
                                     readOnly: true,
                                     controller: TextEditingController(
@@ -269,7 +255,9 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: widget._width / (deviceWidth / 8.0), vertical: widget._height / (deviceHeight / 8.0)),
+                padding: EdgeInsets.symmetric(
+                    horizontal: widget._width / (deviceWidth / 8.0),
+                    vertical: widget._height / (deviceHeight / 8.0)),
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -295,8 +283,7 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
                                   children: [
                                     Padding(
                                       padding: EdgeInsets.only(
-                                          left: widget._width /
-                                              49.09),
+                                          left: widget._width / 49.09),
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
@@ -324,8 +311,7 @@ class _ViewClaimInDetail extends State<EmployeeViewClaimIndetailScreen> {
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(
-                                        right:
-                                            widget._width / 19.636,
+                                        right: widget._width / 19.636,
                                       ),
                                       child: Row(
                                         children: [
