@@ -351,7 +351,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
 
     //upload to firebase
     Reference referenceRoot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages = referenceRoot.child('images');
+    Reference referenceDirImages = referenceRoot.child('receipts');
 
     //file reference
     Reference referenceImageUpload = referenceDirImages.child(uniqueFileName);
