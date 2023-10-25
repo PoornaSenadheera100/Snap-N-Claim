@@ -925,7 +925,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                             height: widget._height / (deviceHeight / 200),
                             child: Center(
                               child: SizedBox(
-                                width: widget._width / (deviceWidth / 123),
+                                width: widget._width / (deviceWidth / 130),
                                 child: const Text('No expenses added'),
                               ),
                             ),
@@ -1045,7 +1045,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                             height: widget._height / (deviceHeight / 200),
                             child: Center(
                               child: SizedBox(
-                                width: widget._width / (deviceWidth / 123),
+                                width: widget._width / (deviceWidth / 130),
                                 child: const Text('No expenses added'),
                               ),
                             ),
