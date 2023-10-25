@@ -74,7 +74,7 @@ class _FinanceAdminHomeScreenState extends State<FinanceAdminHomeScreen> {
                       color: Colors.grey,
                       width: widget._width / 1.05,
                       height: widget._height / (deviceHeight / 30),
-                      child: const Center(child: Text('Pending Claims', style: TextStyle(fontSize: 19),)),
+                      child: Center(child: Text('Pending Claims', style: TextStyle(fontSize: widget._width / (deviceWidth / 19)),)),
                     ),
                   ),
                   SizedBox(
