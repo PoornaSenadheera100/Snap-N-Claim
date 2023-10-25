@@ -201,12 +201,12 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
     if (_invoiceDateController.text == '') {
       callToast('Invoice date cannot be empty!');
     } else if (invoiceDate.isAfter(currDate)) {
-      callToast('Invoice date cannot be after claim date!');
+      callToast('Invoice date cannot be a future date!');
     } else if (_invoiceNoController.text == '') {
       callToast('Invoice number cannot be empty!');
     } else if (isInvoiceNoExists) {
       callToast('Cannot add same invoice number');
-    } else if (_invoiceAmountController.text == '') {
+    } else if (_invoiceAmountController.text == '' || invoiceAmount == 0.0) {
       callToast('Invoice amount cannot be empty!');
     } else if (invoiceAmount > transactionLimit) {
       callToast('Invoice amount cannot be greater than limit!');
@@ -844,6 +844,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                                     _claimExpenseValue != '') {
                                   callToast("Not eligible for this category!");
                                 } else {
+                                  _invoiceAmountfocusNode.unfocus();
+                                  _invoiceNofocusNode.unfocus();
                                   validateForm();
                                   shouldDropDownBeDisabled = true;
                                 }
@@ -950,6 +952,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                                               children: [
                                                 IconButton(
                                                     onPressed: () {
+                                                      _invoiceAmountfocusNode.unfocus();
+                                                      _invoiceNofocusNode.unfocus();
                                                       deleteLineItem(
                                                           context,
                                                           _claimNoController
@@ -961,6 +965,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                                                         Icons.cancel_outlined)),
                                                 IconButton(
                                                     onPressed: () {
+                                                      _invoiceAmountfocusNode.unfocus();
+                                                      _invoiceNofocusNode.unfocus();
                                                       showImage(
                                                           context,
                                                           lineItem[
