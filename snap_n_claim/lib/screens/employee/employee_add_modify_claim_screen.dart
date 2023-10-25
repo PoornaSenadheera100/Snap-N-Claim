@@ -233,6 +233,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
     } else if (imageUrl == '') {
       callToast('Please upload an image');
     } else {
+      shouldDropDownBeDisabled = true;
+
       globalLineItems.add({
         "invoiceAmount": invoiceAmount,
         "invoiceDate": DateTime.parse(_invoiceDateController.text),
@@ -869,7 +871,6 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                                   _invoiceAmountfocusNode.unfocus();
                                   _invoiceNofocusNode.unfocus();
                                   validateForm();
-                                  shouldDropDownBeDisabled = true;
                                 }
                               },
                         child: const Text('Add'))
