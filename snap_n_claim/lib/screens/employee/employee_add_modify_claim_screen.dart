@@ -89,16 +89,20 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
   void initState() {
     super.initState();
 
-    _collectionReferenceClaimNo =
-        ExpenseSubmissionAndViewingClaimStateService.getLatestClaimNo();
+    if (widget.requestClaimNo != '') {
+      _collectionReferenceClaimNo =
+          ExpenseSubmissionAndViewingClaimStateService.getSingleClaimDetails(
+              widget.requestClaimNo!);
+
+      // _claimNoController.text = widget.requestClaimNo!;
+    } else {
+      _collectionReferenceClaimNo =
+          ExpenseSubmissionAndViewingClaimStateService.getLatestClaimNo();
+
+    }
 
     _collectionReferenceClaimNo.then((value) {
-      _claimNoController.text = value.docs[0].get('claimNo');
-      int newClaimNo = int.parse(_claimNoController.text.substring(1)) + 1;
-
       setState(() {
-        _claimNoController.text = 'R${newClaimNo.toString().padLeft(3, '0')}';
-
         if (widget.requestClaimNo != '') {
           //set title
           title = 'Edit Claim';
@@ -107,6 +111,10 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
           _claimNoController.text = widget.requestClaimNo!;
 
           //init claimDate
+          _claimDateController.text =
+              value.docs[0].get('date').toDate().toString().substring(0, 10);
+
+          //init total
           _totalAmountController.text = value.docs[0].get('total').toString();
 
           //init category
@@ -125,6 +133,23 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
               "invoiceNo": fetchedLineItems[i]["invoiceNo"],
             });
           }
+        } else {
+          _claimNoController.text = value.docs[0].get('claimNo');
+          int newClaimNo = int.parse(_claimNoController.text.substring(1)) + 1;
+          _claimNoController.text = 'R${newClaimNo.toString().padLeft(3, '0')}';
+
+          //set current date
+          _claimDateController.text = DateTime.now().toString().substring(0, 10);
+
+          //set total
+          _totalAmountController.text = '0.0';
+
+          //set balance
+          _remainingBalanceController.text = mainBalance.toString();
+
+          //set transaction limit
+          _transactionLimitController.text = mainTransactionLimit.toString();
+
         }
 
         _collectionReferenceExpenses =
@@ -132,17 +157,6 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                 _claimNoController.text);
       });
     });
-
-    //set current date
-    setState(() {
-      _claimDateController.text = DateTime.now().toString().substring(0, 10);
-    });
-
-    _totalAmountController.text = '0.0';
-
-    _remainingBalanceController.text = mainBalance.toString();
-
-    _transactionLimitController.text = mainTransactionLimit.toString();
   }
 
   void callToast(String msg) {
@@ -375,7 +389,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                   child: CircularProgressIndicator(
                     value: loadingProgress.expectedTotalBytes != null
                         ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
+                            loadingProgress.expectedTotalBytes!
                         : null,
                   ),
                 ),
@@ -543,7 +557,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<TooltipState> draftTooltipKey = GlobalKey<TooltipState>();
-    final GlobalKey<TooltipState> categoryTooltipKey = GlobalKey<TooltipState>();
+    final GlobalKey<TooltipState> categoryTooltipKey =
+        GlobalKey<TooltipState>();
 
     return Scaffold(
       appBar: AppBar(
@@ -602,6 +617,10 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                             width: widget._width / (deviceWidth / 116),
                             height: widget._height / (deviceHeight / 40),
                             child: TextField(
+                              onTap: (){
+                                print('The date:');
+                                print(_claimDateController.text);
+                                },
                               style: const TextStyle(fontSize: 12),
                               textAlign: TextAlign.center,
                               controller: _claimDateController,
@@ -744,11 +763,14 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Tooltip(
-                          key : categoryTooltipKey,
-                            triggerMode: shouldDropDownBeDisabled ? TooltipTriggerMode.tap : null,
-                            showDuration: const Duration(seconds: 3),
-                            message: 'Only 1 category type can be selected per claim',
-                            child: const Text('\nClaim Expense'),
+                          key: categoryTooltipKey,
+                          triggerMode: shouldDropDownBeDisabled
+                              ? TooltipTriggerMode.tap
+                              : null,
+                          showDuration: const Duration(seconds: 3),
+                          message:
+                              'Only 1 category type can be selected per claim',
+                          child: const Text('\nClaim Expense'),
                         ),
                         DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
@@ -952,8 +974,10 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                                               children: [
                                                 IconButton(
                                                     onPressed: () {
-                                                      _invoiceAmountfocusNode.unfocus();
-                                                      _invoiceNofocusNode.unfocus();
+                                                      _invoiceAmountfocusNode
+                                                          .unfocus();
+                                                      _invoiceNofocusNode
+                                                          .unfocus();
                                                       deleteLineItem(
                                                           context,
                                                           _claimNoController
@@ -965,8 +989,10 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                                                         Icons.cancel_outlined)),
                                                 IconButton(
                                                     onPressed: () {
-                                                      _invoiceAmountfocusNode.unfocus();
-                                                      _invoiceNofocusNode.unfocus();
+                                                      _invoiceAmountfocusNode
+                                                          .unfocus();
+                                                      _invoiceNofocusNode
+                                                          .unfocus();
                                                       showImage(
                                                           context,
                                                           lineItem[
@@ -1025,7 +1051,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                         deleteClaim(context, _claimNoController.text);
                       },
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xC5D3400B)),
+                          backgroundColor: const Color(0xC5D3400B)),
                       child: const Text('Cancel'),
                     ),
                   ),
@@ -1090,6 +1116,8 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
                     onPressed: () {
                       _invoiceAmountfocusNode.unfocus();
                       _invoiceNofocusNode.unfocus();
+                      print('line items not empty: ');
+                      print(globalLineItems.isNotEmpty);
                       updateClaimStatus(context, _claimNoController.text);
                     },
                     style: ElevatedButton.styleFrom(
