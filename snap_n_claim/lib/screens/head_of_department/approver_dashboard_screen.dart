@@ -31,6 +31,7 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(centerTitle: true, title: const Text("Approver Screen")),
         // drawer: ApproverNavBar(widget._user),
         drawer: ApproverMenuDrawer(
@@ -123,8 +124,8 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
             child: ListView(
                 children: snapShot.data!.docs
                     .map((e) => Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
                             onTap: () {
                               // Navigate to the my claims page when the item is tapped
                               Navigator.of(context).push(
@@ -155,8 +156,10 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                                 height: widget._height / (deviceHeight / 135),
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(
-                                    vertical: widget._height / 40.14545454545455,
-                                    horizontal: widget._width / 19.63636363636364,
+                                    vertical:
+                                        widget._height / 40.14545454545455,
+                                    horizontal:
+                                        widget._width / 19.63636363636364,
                                   ),
                                   child: Column(
                                     children: [
@@ -235,7 +238,7 @@ class _ApproverDashboardScreenState extends State<ApproverDashboardScreen> {
                               ),
                             ),
                           ),
-                    ))
+                        ))
                     .toList()),
           );
         } else {
