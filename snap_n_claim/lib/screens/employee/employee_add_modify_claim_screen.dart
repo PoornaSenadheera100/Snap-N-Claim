@@ -72,6 +72,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
 
   bool shouldAddButtonBeDisabled = false;
   bool shouldDropDownBeDisabled = false;
+  bool shouldGoBack = false;
 
   Map<String, dynamic> _expenseLimitInfo = {
     "gl_code": "",
@@ -447,7 +448,7 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
     }
   }
 
-  void deleteClaim(BuildContext context, String claimNo) async {
+  Future<bool> deleteClaim(BuildContext context, String claimNo) async {
     var dialogRes = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
@@ -474,19 +475,26 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
               claimNo);
 
       if (response.code == 200) {
+        shouldGoBack = true;
         if (widget.requestClaimNo != '') {
           Navigator.of(context).pop();
         }
         Navigator.of(context).pop();
         callToast(response.message);
+        return true;
       } else if (response.code == 404) {
+        shouldGoBack = true;
         if (widget.requestClaimNo != '') {
           Navigator.of(context).pop();
         }
         Navigator.of(context).pop();
+        return true;
       } else {
         callToast(response.message);
+        return false;
       }
+    } else {
+      return false;
     }
   }
 
@@ -562,573 +570,580 @@ class _EmployeeAddNewClaimState extends State<EmployeeAddNewClaim> {
     final GlobalKey<TooltipState> categoryTooltipKey =
         GlobalKey<TooltipState>();
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              _invoiceAmountfocusNode.unfocus();
-              _invoiceNofocusNode.unfocus();
-              deleteClaim(context, _claimNoController.text);
-            },
-            icon: const Icon(Icons.arrow_back)),
-        title: Text(title),
-      ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 49.09,
-                    vertical: widget._height / 97.909),
-                child: Container(
-                  color: Colors.grey,
-                  width: widget._width / 1.05,
-                  height: widget._height / (deviceHeight / 30),
-                  child: const Center(child: Text('Claim header Information')),
+    return WillPopScope(
+      onWillPop: () {
+        _invoiceAmountfocusNode.unfocus();
+        _invoiceNofocusNode.unfocus();
+        return deleteClaim(context, _claimNoController.text);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                _invoiceAmountfocusNode.unfocus();
+                _invoiceNofocusNode.unfocus();
+                deleteClaim(context, _claimNoController.text);
+              },
+              icon: const Icon(Icons.arrow_back)),
+          title: Text(title),
+        ),
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: widget._width / 49.09,
+                      vertical: widget._height / 97.909),
+                  child: Container(
+                    color: Colors.grey,
+                    width: widget._width / 1.05,
+                    height: widget._height / (deviceHeight / 30),
+                    child: const Center(child: Text('Claim header Information')),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 49.09,
-                    vertical: widget._height / 97.909),
-                child: Row(
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: widget._width / 49.09,
+                      vertical: widget._height / 97.909),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          children: [
+                            const Text('Claim No'),
+                            SizedBox(
+                              width: widget._width / (deviceWidth / 116),
+                              height: widget._height / (deviceHeight / 40),
+                              child: TextField(
+                                  style: const TextStyle(fontSize: 12),
+                                  textAlign: TextAlign.center,
+                                  controller: _claimNoController,
+                                  readOnly: true,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder())),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            const Text('Claim Date'),
+                            SizedBox(
+                              width: widget._width / (deviceWidth / 116),
+                              height: widget._height / (deviceHeight / 40),
+                              child: TextField(
+                                onTap: (){
+                                  print('The date:');
+                                  print(_claimDateController.text);
+                                  },
+                                style: const TextStyle(fontSize: 12),
+                                textAlign: TextAlign.center,
+                                controller: _claimDateController,
+                                readOnly: true,
+                                decoration: const InputDecoration(
+                                    border: OutlineInputBorder()),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            const Text('Total Amount (Rs.)'),
+                            SizedBox(
+                              width: widget._width / (deviceWidth / 116),
+                              height: widget._height / (deviceHeight / 40),
+                              child: TextField(
+                                  style: const TextStyle(fontSize: 12),
+                                  textAlign: TextAlign.center,
+                                  controller: _totalAmountController,
+                                  readOnly: true,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder())),
+                            ),
+                          ],
+                        ),
+                      ]),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: widget._width / 49.09,
+                      vertical: widget._height / 97.909),
+                  child: Container(
+                      color: Colors.grey,
+                      width: widget._width / 1.05,
+                      height: widget._height / (deviceHeight / 30),
+                      child: const Center(child: Text('Line Item Information'))),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: widget._width / 49.09,
+                      vertical: widget._height / 97.909),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Column(
                         children: [
-                          const Text('Claim No'),
+                          const Text('Invoice Date'),
                           SizedBox(
                             width: widget._width / (deviceWidth / 116),
                             height: widget._height / (deviceHeight / 40),
-                            child: TextField(
+                            child: TextFormField(
+                                onTap: () async {
+                                  final selectedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(2022),
+                                    lastDate: DateTime(2101),
+                                  );
+                                  if (selectedDate != null) {
+                                    setState(() {
+                                      _invoiceDateController.text = selectedDate
+                                          .toString()
+                                          .substring(0, 10);
+                                    });
+                                  }
+                                },
                                 style: const TextStyle(fontSize: 12),
                                 textAlign: TextAlign.center,
-                                controller: _claimNoController,
+                                controller: _invoiceDateController,
                                 readOnly: true,
                                 decoration: const InputDecoration(
+                                    hintText: 'YYYY-MM-DD',
                                     border: OutlineInputBorder())),
                           ),
                         ],
                       ),
                       Column(
                         children: [
-                          const Text('Claim Date'),
+                          const Text('Invoice No.'),
                           SizedBox(
                             width: widget._width / (deviceWidth / 116),
                             height: widget._height / (deviceHeight / 40),
-                            child: TextField(
-                              onTap: (){
-                                print('The date:');
-                                print(_claimDateController.text);
-                                },
+                            child: TextFormField(
+                                focusNode: _invoiceNofocusNode,
+                                textInputAction: TextInputAction.next,
+                                style: const TextStyle(fontSize: 12),
+                                textAlign: TextAlign.center,
+                                controller: _invoiceNoController,
+                                decoration: const InputDecoration(
+                                    hintText: 'CXXX',
+                                    hintStyle: TextStyle(fontSize: 12),
+                                    border: OutlineInputBorder())),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          const Text('Invoice Amount (Rs.)'),
+                          SizedBox(
+                            width: widget._width / (deviceWidth / 116),
+                            height: widget._height / (deviceHeight / 40),
+                            child: TextFormField(
+                              focusNode: _invoiceAmountfocusNode,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d+\.?\d{0,2}'),
+                                ),
+                              ],
                               style: const TextStyle(fontSize: 12),
                               textAlign: TextAlign.center,
-                              controller: _claimDateController,
-                              readOnly: true,
+                              controller: _invoiceAmountController,
+                              onFieldSubmitted: (a) {
+                                String value = a.toString();
+                                if (value.isNotEmpty) {
+                                  _invoiceAmountController.text =
+                                      double.parse(value).toStringAsFixed(2);
+                                }
+                              },
                               decoration: const InputDecoration(
-                                  border: OutlineInputBorder()),
+                                hintText: '0.00',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: widget._width / 49.09,
+                      vertical: widget._height / 97.909),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Tooltip(
+                            key: categoryTooltipKey,
+                            triggerMode: shouldDropDownBeDisabled
+                                ? TooltipTriggerMode.tap
+                                : null,
+                            showDuration: const Duration(seconds: 3),
+                            message:
+                                'Only 1 category type can be selected per claim',
+                            child: const Text('\nClaim Expense'),
+                          ),
+                          DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              hint: const Text('Pick Category'),
+                              items: _claimExpenseList
+                                  .map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem(
+                                  value: value,
+                                  child: Text(value,
+                                      style: TextStyle(
+                                          fontSize: widget._width /
+                                              (deviceWidth / 12))),
+                                );
+                              }).toList(),
+                              onChanged: shouldDropDownBeDisabled
+                                  ? null
+                                  : (String? newValue) async {
+                                      setState(
+                                        () {
+                                          _claimExpenseValue = newValue!;
+                                        },
+                                      );
+                                      _checkEligibility(newValue!);
+                                    },
+                              value: _claimExpenseValue.isNotEmpty
+                                  ? _claimExpenseValue
+                                  : null,
                             ),
                           ),
                         ],
                       ),
                       Column(
                         children: [
-                          const Text('Total Amount (Rs.)'),
+                          const Text(
+                            'Remaining\nBalance (Rs.)',
+                            textAlign: TextAlign.center,
+                          ),
                           SizedBox(
-                            width: widget._width / (deviceWidth / 116),
+                            width: widget._width / (deviceWidth / 80),
                             height: widget._height / (deviceHeight / 40),
                             child: TextField(
                                 style: const TextStyle(fontSize: 12),
                                 textAlign: TextAlign.center,
-                                controller: _totalAmountController,
+                                controller: _remainingBalanceController,
                                 readOnly: true,
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder())),
                           ),
                         ],
                       ),
-                    ]),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 49.09,
-                    vertical: widget._height / 97.909),
-                child: Container(
+                      Column(
+                        children: [
+                          const Text(
+                            'Transaction\nLimit (Rs.)',
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(
+                            width: widget._width / (deviceWidth / 80),
+                            height: widget._height / (deviceHeight / 40),
+                            child: TextField(
+                                style: const TextStyle(fontSize: 12),
+                                textAlign: TextAlign.center,
+                                controller: _transactionLimitController,
+                                readOnly: true,
+                                decoration: const InputDecoration(
+                                    border: OutlineInputBorder())),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: widget._width / 49.09,
+                      vertical: widget._height / 97.909),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: widget._width / (deviceWidth / 50),
+                      ),
+                      IconButton(
+                          onPressed: () async {
+                            await addImage();
+                          },
+                          icon: const Icon(Icons.add_a_photo)),
+                      ElevatedButton(
+                          onPressed: shouldAddButtonBeDisabled
+                              ? null
+                              : () {
+                            _invoiceAmountfocusNode.unfocus();
+                            _invoiceNofocusNode.unfocus();
+                                  if (_isEligible == false &&
+                                      _claimExpenseValue != '') {
+                                    callToast("Not eligible for this category!");
+                                  } else {
+                                    validateForm();
+                                  }
+                                },
+                          child: const Text('Add'))
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: widget._width / 49.09,
+                      vertical: widget._height / 97.909),
+                  child: Container(
                     color: Colors.grey,
                     width: widget._width / 1.05,
                     height: widget._height / (deviceHeight / 30),
-                    child: const Center(child: Text('Line Item Information'))),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 49.09,
-                    vertical: widget._height / 97.909),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
-                      children: [
-                        const Text('Invoice Date'),
-                        SizedBox(
-                          width: widget._width / (deviceWidth / 116),
-                          height: widget._height / (deviceHeight / 40),
-                          child: TextFormField(
-                              onTap: () async {
-                                final selectedDate = await showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(2022),
-                                  lastDate: DateTime(2101),
-                                );
-                                if (selectedDate != null) {
-                                  setState(() {
-                                    _invoiceDateController.text = selectedDate
-                                        .toString()
-                                        .substring(0, 10);
-                                  });
-                                }
-                              },
-                              style: const TextStyle(fontSize: 12),
-                              textAlign: TextAlign.center,
-                              controller: _invoiceDateController,
-                              readOnly: true,
-                              decoration: const InputDecoration(
-                                  hintText: 'YYYY-MM-DD',
-                                  border: OutlineInputBorder())),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        const Text('Invoice No.'),
-                        SizedBox(
-                          width: widget._width / (deviceWidth / 116),
-                          height: widget._height / (deviceHeight / 40),
-                          child: TextFormField(
-                              focusNode: _invoiceNofocusNode,
-                              textInputAction: TextInputAction.next,
-                              style: const TextStyle(fontSize: 12),
-                              textAlign: TextAlign.center,
-                              controller: _invoiceNoController,
-                              decoration: const InputDecoration(
-                                  hintText: 'CXXX',
-                                  hintStyle: TextStyle(fontSize: 12),
-                                  border: OutlineInputBorder())),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        const Text('Invoice Amount (Rs.)'),
-                        SizedBox(
-                          width: widget._width / (deviceWidth / 116),
-                          height: widget._height / (deviceHeight / 40),
-                          child: TextFormField(
-                            focusNode: _invoiceAmountfocusNode,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(
-                                RegExp(r'^\d+\.?\d{0,2}'),
+                    child: const Center(child: Text('Added Expenses')),
+                  ),
+                ),
+                StreamBuilder(
+                    stream: _collectionReferenceExpenses,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        );
+                      } else if (!snapshot.hasData) {
+                        setDataStatus(false);
+
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: (widget._width / (deviceWidth / 8))),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Colors.grey,
+                                  width: widget._width / (deviceWidth / 2.0)),
+                            ),
+                            height: widget._height / (deviceHeight / 200),
+                            child: Center(
+                              child: SizedBox(
+                                width: widget._width / (deviceWidth / 123),
+                                child: const Text('No expenses added'),
                               ),
-                            ],
-                            style: const TextStyle(fontSize: 12),
-                            textAlign: TextAlign.center,
-                            controller: _invoiceAmountController,
-                            onFieldSubmitted: (a) {
-                              String value = a.toString();
-                              if (value.isNotEmpty) {
-                                _invoiceAmountController.text =
-                                    double.parse(value).toStringAsFixed(2);
-                              }
-                            },
-                            decoration: const InputDecoration(
-                              hintText: '0.00',
-                              border: OutlineInputBorder(),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 49.09,
-                    vertical: widget._height / 97.909),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Tooltip(
-                          key: categoryTooltipKey,
-                          triggerMode: shouldDropDownBeDisabled
-                              ? TooltipTriggerMode.tap
-                              : null,
-                          showDuration: const Duration(seconds: 3),
-                          message:
-                              'Only 1 category type can be selected per claim',
-                          child: const Text('\nClaim Expense'),
-                        ),
-                        DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            hint: const Text('Pick Category'),
-                            items: _claimExpenseList
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem(
-                                value: value,
-                                child: Text(value,
-                                    style: TextStyle(
-                                        fontSize: widget._width /
-                                            (deviceWidth / 12))),
-                              );
-                            }).toList(),
-                            onChanged: shouldDropDownBeDisabled
-                                ? null
-                                : (String? newValue) async {
-                                    setState(
-                                      () {
-                                        _claimExpenseValue = newValue!;
-                                      },
-                                    );
-                                    _checkEligibility(newValue!);
-                                  },
-                            value: _claimExpenseValue.isNotEmpty
-                                ? _claimExpenseValue
-                                : null,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        const Text(
-                          'Remaining\nBalance (Rs.)',
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(
-                          width: widget._width / (deviceWidth / 80),
-                          height: widget._height / (deviceHeight / 40),
-                          child: TextField(
-                              style: const TextStyle(fontSize: 12),
-                              textAlign: TextAlign.center,
-                              controller: _remainingBalanceController,
-                              readOnly: true,
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder())),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        const Text(
-                          'Transaction\nLimit (Rs.)',
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(
-                          width: widget._width / (deviceWidth / 80),
-                          height: widget._height / (deviceHeight / 40),
-                          child: TextField(
-                              style: const TextStyle(fontSize: 12),
-                              textAlign: TextAlign.center,
-                              controller: _transactionLimitController,
-                              readOnly: true,
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder())),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 49.09,
-                    vertical: widget._height / 97.909),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: widget._width / (deviceWidth / 50),
-                    ),
-                    IconButton(
-                        onPressed: () async {
-                          await addImage();
-                        },
-                        icon: const Icon(Icons.add_a_photo)),
-                    ElevatedButton(
-                        onPressed: shouldAddButtonBeDisabled
-                            ? null
-                            : () {
-                                if (_isEligible == false &&
-                                    _claimExpenseValue != '') {
-                                  callToast("Not eligible for this category!");
-                                } else {
-                                  _invoiceAmountfocusNode.unfocus();
-                                  _invoiceNofocusNode.unfocus();
-                                  validateForm();
-                                }
-                              },
-                        child: const Text('Add'))
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: widget._width / 49.09,
-                    vertical: widget._height / 97.909),
-                child: Container(
-                  color: Colors.grey,
-                  width: widget._width / 1.05,
-                  height: widget._height / (deviceHeight / 30),
-                  child: const Center(child: Text('Added Expenses')),
-                ),
-              ),
-              StreamBuilder(
-                  stream: _collectionReferenceExpenses,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator.adaptive(),
-                      );
-                    } else if (!snapshot.hasData) {
-                      setDataStatus(false);
+                        );
+                      } else if (snapshot.data!.docs.isNotEmpty) {
+                        setDataStatus(true);
 
-                      return Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: (widget._width / (deviceWidth / 8))),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.grey,
-                                width: widget._width / (deviceWidth / 2.0)),
-                          ),
-                          height: widget._height / (deviceHeight / 200),
-                          child: Center(
-                            child: SizedBox(
-                              width: widget._width / (deviceWidth / 123),
-                              child: const Text('No expenses added'),
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: widget._width / (deviceWidth / 8)),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey, width: 2.0),
                             ),
-                          ),
-                        ),
-                      );
-                    } else if (snapshot.data!.docs.isNotEmpty) {
-                      setDataStatus(true);
+                            height: widget._height / (deviceHeight / 200),
+                            child: ListView(
+                              children: snapshot.data!.docs.map((e) {
+                                List<dynamic> lineItems = e['lineItems'];
 
-                      return Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: widget._width / (deviceWidth / 8)),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 2.0),
-                          ),
-                          height: widget._height / (deviceHeight / 200),
-                          child: ListView(
-                            children: snapshot.data!.docs.map((e) {
-                              List<dynamic> lineItems = e['lineItems'];
-
-                              List<Widget> lineItemWidgets =
-                                  lineItems.map((lineItem) {
-                                return Card(
-                                  shape: const ContinuousRectangleBorder(),
-                                  color: const Color(0x9A5987EF),
-                                  child: SizedBox(
-                                    width: widget._width / (deviceWidth / 400),
-                                    height:
-                                        widget._height / (deviceHeight / 55),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: widget._width /
-                                                      (deviceWidth / 8)),
-                                              child: Column(
+                                List<Widget> lineItemWidgets =
+                                    lineItems.map((lineItem) {
+                                  return Card(
+                                    shape: const ContinuousRectangleBorder(),
+                                    color: const Color(0x9A5987EF),
+                                    child: SizedBox(
+                                      width: widget._width / (deviceWidth / 400),
+                                      height:
+                                          widget._height / (deviceHeight / 55),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: widget._width /
+                                                        (deviceWidth / 8)),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                        "${lineItem['invoiceDate'].toDate().day}/${lineItem['invoiceDate'].toDate().month}/${lineItem['invoiceDate'].toDate().year}"),
+                                                    Text("${e['category']}"),
+                                                  ],
+                                                ),
+                                              ),
+                                              Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                      "${lineItem['invoiceDate'].toDate().day}/${lineItem['invoiceDate'].toDate().month}/${lineItem['invoiceDate'].toDate().year}"),
-                                                  Text("${e['category']}"),
+                                                      "${lineItem['invoiceNo']}"),
+                                                  Text(
+                                                      "Rs : ${lineItem['invoiceAmount'].toStringAsFixed(2)}"),
                                                 ],
                                               ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                    "${lineItem['invoiceNo']}"),
-                                                Text(
-                                                    "Rs : ${lineItem['invoiceAmount'].toStringAsFixed(2)}"),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                IconButton(
-                                                    onPressed: () {
-                                                      _invoiceAmountfocusNode
-                                                          .unfocus();
-                                                      _invoiceNofocusNode
-                                                          .unfocus();
-                                                      deleteLineItem(
-                                                          context,
-                                                          _claimNoController
-                                                              .text,
-                                                          "${lineItem['invoiceNo']}",
-                                                          "${lineItem['invoiceAmount']}");
-                                                    },
-                                                    icon: const Icon(
-                                                        Icons.cancel_outlined)),
-                                                IconButton(
-                                                    onPressed: () {
-                                                      _invoiceAmountfocusNode
-                                                          .unfocus();
-                                                      _invoiceNofocusNode
-                                                          .unfocus();
-                                                      showImage(
-                                                          context,
-                                                          lineItem[
-                                                              'invoiceImage']);
-                                                    },
-                                                    icon: const Icon(
-                                                        Icons.image_rounded)),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                              Row(
+                                                children: [
+                                                  IconButton(
+                                                      onPressed: () {
+                                                        _invoiceAmountfocusNode
+                                                            .unfocus();
+                                                        _invoiceNofocusNode
+                                                            .unfocus();
+                                                        deleteLineItem(
+                                                            context,
+                                                            _claimNoController
+                                                                .text,
+                                                            "${lineItem['invoiceNo']}",
+                                                            "${lineItem['invoiceAmount']}");
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.cancel_outlined)),
+                                                  IconButton(
+                                                      onPressed: () {
+                                                        _invoiceAmountfocusNode
+                                                            .unfocus();
+                                                        _invoiceNofocusNode
+                                                            .unfocus();
+                                                        showImage(
+                                                            context,
+                                                            lineItem[
+                                                                'invoiceImage']);
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.image_rounded)),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
+                                  );
+                                }).toList();
+
+                                return Column(
+                                  children: lineItemWidgets,
                                 );
-                              }).toList();
-
-                              return Column(
-                                children: lineItemWidgets,
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      );
-                    } else {
-                      setDataStatus(false);
-
-                      return Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: (widget._width / (deviceWidth / 8))),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 2.0),
-                          ),
-                          height: widget._height / (deviceHeight / 200),
-                          child: Center(
-                            child: SizedBox(
-                              width: widget._width / (deviceWidth / 123),
-                              child: const Text('No expenses added'),
+                              }).toList(),
                             ),
                           ),
+                        );
+                      } else {
+                        setDataStatus(false);
+
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: (widget._width / (deviceWidth / 8))),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey, width: 2.0),
+                            ),
+                            height: widget._height / (deviceHeight / 200),
+                            child: Center(
+                              child: SizedBox(
+                                width: widget._width / (deviceWidth / 123),
+                                child: const Text('No expenses added'),
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    }),
+                Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: widget._width / 49.09,
+                          vertical: widget._height / 97.909),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _invoiceAmountfocusNode.unfocus();
+                          _invoiceNofocusNode.unfocus();
+                          deleteClaim(context, _claimNoController.text);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xC5D3400B)),
+                        child: const Text('Cancel'),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          bottom: widget._height / 97.909,
+                          right: widget._width / 49.09,
+                          top: widget._height / 97.909),
+                      child: Tooltip(
+                        key: draftTooltipKey,
+                        triggerMode: TooltipTriggerMode.tap,
+                        showDuration: const Duration(seconds: 3),
+                        message: 'Add atleast one expense to save as a draft',
+                        child: ElevatedButton(
+                          onPressed: globalLineItems.isEmpty
+                              ? null
+                              : () async {
+                                  _invoiceAmountfocusNode.unfocus();
+                                  _invoiceNofocusNode.unfocus();
+                                  var dialogRes = await showDialog<bool>(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                            actionsAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            title: const Text(
+                                                'This claim will be saved as a draft'),
+                                            content: const Text(
+                                                'Are you sure you want to save this for later?'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context, false),
+                                                child: const Text('No'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () async {
+                                                  return Navigator.pop(
+                                                      context, true);
+                                                },
+                                                child: const Text('Yes'),
+                                              ),
+                                            ],
+                                          ));
+
+                                  if (dialogRes == true) {
+                                    if (widget.requestClaimNo != '') {
+                                      Navigator.of(context).pop();
+                                    }
+
+                                    Navigator.of(context).pop();
+                                    callToast('Claim saved as a draft');
+                                  }
+                                },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0x9A5987EF),
+                          ),
+                          child: const Text('Draft'),
                         ),
-                      );
-                    }
-                  }),
-              Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: widget._width / 49.09,
-                        vertical: widget._height / 97.909),
-                    child: ElevatedButton(
+                      ),
+                    ),
+                    ElevatedButton(
                       onPressed: () {
                         _invoiceAmountfocusNode.unfocus();
                         _invoiceNofocusNode.unfocus();
-                        deleteClaim(context, _claimNoController.text);
+                        print('line items not empty: ');
+                        print(globalLineItems.isNotEmpty);
+                        updateClaimStatus(context, _claimNoController.text);
                       },
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xC5D3400B)),
-                      child: const Text('Cancel'),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        bottom: widget._height / 97.909,
-                        right: widget._width / 49.09,
-                        top: widget._height / 97.909),
-                    child: Tooltip(
-                      key: draftTooltipKey,
-                      triggerMode: TooltipTriggerMode.tap,
-                      showDuration: const Duration(seconds: 3),
-                      message: 'Add atleast one expense to save as a draft',
-                      child: ElevatedButton(
-                        onPressed: globalLineItems.isEmpty
-                            ? null
-                            : () async {
-                                _invoiceAmountfocusNode.unfocus();
-                                _invoiceNofocusNode.unfocus();
-                                var dialogRes = await showDialog<bool>(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                          actionsAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          title: const Text(
-                                              'This claim will be saved as a draft'),
-                                          content: const Text(
-                                              'Are you sure you want to save this for later?'),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context, false),
-                                              child: const Text('No'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () async {
-                                                return Navigator.pop(
-                                                    context, true);
-                                              },
-                                              child: const Text('Yes'),
-                                            ),
-                                          ],
-                                        ));
-
-                                if (dialogRes == true) {
-                                  if (widget.requestClaimNo != '') {
-                                    Navigator.of(context).pop();
-                                  }
-
-                                  Navigator.of(context).pop();
-                                  callToast('Claim saved as a draft');
-                                }
-                              },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0x9A5987EF),
-                        ),
-                        child: const Text('Draft'),
+                        backgroundColor: const Color(0x995DC523),
                       ),
+                      child: const Text('Submit'),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      _invoiceAmountfocusNode.unfocus();
-                      _invoiceNofocusNode.unfocus();
-                      print('line items not empty: ');
-                      print(globalLineItems.isNotEmpty);
-                      updateClaimStatus(context, _claimNoController.text);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0x995DC523),
-                    ),
-                    child: const Text('Submit'),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
