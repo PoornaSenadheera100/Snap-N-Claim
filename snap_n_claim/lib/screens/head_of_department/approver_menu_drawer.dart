@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:snap_n_claim/models/employee.dart';
 import 'package:snap_n_claim/screens/common/login_screen.dart';
 import 'package:snap_n_claim/screens/finance_admin/finance_admin_home_screen.dart';
+import 'package:snap_n_claim/screens/head_of_department/approver_dashboard_screen.dart';
 import 'package:snap_n_claim/screens/head_of_department/hod_reporting_screen.dart';
 
 import '../employee/employee_add_modify_claim_screen.dart';
@@ -28,7 +29,7 @@ class ApproverMenuDrawer extends StatelessWidget {
       Navigator.pushReplacement(
         context,
         PageTransition(
-          child: FinanceAdminHomeScreen(_width, _height, user),
+          child: ApproverDashboardScreen(_width, _height, user),
           type: PageTransitionType.rightToLeft,
           alignment: Alignment.center,
           isIos: true,
