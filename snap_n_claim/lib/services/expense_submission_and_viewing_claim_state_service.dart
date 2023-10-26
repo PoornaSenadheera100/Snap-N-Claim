@@ -26,6 +26,13 @@ class ExpenseSubmissionAndViewingClaimStateService {
         .get();
   }
 
+  static Future<QuerySnapshot<Object?>> getSingleClaimDetails(String claimNo) {
+    return requestCollectionReference
+        .where("claimNo", isEqualTo: claimNo)
+        .limit(1)
+        .get();
+  }
+
   static Stream<QuerySnapshot> getPendingRequests(String empNo) {
     return requestCollectionReference
         .where('empNo', isEqualTo: empNo)

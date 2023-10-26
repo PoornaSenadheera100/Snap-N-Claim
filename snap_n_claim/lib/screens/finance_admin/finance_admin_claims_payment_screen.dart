@@ -160,6 +160,7 @@ class _FinanceAdminClaimsPaymentScreenState
                 child: Container(
                   color: Colors.grey,
                   width: widget._width / _widthDenominator1,
+                  height: widget._height / 26.76363636363636,
                   child: const Center(child: Text('Claim header Information')),
                 ),
               ),
@@ -244,6 +245,7 @@ class _FinanceAdminClaimsPaymentScreenState
                 child: Container(
                   color: Colors.grey,
                   width: widget._width / _widthDenominator1,
+                  height: widget._height / 26.76363636363636,
                   child: const Center(child: Text('Added Expenses')),
                 ),
               ),

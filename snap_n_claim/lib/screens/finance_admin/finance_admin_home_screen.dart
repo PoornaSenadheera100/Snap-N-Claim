@@ -20,6 +20,9 @@ class FinanceAdminHomeScreen extends StatefulWidget {
 class _FinanceAdminHomeScreenState extends State<FinanceAdminHomeScreen> {
   late Stream<QuerySnapshot> _pendingClaimsReference;
 
+  final double deviceWidth = 392.72727272727275;
+  final double deviceHeight = 783.2727272727273;
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +38,7 @@ class _FinanceAdminHomeScreenState extends State<FinanceAdminHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Finance Pending Claims"),
+        title: const Text("Welcome"),
       ),
       drawer: FinanceAdminMenuDrawer(
           widget._width, widget._height, "Finance Pending Claims", widget.user),
@@ -61,118 +64,131 @@ class _FinanceAdminHomeScreenState extends State<FinanceAdminHomeScreen> {
             return Padding(
               padding: EdgeInsets.symmetric(
                   vertical: widget._height / 100.3636363636364),
-              child: SingleChildScrollView(
-                child: SizedBox(
-                  width: widget._width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: snapshot.data!.docs
-                        .map((e) => GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        FinanceAdminClaimsPaymentScreen(
-                                            widget._width,
-                                            widget._height,
-                                            widget.user,
-                                            e)));
-                              },
-                              key: UniqueKey(),
-                              child: Card(
-                                elevation: 5,
-                                shadowColor: Colors.black,
-                                color: const Color(0x81A2C5FF),
-                                child: SizedBox(
-                                  width: widget._width / 1.122077922077922,
-                                  height: widget._height / 7.646753246753247,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical:
-                                          widget._height / 40.14545454545455,
-                                      horizontal:
-                                          widget._width / 19.63636363636364,
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              DateTime.parse(e["date"]
-                                                      .toDate()
-                                                      .toString())
-                                                  .toString()
-                                                  .substring(0, 10),
-                                              style: TextStyle(
-                                                fontSize: widget._width /
-                                                    26.18181818181818,
-                                                color: Colors.black,
+              child: ListView(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: widget._width / 49.09,
+                        vertical: widget._height / 97.909),
+                    child: Container(
+                      color: Colors.grey,
+                      width: widget._width / 1.05,
+                      height: widget._height / (deviceHeight / 30),
+                      child: Center(child: Text('Pending Claims', style: TextStyle(fontSize: widget._width / (deviceWidth / 19)),)),
+                    ),
+                  ),
+                  SizedBox(
+                    width: widget._width,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: snapshot.data!.docs
+                          .map((e) => GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          FinanceAdminClaimsPaymentScreen(
+                                              widget._width,
+                                              widget._height,
+                                              widget.user,
+                                              e)));
+                                },
+                                key: UniqueKey(),
+                                child: Card(
+                                  elevation: 5,
+                                  shadowColor: Colors.black,
+                                  color: const Color(0x81A2C5FF),
+                                  child: SizedBox(
+                                    width: widget._width / 1.122077922077922,
+                                    height: widget._height / 7.646753246753247,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical:
+                                            widget._height / 40.14545454545455,
+                                        horizontal:
+                                            widget._width / 19.63636363636364,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                DateTime.parse(e["date"]
+                                                        .toDate()
+                                                        .toString())
+                                                    .toString()
+                                                    .substring(0, 10),
+                                                style: TextStyle(
+                                                  fontSize: widget._width /
+                                                      26.18181818181818,
+                                                  color: Colors.black,
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              'Rs.${e["total"].toStringAsFixed(2)}',
-                                              style: TextStyle(
-                                                fontSize: widget._width /
-                                                    26.18181818181818,
-                                                color: Colors.black,
+                                              Text(
+                                                'Rs.${e["total"].toStringAsFixed(2)}',
+                                                style: TextStyle(
+                                                  fontSize: widget._width /
+                                                      26.18181818181818,
+                                                  color: Colors.black,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                e["claimNo"],
+                                                style: TextStyle(
+                                                  fontSize: widget._width /
+                                                      26.18181818181818,
+                                                  color: Colors.black,
+                                                ),
                                               ),
-                                            )
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              e["claimNo"],
-                                              style: TextStyle(
-                                                fontSize: widget._width /
-                                                    26.18181818181818,
-                                                color: Colors.black,
+                                              Text(
+                                                'Status : ${e["status"]}',
+                                                style: TextStyle(
+                                                  fontSize: widget._width /
+                                                      26.18181818181818,
+                                                  color: Colors.black,
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              'Status : ${e["status"]}',
-                                              style: TextStyle(
-                                                fontSize: widget._width /
-                                                    26.18181818181818,
-                                                color: Colors.black,
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                '${e["category"]}',
+                                                style: TextStyle(
+                                                  fontSize: widget._width /
+                                                      26.18181818181818,
+                                                  color: Colors.black,
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              '${e["category"]}',
-                                              style: TextStyle(
-                                                fontSize: widget._width /
-                                                    26.18181818181818,
-                                                color: Colors.black,
+                                              Text(
+                                                e["empName"],
+                                                style: TextStyle(
+                                                  fontSize: widget._width /
+                                                      26.18181818181818,
+                                                  color: Colors.black,
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              e["empName"],
-                                              style: TextStyle(
-                                                fontSize: widget._width /
-                                                    26.18181818181818,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ))
-                        .toList(),
+                              ))
+                          .toList(),
+                    ),
                   ),
-                ),
+                ],
               ),
             );
           } else {

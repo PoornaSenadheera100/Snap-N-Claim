@@ -44,20 +44,6 @@ class _ViewClaimInDetail extends State<ViewClaimInDetail> {
     });
   }
 
-  // TextEditingController email = TextEditingController();
-  //
-  // sendEmail(String subject,String body , String recipientEmail,) async {
-  //   final Email email = Email(
-  //     from:'poornasenadheera100@gmail.com',
-  //     body : body,
-  //     subject : subject,
-  //     recipients : [recipientEmail],
-  //     isHTML:false,
-  //   );
-  //   await FlutterEmailSender.send(email);
-  // }
-
-
   String? _validateRejectReason(String value) {
     if (value == '') {
       return "This field is required!";
